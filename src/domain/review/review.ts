@@ -1,29 +1,38 @@
 import { createId, nowIso } from "../../lib/utils";
 import { MISTAKE_TYPES, type MistakeType, type Review } from "../types";
 
+/**
+ * The four blocks of a 复盘. Each block answers several prompts (see
+ * `REVIEW_SECTIONS`), but is stored as one text field — a review has to stay
+ * cheap enough to write after every single game.
+ */
 export interface ReviewInput {
-  /** 1. 开局 */
   opening?: string;
-  firstItem?: string;
-  openingPlan?: string;
-
-  /** 2. 中期 */
-  economyHealth?: string;
   midGame?: string;
-
-  /** 3. 后期 */
   lateGame?: string;
-  positioning?: string;
-  missedUpgrades?: string;
-
-  /** 4. 复盘结论 */
   bestDecision?: string;
   biggestMistake?: string;
   primaryMistake?: MistakeType;
   nextGameFocus?: string;
-
   selfScore?: number;
 }
+
+export const REVIEW_SECTIONS = {
+  opening: {
+    title: "1 · 开局",
+    prompts: ["开局拿到了什么", "第一件装备", "开局思路", "为什么这么选择"],
+  },
+  midGame: {
+    title: "2 · 中期",
+    prompts: ["经济是否健康", "升级是否合理", "D牌是否合理", "阵容转型是否及时", "节奏是否合理"],
+  },
+  lateGame: {
+    title: "3 · 后期",
+    prompts: ["最终阵容是否合理", "装备是否合理", "站位是否合理", "是否错过关键升级"],
+  },
+} as const;
+
+export const EMPTY_REVIEW_INPUT: ReviewInput = {};
 
 /** The four answers that make a match "reviewed". Everything else is optional. */
 export function isReviewComplete(input: Partial<ReviewInput>): boolean {
@@ -49,8 +58,6 @@ export function validateReviewInput(input: Partial<ReviewInput>): string[] {
   return errors;
 }
 
-export const EMPTY_REVIEW_INPUT: ReviewInput = {};
-
 export function createReview(matchId: string, input: ReviewInput): Review {
   const now = nowIso();
   return { id: createId(), matchId, ...normalize(input), createdAt: now, updatedAt: now };
@@ -71,10 +78,15 @@ export function patchReview(review: Review, patch: ReviewInput): Review {
   return { ...review, ...normalize(merged), updatedAt: nowIso() };
 }
 
-export function reviewSummaryText(review: Review): string {
-  return [review.opening, review.midGame, review.lateGame, review.biggestMistake]
-    .filter(Boolean)
-    .join("\n\n");
+/** Review record -> editable form value. */
+export function reviewInputOf(review?: Review): ReviewInput {
+  if (!review) return {};
+  const { id, matchId, createdAt, updatedAt, ...input } = review;
+  void id;
+  void matchId;
+  void createdAt;
+  void updatedAt;
+  return input;
 }
 
 export function isMistakeType(value: unknown): value is MistakeType {
@@ -84,17 +96,14 @@ export function isMistakeType(value: unknown): value is MistakeType {
 function normalize(input: ReviewInput): ReviewInput {
   return {
     opening: trim(input.opening),
-    firstItem: trim(input.firstItem),
-    openingPlan: trim(input.openingPlan),
-    economyHealth: trim(input.economyHealth),
     midGame: trim(input.midGame),
     lateGame: trim(input.lateGame),
-    positioning: trim(input.positioning),
-    missedUpgrades: trim(input.missedUpgrades),
     bestDecision: trim(input.bestDecision),
     biggestMistake: trim(input.biggestMistake),
     primaryMistake:
-      input.primaryMistake && isMistakeType(input.primaryMistake) ? input.primaryMistake : undefined,
+      input.primaryMistake && isMistakeType(input.primaryMistake)
+        ? input.primaryMistake
+        : undefined,
     nextGameFocus: trim(input.nextGameFocus),
     selfScore: input.selfScore,
   };

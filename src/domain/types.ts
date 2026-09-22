@@ -104,16 +104,10 @@ export interface Review {
   id: string;
   matchId: string;
 
+  /** Three blocks, one text field each; the prompts live in REVIEW_SECTIONS. */
   opening?: string;
-  firstItem?: string;
-  openingPlan?: string;
-
-  economyHealth?: string;
   midGame?: string;
-
   lateGame?: string;
-  positioning?: string;
-  missedUpgrades?: string;
 
   bestDecision?: string;
   biggestMistake?: string;
