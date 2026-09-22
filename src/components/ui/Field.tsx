@@ -86,27 +86,6 @@ export function Checkbox({
   );
 }
 
-/** Comma / slash separated list input, kept as text for the MVP. */
-export function ChipInput({
-  value,
-  onChange,
-  placeholder,
-  id,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  id?: string;
-}): ReactNode {
-  return (
-    <Input
-      id={id}
-      value={value}
-      placeholder={placeholder}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  );
-}
 
 /** Inline caption that is not tied to a control id. */
 export function Label({
