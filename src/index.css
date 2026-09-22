@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base-950: #070a11;
+  --color-base-900: #0b0f18;
+  --color-base-850: #10151f;
+  --color-base-800: #151b28;
+  --color-base-700: #1e2635;
+  --color-base-600: #2a3444;
+  --color-line: #232c3d;
+
+  --color-ink-50: #f2f5fa;
+  --color-ink-200: #c3ccdb;
+  --color-ink-400: #8b97ab;
+  --color-ink-600: #5d6779;
+
+  --color-gold-300: #f5cf73;
+  --color-gold-400: #e8b64a;
+  --color-gold-500: #d19a2b;
+
+  --color-teal-400: #38bdf8;
+
+  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-base-950);
+    background-image:
+      radial-gradient(900px 500px at 15% -10%, rgba(209, 154, 43, 0.09), transparent 60%),
+      radial-gradient(700px 400px at 100% 0%, rgba(56, 189, 248, 0.07), transparent 55%);
+    background-attachment: fixed;
+    color: var(--color-ink-50);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  * {
+    border-color: var(--color-line);
+  }
+
+  ::selection {
+    background: rgba(232, 182, 74, 0.3);
+  }
+
+  /* Keep dark form controls readable */
+  input,
+  select,
+  textarea {
+    color-scheme: dark;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-base-600);
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@utility panel {
+  border: 1px solid var(--color-line);
+  background-color: color-mix(in oklab, var(--color-base-850) 88%, transparent);
+  border-radius: 14px;
+}
+
+@utility num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
