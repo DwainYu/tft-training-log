@@ -86,8 +86,7 @@ describe("match service CRUD", () => {
     expect((await getMatchBundle(created.id))?.review).toBeTruthy();
 
     await deleteMatch(created.id);
-    const bundle = await getMatchBundle(created.id);
-    expect(bundle).toBeUndefined();
+    expect(await getMatchBundle(created.id)).toBeNull();
     expect(await allMatches()).toHaveLength(0);
   });
 

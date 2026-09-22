@@ -80,9 +80,10 @@ export async function recentMatches(limit: number, query: MatchQuery = {}): Prom
   return (await listMatches({ sortField: "playedAt", sortDir: "desc", ...query })).slice(0, limit);
 }
 
-export async function getMatchBundle(id: string): Promise<MatchBundle | undefined> {
+/** `null` = no such match; callers rely on distinguishing that from "loading". */
+export async function getMatchBundle(id: string): Promise<MatchBundle | null> {
   const match = await matchRepository.get(id);
-  if (!match) return undefined;
+  if (!match) return null;
   const [review, decisions] = await Promise.all([
     reviewRepository.byMatch(id),
     decisionRepository.byMatch(id),

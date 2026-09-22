@@ -28,7 +28,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[236px_1fr]">
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:border-r lg:border-line lg:bg-base-900/70 lg:backdrop-blur">
+      <aside className="hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-line lg:bg-base-900/70 lg:backdrop-blur">
         <div className="flex h-full flex-col gap-6 px-4 py-6">
           <Brand />
           <nav className="flex flex-col gap-1">
