@@ -9,6 +9,7 @@ import {
   type MatchInput,
 } from "../domain/match/match";
 import { queryMatches, type MatchQuery } from "../domain/match/query";
+import { seedReview } from "./review-service";
 import { ValidationError } from "../lib/errors";
 import { dateKey, toDate } from "../lib/wallclock";
 import { nowIso } from "../lib/utils";
@@ -120,3 +121,18 @@ export async function trainedDateKeys(): Promise<string[]> {
     .sort((a, b) => b.localeCompare(a));
 }
 
+
+/**
+ * Quick Add: log a game in under a minute. `nextGameFocus` is stored on the
+ * review record (seeded, not "reviewed") so the fast path and the detailed
+ * review never disagree about what the player meant.
+ */
+export async function quickAdd(
+  payload: ManualMatchPayload,
+  nextGameFocus?: string,
+): Promise<Match> {
+  const match = await addMatch(payload);
+  const focus = nextGameFocus?.trim();
+  if (focus) await seedReview(match.id, { nextGameFocus: focus });
+  return match;
+}

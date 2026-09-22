@@ -15,6 +15,14 @@ import { addDecision } from "./decision-service";
 import { saveReview } from "./review-service";
 import { ValidationError } from "../lib/errors";
 import { resetDatabase } from "../test/db-helper";
+import type { ReviewInput } from "../domain/review/review";
+
+const completeReview = (primaryMistake: "ECONOMY" | "ROLLING"): ReviewInput => ({
+  primaryMistake,
+  biggestMistake: primaryMistake === "ROLLING" ? "4-1 D 牌过深" : "利息没吃满",
+  bestDecision: "3-2 直接上 6 保住了血量",
+  nextGameFocus: "4-1 之后只 D 到 2 星主 C",
+});
 
 beforeEach(resetDatabase);
 
@@ -74,7 +82,7 @@ describe("match service CRUD", () => {
       decision: "直接上 6",
       reasoning: "保持战斗力",
     });
-    await saveReview(created.id, { primaryMistake: "ECONOMY", nextGameFocus: "存钱" });
+    await saveReview(created.id, completeReview("ECONOMY"));
     expect((await getMatchBundle(created.id))?.review).toBeTruthy();
 
     await deleteMatch(created.id);
@@ -85,11 +93,7 @@ describe("match service CRUD", () => {
 
   it("marks a match reviewed only when the review is complete", async () => {
     const created = await addMatch({ playedAt: "2026-02-05T13:20", placement: "4" });
-    await saveReview(created.id, {
-      primaryMistake: "ROLLING",
-      nextGameFocus: "4-1 之后只 D 到 2 星主 C",
-      biggestMistake: "D 牌过深",
-    });
+    await saveReview(created.id, completeReview("ROLLING"));
     const after = await getMatch(created.id);
     expect(after?.reviewed).toBe(true);
     // review's primary mistake becomes the single source of truth on the match

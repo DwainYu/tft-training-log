@@ -107,3 +107,14 @@ export function ChipInput({
     />
   );
 }
+
+/** Inline caption that is not tied to a control id. */
+export function Label({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}): ReactNode {
+  return <span className={`text-[11px] leading-relaxed text-ink-600 ${className}`}>{children}</span>;
+}
