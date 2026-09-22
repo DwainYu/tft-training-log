@@ -10,11 +10,14 @@ import {
   Trash2,
 } from "lucide-react";
 import { deleteMatch, getMatchBundle } from "../services/match-service";
+import { addDecision, removeDecision, updateDecision } from "../services/decision-service";
 import { currentGoals } from "../services/training-service";
-import { decisionLabel, mistakeLabel } from "../domain/labels";
+import { mistakeLabel } from "../domain/labels";
+import { errorMessage } from "../lib/errors";
 import { durationOf, isBottom4, isTop4, isWin, placementTone } from "../domain/match/match";
 import { formatDateWeekday, formatTime } from "../lib/wallclock";
 import { formatDuration } from "../lib/utils";
+import { DecisionPanel } from "../components/decisions/DecisionPanel";
 import { Badge, EmptyState } from "../components/ui/Badge";
 import { Button, LinkButton } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
@@ -136,41 +139,33 @@ export function MatchDetailPage() {
             </div>
           </Panel>
 
-          <Panel>
-            <PanelHeader
-              title="关键决策"
-              subtitle="回合 · 类型 · 当时状态 · 决定 · 原因 · 结果 · 回看"
-              action={<Badge tone="muted">{decisions.length} 条</Badge>}
-            />
-            {decisions.length === 0 ? (
-              <EmptyState
-                title="还没有记录决策"
-                description="在复盘前记下 2 – 3 个关键决策，统计才能找出重复出现的问题。"
-                action={
-                  <LinkButton to={`/matches/${match.id}/review`}>去复盘页添加</LinkButton>
-                }
-              />
-            ) : (
-              <ul className="divide-y divide-line">
-                {decisions.map((d) => (
-                  <li key={d.id} className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="num rounded bg-base-800 px-1.5 py-0.5 text-xs text-ink-200">
-                        {d.round}
-                      </span>
-                      <span className="text-xs text-gold-300">{decisionLabel(d.type)}</span>
-                      {d.situation && (
-                        <span className="truncate text-xs text-ink-600">{d.situation}</span>
-                      )}
-                    </div>
-                    <p className="mt-1.5 text-sm text-ink-50">{d.decision}</p>
-                    {d.reasoning && <p className="text-xs text-ink-400">原因：{d.reasoning}</p>}
-                    {d.result && <p className="text-xs text-ink-400">结果：{d.result}</p>}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </Panel>
+          <DecisionPanel
+            decisions={decisions}
+            onAdd={async (input) => {
+              try {
+                await addDecision(match.id, input);
+                toast.push("决策已记录");
+              } catch (err) {
+                toast.push(errorMessage(err), "warn");
+              }
+            }}
+            onUpdate={async (decisionId, input) => {
+              try {
+                await updateDecision(decisionId, input);
+                toast.push("决策已更新");
+              } catch (err) {
+                toast.push(errorMessage(err), "warn");
+              }
+            }}
+            onRemove={async (decisionId) => {
+              try {
+                await removeDecision(decisionId);
+                toast.push("决策已删除");
+              } catch (err) {
+                toast.push(errorMessage(err), "warn");
+              }
+            }}
+          />
         </div>
 
         <div className="flex flex-col gap-4">

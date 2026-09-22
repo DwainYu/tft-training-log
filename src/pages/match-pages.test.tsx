@@ -116,7 +116,7 @@ describe("Match detail page", () => {
     expect(screen.getByText("2026-02-03")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /删除/ })).toBeInTheDocument();
     expect(screen.getAllByText("开始复盘").length).toBeGreaterThan(0);
-    expect(screen.getByText("还没有记录决策")).toBeInTheDocument();
+    expect(screen.getByText("添加决策")).toBeInTheDocument();
   });
 
   it("reports a missing match instead of crashing", async () => {

@@ -85,9 +85,9 @@ export interface Decision {
   round: string;
   type: DecisionType;
 
-  situation: string;
+  situation?: string;
   decision: string;
-  reasoning: string;
+  reasoning?: string;
   result?: string;
 
   /** 现在回看是否正确 */

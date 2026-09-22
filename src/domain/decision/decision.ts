@@ -4,9 +4,10 @@ import { DECISION_TYPES, type Decision, type DecisionHindsight, type DecisionTyp
 export interface DecisionInput {
   round: string;
   type: DecisionType;
-  situation: string;
+  /** 当时状态 — useful, but a decision is still loggable without it. */
+  situation?: string;
   decision: string;
-  reasoning: string;
+  reasoning?: string;
   result?: string;
   hindsight?: DecisionHindsight;
   hindsightNote?: string;
@@ -18,9 +19,9 @@ export function createDecision(matchId: string, input: DecisionInput): Decision 
     matchId,
     round: input.round.trim(),
     type: input.type,
-    situation: input.situation.trim(),
+    situation: input.situation?.trim() || undefined,
     decision: input.decision.trim(),
-    reasoning: input.reasoning.trim(),
+    reasoning: input.reasoning?.trim() || undefined,
     result: input.result?.trim() || undefined,
     hindsight: input.hindsight,
     hindsightNote: input.hindsightNote?.trim() || undefined,
