@@ -43,10 +43,17 @@ export function validateTrainingGoalInput(input: Partial<TrainingGoalInput>): st
 
 const GOAL_STATUSES: string[] = ["active", "completed", "archived"];
 
-/** A goal is "current" while active and not past its end date. */
-export function isGoalCurrent(goal: TrainingGoal, today = dateKey(wallClockNow())): boolean {
+/**
+ * A goal is "current" while active and not past its end date.
+ *
+ * The default is a *runtime* default: the guard makes it safe to pass the
+ * function straight into `.filter(isGoalCurrent)` (where Array would pass the
+ * index as `today`, which would silently poison the date comparison).
+ */
+export function isGoalCurrent(goal: TrainingGoal, today?: string): boolean {
+  const date = typeof today === "string" ? today : dateKey(wallClockNow());
   if (goal.status !== "active") return false;
-  return !goal.endDate || goal.endDate >= today;
+  return !goal.endDate || goal.endDate >= date;
 }
 
 export function goalStatusLabel(status: GoalStatus): string {
