@@ -2,6 +2,12 @@
 
 **S18 Personal Training & Review System.**
 
+![CI](https://github.com/DwainYu/tft-training-log/actions/workflows/ci.yml/badge.svg)
+![Pages](https://github.com/DwainYu/tft-training-log/actions/workflows/deploy-pages.yml/badge.svg)
+![Release](https://img.shields.io/github/v/release/DwainYu/tft-training-log)
+
+**[Live Demo →](https://dwainyu.github.io/tft-training-log/)**
+
 A local-first personal training system for recording TFT (Teamfight Tactics) matches,
 tracking in-game decisions, reviewing mistakes, and measuring improvement over time.
 
@@ -60,17 +66,26 @@ All four were taken against the bundled **fictional** demo dataset — see [Demo
 | **Statistics** | **Match detail (decisions + review)** |
 | ![Statistics](docs/screenshots/statistics.png) | ![Match detail](docs/screenshots/match-detail.png) |
 
+## Live Demo
+
+**[dwainyu.github.io/tft-training-log](https://dwainyu.github.io/tft-training-log/)**
+
+The demo runs entirely in your browser and keeps every record in local IndexedDB — pushing
+`main` publishes the same static bundle through GitHub Actions. Load the
+[demo data](#demo-data) to see all screens filled; nothing is uploaded anywhere.
+
 ## Getting Started
 
 ```bash
 npm install
-npm run dev          # http://localhost:5183
+npm run dev          # http://localhost:5183/tft-training-log/
 ```
 
 ```bash
-npm run build        # tsc --noEmit && vite build  -> dist/
+npm run build        # tsc --noEmit && vite build  -> dist/ (base: /tft-training-log/)
 npm run test         # vitest run (16 files / 105 tests)
 npm run typecheck    # tsc --noEmit
+npm run preview      # serve the production build
 ```
 
 ### Demo data
@@ -91,7 +106,8 @@ date when loaded, so streaks and the weekly view stay meaningful whenever you cl
 - **TypeScript** (strict) + **React 19** + **Vite 6**
 - **Tailwind CSS v4** (`@tailwindcss/vite`) — dark, data-dense UI
 - **Dexie** (IndexedDB) + `dexie-react-hooks` `liveQuery` — local-first storage, reactive reads
-- **react-router-dom** (`HashRouter`) — the app is a static bundle, openable from `file://`
+- **react-router-dom** (`HashRouter`) — routes live in the hash, so the static bundle can be
+  served from any sub-path (GitHub Pages project site) without server-side rewrites
 - **Recharts** — trend lines and mistake bars
 - **lucide-react** — icons
 - **Vitest** + **Testing Library** + **fake-indexeddb** (jsdom) — 105 tests
@@ -207,7 +223,7 @@ Full phase list with scope notes: [ROADMAP.md](./ROADMAP.md).
 - Times are hand-entered Beijing wall-clock; there is no timezone or DST handling, by design.
 - The weekly summary is a rule engine, not an LLM.
 - Data is per-browser. Export JSON is the only migration path.
-- No deployment: this is a local tool. GitHub Pages / Vercel are deliberately not wired up yet.
+- The public deployment is a static GitHub Pages bundle — still no backend, no sync, no telemetry.
 
 ## Contributing
 

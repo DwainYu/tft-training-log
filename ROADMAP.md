@@ -24,6 +24,12 @@ prerequisite for the tool being worth using today.
 - [x] Fictional demo dataset + one-click load / remove (`data/examples/demo-matches.json`)
 - [x] Repository hygiene: `.gitignore` for personal data, MIT license, English README with screenshots
 
+## Phase 1.5 — Release Engineering ✅
+
+- [x] CI: typecheck + 105 tests + production build on every push and pull request
+- [x] GitHub Pages deployment from `main` (`https://dwainyu.github.io/tft-training-log/`)
+- [x] Vite `base` for the project-page sub-path, favicon and page description
+
 ## Phase 2 — S18 Static Data
 
 - [ ] Units, traits, items and augments as structured data
@@ -61,6 +67,6 @@ prerequisite for the tool being worth using today.
 
 - Anything that reads game state for a live advantage (cheat-adjacent tooling).
 - Server-side accounts, cloud sync and telemetry — the tool is local-first by design.
-- Deployment targets (GitHub Pages / Vercel / Cloudflare Pages) until the tool is finished.
+- Hosting other than GitHub Pages (Vercel / Cloudflare Pages) — one static deploy target is enough.
 - Riot Match API dependence: the Chinese server does not expose one to this project, and the
   roadmap does not assume it.
