@@ -1,8 +1,39 @@
-node_modules
-dist
-dist-ssr
-coverage
-*.local
-.DS_Store
-.vite
+# --- dependencies / build output ---
+node_modules/
+dist/
+dist-ssr/
+coverage/
+.vite/
 *.tsbuildinfo
+
+# --- local env & secrets (only the template is tracked) ---
+.env
+.env.*
+!.env.example
+
+# --- personal training data: never goes to Git ---
+# Real records live in the browser's IndexedDB. Anything extracted or dumped locally
+# is ignored, except the fictional fixtures under data/examples/.
+data/*
+!data/examples/
+data/examples/*
+!data/examples/*.json
+*.db
+*.sqlite
+*.sqlite3
+*-backup.json
+*-export.json
+
+# --- local scratch & captures (docs/screenshots/ *is* tracked) ---
+/screenshots/
+/tmp/
+/scratch/
+*.log
+*.local
+
+# --- editor / OS ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
