@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Database, Download, FileJson, Trash2, Upload } from "lucide-react";
+import { Database, Download, FileJson, Sparkles, Trash2, Upload } from "lucide-react";
 import {
   buildSnapshot,
   decisionsToCsv,
@@ -12,6 +12,7 @@ import {
   stampForFilename,
   wipeAll,
 } from "../services/export-service";
+import { loadDemoData, removeDemoData } from "../services/demo-service";
 import { decisionRepository } from "../data/repository/decision-repository";
 import { matchRepository } from "../data/repository/match-repository";
 import { errorMessage } from "../lib/errors";
@@ -80,6 +81,25 @@ export function DataPage() {
     }
   }
 
+  async function onLoadDemo() {
+    setBusy(true);
+    try {
+      const report = await loadDemoData();
+      toast.push(`示例数据已载入：${report.matches} 局虚构对局 · ${report.decisions} 决策 · ${report.reviews} 复盘 · ${report.trainingGoals} 目标`);
+    } catch (err) {
+      toast.push(errorMessage(err), "warn");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onClearDemo() {
+    setBusy(true);
+    const removed = await removeDemoData();
+    setBusy(false);
+    toast.push(removed > 0 ? `已清除 ${removed} 条示例数据（真实数据保留）` : "没有示例数据");
+  }
+
   return (
     <>
       <PageHeader title="数据" subtitle="数据 100% 保存在这台电脑的浏览器里 —— 随时可以带走" />
@@ -102,7 +122,7 @@ export function DataPage() {
           </div>
           {total === 0 && (
             <p className="border-t border-line px-4 py-3 text-xs text-ink-600">
-              还没有数据。记录一局之后再回来备份。
+              还没有数据。可以先「载入示例数据」看看每个页面长什么样，或者记录一局之后再回来备份。
             </p>
           )}
         </Panel>
@@ -140,6 +160,32 @@ export function DataPage() {
             </div>
           </Panel>
         </div>
+
+        <Panel>
+          <PanelHeader
+            title="示例数据"
+            subtitle="虚构数据，用来浏览全部页面"
+            action={
+              <Badge tone="info">
+                <Sparkles size={12} /> Demo · 非真实战绩
+              </Badge>
+            }
+          />
+          <div className="flex flex-wrap items-center gap-3 p-4">
+            <Button variant="primary" onClick={onLoadDemo} disabled={busy}>
+              <Sparkles size={15} />
+              载入示例数据
+            </Button>
+            <Button onClick={onClearDemo} disabled={busy}>
+              清除示例数据
+            </Button>
+            <span className="text-[11px] leading-relaxed text-ink-600">
+              16 局虚构对局 + 决策 / 复盘 / 训练目标，日期自动对齐到今天；示例记录 id 以
+              <code className="mx-1">demo-</code>
+              开头，清除时不会影响你真实记录的数据。
+            </span>
+          </div>
+        </Panel>
 
         <Panel>
           <PanelHeader title="危险区" subtitle="清掉本机全部训练数据" />

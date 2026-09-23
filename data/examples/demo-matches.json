@@ -1,0 +1,951 @@
+{
+  "app": "tft-training-log",
+  "schemaVersion": 1,
+  "demo": true,
+  "note": "Fictional demo data for TFT Training Log. Not a real player's match history.",
+  "exportedAt": "2026-09-20T00:00:00.000Z",
+  "matches": [
+    {
+      "id": "demo-m01",
+      "playedAt": "2026-09-08T13:05",
+      "startedAt": "2026-09-08T12:38",
+      "endedAt": "2026-09-08T13:05",
+      "durationSeconds": 1620,
+      "placement": 5,
+      "finalLevel": 8,
+      "finalHealth": 34,
+      "totalGold": 96,
+      "composition": "法师爆发",
+      "traits": [
+        "法师",
+        "爆发",
+        "咒火"
+      ],
+      "coreUnits": [
+        "主C 法师",
+        "前排 斗士",
+        "功能 召唤"
+      ],
+      "coreItems": [
+        "大天使",
+        "青龙刀",
+        "法爆"
+      ],
+      "augments": [
+        "战斗强化",
+        "经济强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "ROLLING",
+      "notes": "第三轮还没到 8 级就开始 D，把利息打空了。",
+      "createdAt": "2026-09-08T13:50:00.000Z",
+      "updatedAt": "2026-09-08T13:50:00.000Z"
+    },
+    {
+      "id": "demo-m02",
+      "playedAt": "2026-09-09T20:40",
+      "startedAt": "2026-09-09T20:09",
+      "endedAt": "2026-09-09T20:40",
+      "durationSeconds": 1860,
+      "placement": 3,
+      "finalLevel": 8,
+      "finalHealth": 41,
+      "totalGold": 108,
+      "composition": "斗士前排",
+      "traits": [
+        "斗士",
+        "强袭",
+        "守护"
+      ],
+      "coreUnits": [
+        "主C 斗士",
+        "副C 射手",
+        "坦克 重装"
+      ],
+      "coreItems": [
+        "饮血剑",
+        "反甲",
+        "龙牙"
+      ],
+      "augments": [
+        "装备强化",
+        "人口强化"
+      ],
+      "reviewed": false,
+      "primaryMistake": "ECONOMY",
+      "notes": "运营局，节奏对，决赛圈被针对。",
+      "createdAt": "2026-09-09T21:25:00.000Z",
+      "updatedAt": "2026-09-09T21:25:00.000Z"
+    },
+    {
+      "id": "demo-m03",
+      "playedAt": "2026-09-09T21:35",
+      "startedAt": "2026-09-09T21:11",
+      "endedAt": "2026-09-09T21:35",
+      "durationSeconds": 1440,
+      "placement": 7,
+      "finalLevel": 7,
+      "finalHealth": 12,
+      "totalGold": 54,
+      "composition": "狙神运营",
+      "traits": [
+        "狙神",
+        "秘术",
+        "先锋"
+      ],
+      "coreUnits": [
+        "主C 狙神",
+        "前排 先锋",
+        "辅助 秘术"
+      ],
+      "coreItems": [
+        "无尽",
+        "火炮",
+        "蓝buff"
+      ],
+      "augments": [
+        "经济强化",
+        "后排强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "AUGMENT",
+      "notes": "强化选了连胜结果开局连败，硬 D 抬质量失败。",
+      "createdAt": "2026-09-09T22:20:00.000Z",
+      "updatedAt": "2026-09-09T22:20:00.000Z"
+    },
+    {
+      "id": "demo-m04",
+      "playedAt": "2026-09-11T15:20",
+      "startedAt": "2026-09-11T14:51",
+      "endedAt": "2026-09-11T15:20",
+      "durationSeconds": 1740,
+      "placement": 4,
+      "finalLevel": 9,
+      "finalHealth": 28,
+      "totalGold": 112,
+      "composition": "法师爆发",
+      "traits": [
+        "法师",
+        "爆发",
+        "咒火"
+      ],
+      "coreUnits": [
+        "主C 法师",
+        "前排 斗士",
+        "功能 召唤"
+      ],
+      "coreItems": [
+        "大天使",
+        "青龙刀",
+        "法爆"
+      ],
+      "augments": [
+        "战斗强化",
+        "经济强化"
+      ],
+      "reviewed": false,
+      "primaryMistake": "POSITIONING",
+      "notes": "后排一直被跳，站位三局没换过。",
+      "createdAt": "2026-09-11T16:05:00.000Z",
+      "updatedAt": "2026-09-11T16:05:00.000Z"
+    },
+    {
+      "id": "demo-m05",
+      "playedAt": "2026-09-12T19:50",
+      "startedAt": "2026-09-12T19:17",
+      "endedAt": "2026-09-12T19:50",
+      "durationSeconds": 1980,
+      "placement": 2,
+      "finalLevel": 9,
+      "finalHealth": 45,
+      "totalGold": 121,
+      "composition": "重装守卫",
+      "traits": [
+        "重装",
+        "守卫",
+        "铁匠"
+      ],
+      "coreUnits": [
+        "主T 重装",
+        "主C 守卫",
+        "副C 铁匠"
+      ],
+      "coreItems": [
+        "狂徒",
+        "离子火花",
+        "泰坦"
+      ],
+      "augments": [
+        "装备强化",
+        "人口强化"
+      ],
+      "reviewed": false,
+      "notes": "装备合成顺序对，前排坦度够，决赛差一张两星主C。",
+      "createdAt": "2026-09-12T20:35:00.000Z",
+      "updatedAt": "2026-09-12T20:35:00.000Z"
+    },
+    {
+      "id": "demo-m06",
+      "playedAt": "2026-09-13T12:50",
+      "startedAt": "2026-09-13T12:24",
+      "endedAt": "2026-09-13T12:50",
+      "durationSeconds": 1560,
+      "placement": 6,
+      "finalLevel": 7,
+      "finalHealth": 20,
+      "totalGold": 48,
+      "composition": "狙神运营",
+      "traits": [
+        "狙神",
+        "秘术",
+        "先锋"
+      ],
+      "coreUnits": [
+        "主C 狙神",
+        "前排 先锋",
+        "辅助 秘术"
+      ],
+      "coreItems": [
+        "无尽",
+        "火炮",
+        "蓝buff"
+      ],
+      "augments": [
+        "经济强化",
+        "后排强化"
+      ],
+      "reviewed": false,
+      "primaryMistake": "ECONOMY",
+      "notes": "贪装备卖血，血量掉太快，没资格上 8。",
+      "createdAt": "2026-09-13T13:35:00.000Z",
+      "updatedAt": "2026-09-13T13:35:00.000Z"
+    },
+    {
+      "id": "demo-m07",
+      "playedAt": "2026-09-15T16:30",
+      "startedAt": "2026-09-15T15:58",
+      "endedAt": "2026-09-15T16:30",
+      "durationSeconds": 1920,
+      "placement": 1,
+      "finalLevel": 9,
+      "finalHealth": 38,
+      "totalGold": 134,
+      "composition": "法师爆发",
+      "traits": [
+        "法师",
+        "爆发",
+        "咒火"
+      ],
+      "coreUnits": [
+        "主C 法师",
+        "前排 斗士",
+        "功能 召唤"
+      ],
+      "coreItems": [
+        "大天使",
+        "青龙刀",
+        "法爆"
+      ],
+      "augments": [
+        "战斗强化",
+        "经济强化"
+      ],
+      "reviewed": false,
+      "notes": "吃鸡局：全程卡 50 利息上 9，只 D 了两次。",
+      "createdAt": "2026-09-15T17:15:00.000Z",
+      "updatedAt": "2026-09-15T17:15:00.000Z"
+    },
+    {
+      "id": "demo-m08",
+      "playedAt": "2026-09-15T17:40",
+      "startedAt": "2026-09-15T17:12",
+      "endedAt": "2026-09-15T17:40",
+      "durationSeconds": 1680,
+      "placement": 4,
+      "finalLevel": 8,
+      "finalHealth": 33,
+      "totalGold": 99,
+      "composition": "斗士前排",
+      "traits": [
+        "斗士",
+        "强袭",
+        "守护"
+      ],
+      "coreUnits": [
+        "主C 斗士",
+        "副C 射手",
+        "坦克 重装"
+      ],
+      "coreItems": [
+        "饮血剑",
+        "反甲",
+        "龙牙"
+      ],
+      "augments": [
+        "装备强化",
+        "人口强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "LEVELING",
+      "notes": "该升级的时候贪经济，慢了半级被压下血。",
+      "createdAt": "2026-09-15T18:25:00.000Z",
+      "updatedAt": "2026-09-15T18:25:00.000Z"
+    },
+    {
+      "id": "demo-m09",
+      "playedAt": "2026-09-16T20:15",
+      "startedAt": "2026-09-16T19:45",
+      "endedAt": "2026-09-16T20:15",
+      "durationSeconds": 1800,
+      "placement": 3,
+      "finalLevel": 9,
+      "finalHealth": 47,
+      "totalGold": 106,
+      "composition": "重装守卫",
+      "traits": [
+        "重装",
+        "守卫",
+        "铁匠"
+      ],
+      "coreUnits": [
+        "主T 重装",
+        "主C 守卫",
+        "副C 铁匠"
+      ],
+      "coreItems": [
+        "狂徒",
+        "离子火花",
+        "泰坦"
+      ],
+      "augments": [
+        "经济强化",
+        "后排强化"
+      ],
+      "reviewed": false,
+      "primaryMistake": "SCOUTING",
+      "notes": "没看对手装备和站位，最后一轮才调整。",
+      "createdAt": "2026-09-16T21:00:00.000Z",
+      "updatedAt": "2026-09-16T21:00:00.000Z"
+    },
+    {
+      "id": "demo-m10",
+      "playedAt": "2026-09-17T14:10",
+      "startedAt": "2026-09-17T13:45",
+      "endedAt": "2026-09-17T14:10",
+      "durationSeconds": 1500,
+      "placement": 5,
+      "finalLevel": 8,
+      "finalHealth": 26,
+      "totalGold": 71,
+      "composition": "狙神运营",
+      "traits": [
+        "狙神",
+        "秘术",
+        "先锋"
+      ],
+      "coreUnits": [
+        "主C 狙神",
+        "前排 先锋",
+        "辅助 秘术"
+      ],
+      "coreItems": [
+        "无尽",
+        "火炮",
+        "蓝buff"
+      ],
+      "augments": [
+        "战斗强化",
+        "经济强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "ROLLING",
+      "notes": "7 级 D 完找两星主C，找到一半就没钱了。",
+      "createdAt": "2026-09-17T14:55:00.000Z",
+      "updatedAt": "2026-09-17T14:55:00.000Z"
+    },
+    {
+      "id": "demo-m11",
+      "playedAt": "2026-09-17T21:05",
+      "startedAt": "2026-09-17T20:31",
+      "endedAt": "2026-09-17T21:05",
+      "durationSeconds": 2040,
+      "placement": 2,
+      "finalLevel": 9,
+      "finalHealth": 52,
+      "totalGold": 118,
+      "composition": "法师爆发",
+      "traits": [
+        "法师",
+        "爆发",
+        "咒火"
+      ],
+      "coreUnits": [
+        "主C 法师",
+        "前排 斗士",
+        "功能 召唤"
+      ],
+      "coreItems": [
+        "大天使",
+        "青龙刀",
+        "法爆"
+      ],
+      "augments": [
+        "装备强化",
+        "人口强化"
+      ],
+      "reviewed": false,
+      "primaryMistake": "ITEM",
+      "notes": "副C 装备给错人，输出少一截。",
+      "createdAt": "2026-09-17T21:50:00.000Z",
+      "updatedAt": "2026-09-17T21:50:00.000Z"
+    },
+    {
+      "id": "demo-m12",
+      "playedAt": "2026-09-18T13:30",
+      "startedAt": "2026-09-18T13:03",
+      "endedAt": "2026-09-18T13:30",
+      "durationSeconds": 1620,
+      "placement": 4,
+      "finalLevel": 8,
+      "finalHealth": 30,
+      "totalGold": 94,
+      "composition": "斗士前排",
+      "traits": [
+        "斗士",
+        "强袭",
+        "守护"
+      ],
+      "coreUnits": [
+        "主C 斗士",
+        "副C 射手",
+        "坦克 重装"
+      ],
+      "coreItems": [
+        "饮血剑",
+        "反甲",
+        "龙牙"
+      ],
+      "augments": [
+        "经济强化",
+        "后排强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "POSITIONING",
+      "notes": "同侧被挤，还是没换角落。",
+      "createdAt": "2026-09-18T14:15:00.000Z",
+      "updatedAt": "2026-09-18T14:15:00.000Z"
+    },
+    {
+      "id": "demo-m13",
+      "playedAt": "2026-09-19T18:25",
+      "startedAt": "2026-09-19T17:54",
+      "endedAt": "2026-09-19T18:25",
+      "durationSeconds": 1860,
+      "placement": 1,
+      "finalLevel": 9,
+      "finalHealth": 44,
+      "totalGold": 127,
+      "composition": "重装守卫",
+      "traits": [
+        "重装",
+        "守卫",
+        "铁匠"
+      ],
+      "coreUnits": [
+        "主T 重装",
+        "主C 守卫",
+        "副C 铁匠"
+      ],
+      "coreItems": [
+        "狂徒",
+        "离子火花",
+        "泰坦"
+      ],
+      "augments": [
+        "战斗强化",
+        "经济强化"
+      ],
+      "reviewed": false,
+      "notes": "第二次吃鸡：强化符文对味，全程锁血运营。",
+      "createdAt": "2026-09-19T19:10:00.000Z",
+      "updatedAt": "2026-09-19T19:10:00.000Z"
+    },
+    {
+      "id": "demo-m14",
+      "playedAt": "2026-09-19T19:20",
+      "startedAt": "2026-09-19T18:54",
+      "endedAt": "2026-09-19T19:20",
+      "durationSeconds": 1560,
+      "placement": 3,
+      "finalLevel": 8,
+      "finalHealth": 39,
+      "totalGold": 88,
+      "composition": "法师爆发",
+      "traits": [
+        "法师",
+        "爆发",
+        "咒火"
+      ],
+      "coreUnits": [
+        "主C 法师",
+        "前排 斗士",
+        "功能 召唤"
+      ],
+      "coreItems": [
+        "大天使",
+        "青龙刀",
+        "法爆"
+      ],
+      "augments": [
+        "装备强化",
+        "人口强化"
+      ],
+      "reviewed": false,
+      "primaryMistake": "ECONOMY",
+      "notes": "最后一波 D 牌把利息打空，多苟了一名。",
+      "createdAt": "2026-09-19T20:05:00.000Z",
+      "updatedAt": "2026-09-19T20:05:00.000Z"
+    },
+    {
+      "id": "demo-m15",
+      "playedAt": "2026-09-20T15:10",
+      "startedAt": "2026-09-20T14:37",
+      "endedAt": "2026-09-20T15:10",
+      "durationSeconds": 1980,
+      "placement": 2,
+      "finalLevel": 9,
+      "finalHealth": 49,
+      "totalGold": 113,
+      "composition": "狙神运营",
+      "traits": [
+        "狙神",
+        "秘术",
+        "先锋"
+      ],
+      "coreUnits": [
+        "主C 狙神",
+        "前排 先锋",
+        "辅助 秘术"
+      ],
+      "coreItems": [
+        "无尽",
+        "火炮",
+        "蓝buff"
+      ],
+      "augments": [
+        "经济强化",
+        "后排强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "ROLLING",
+      "notes": "决赛圈差一步，8 级 D 过头。",
+      "createdAt": "2026-09-20T15:55:00.000Z",
+      "updatedAt": "2026-09-20T15:55:00.000Z"
+    },
+    {
+      "id": "demo-m16",
+      "playedAt": "2026-09-20T16:05",
+      "startedAt": "2026-09-20T15:41",
+      "endedAt": "2026-09-20T16:05",
+      "durationSeconds": 1440,
+      "placement": 4,
+      "finalLevel": 8,
+      "finalHealth": 25,
+      "totalGold": 79,
+      "composition": "斗士前排",
+      "traits": [
+        "斗士",
+        "强袭",
+        "守护"
+      ],
+      "coreUnits": [
+        "主C 斗士",
+        "副C 射手",
+        "坦克 重装"
+      ],
+      "coreItems": [
+        "饮血剑",
+        "反甲",
+        "龙牙"
+      ],
+      "augments": [
+        "战斗强化",
+        "经济强化"
+      ],
+      "reviewed": true,
+      "primaryMistake": "ECONOMY",
+      "notes": "又是经济崩，D 牌纪律还是没建立。",
+      "createdAt": "2026-09-20T16:50:00.000Z",
+      "updatedAt": "2026-09-20T16:50:00.000Z"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "demo-d01",
+      "matchId": "demo-m01",
+      "round": "2-1",
+      "type": "ECONOMY",
+      "situation": "开局两连胜装备，但没有质量",
+      "decision": "不升级，吃 50 利息运营",
+      "reasoning": "法师靠装备和等级，先攒经济",
+      "result": "经济到 58，场面一直挨打",
+      "hindsight": "correct",
+      "hindsightNote": "回看还是这么打",
+      "createdAt": "2026-09-08T18:05:00.000Z"
+    },
+    {
+      "id": "demo-d02",
+      "matchId": "demo-m01",
+      "round": "4-2",
+      "type": "ROLLING",
+      "situation": "7 级 30 块，主C 还是一星",
+      "decision": "D 到 10 块找两星主C",
+      "reasoning": "不 D 就没伤害，白给更快",
+      "result": "找到两星，但利息断了",
+      "hindsight": "wrong",
+      "hindsightNote": "应该 8 级再 D，多挨两波",
+      "createdAt": "2026-09-08T18:05:00.000Z"
+    },
+    {
+      "id": "demo-d03",
+      "matchId": "demo-m03",
+      "round": "3-2",
+      "type": "AUGMENT",
+      "situation": "第二次强化给了连胜奖励",
+      "decision": "选连胜符文",
+      "reasoning": "想着滚雪球",
+      "result": "开局连败，符文直接作废",
+      "hindsight": "wrong",
+      "hindsightNote": "应该选经济或稳定战力",
+      "createdAt": "2026-09-10T02:35:00.000Z"
+    },
+    {
+      "id": "demo-d04",
+      "matchId": "demo-m04",
+      "round": "5-1",
+      "type": "POSITIONING",
+      "situation": "对面刺客一直跳我方左底",
+      "decision": "不换站位，只换装备",
+      "reasoning": "觉得靠质量能扛",
+      "result": "后排被切死两个，第 4 出局",
+      "hindsight": "wrong",
+      "hindsightNote": "早该换右底",
+      "createdAt": "2026-09-11T20:20:00.000Z"
+    },
+    {
+      "id": "demo-d05",
+      "matchId": "demo-m05",
+      "round": "4-4",
+      "type": "ITEM",
+      "situation": "抢不到大剑，只有反甲组件",
+      "decision": "先给前排做肉装",
+      "reasoning": "活着才有输出",
+      "result": "前排站住了 30 秒",
+      "hindsight": "correct",
+      "hindsightNote": "合理",
+      "createdAt": "2026-09-13T00:50:00.000Z"
+    },
+    {
+      "id": "demo-d06",
+      "matchId": "demo-m07",
+      "round": "3-4",
+      "type": "TRANSITION",
+      "situation": "法师牌来得多，狙神牌一张没有",
+      "decision": "锁死法师，不转型",
+      "reasoning": "同羁绊来得多就是信号",
+      "result": "阵容完整，一路连胜",
+      "hindsight": "correct",
+      "hindsightNote": "判断对了",
+      "createdAt": "2026-09-15T21:30:00.000Z"
+    },
+    {
+      "id": "demo-d07",
+      "matchId": "demo-m07",
+      "round": "6-1",
+      "type": "LEVELING",
+      "situation": "8 级 60 块，血量健康",
+      "decision": "卡利息慢慢上 9",
+      "reasoning": "有坦度就不用抢节奏",
+      "result": "9 级找到关键两星",
+      "hindsight": "correct",
+      "hindsightNote": "这局赢在这",
+      "createdAt": "2026-09-15T21:30:00.000Z"
+    },
+    {
+      "id": "demo-d08",
+      "matchId": "demo-m07",
+      "round": "7-2",
+      "type": "ROLLING",
+      "situation": "9 级 40 块，只剩两家",
+      "decision": "D 出两星主C",
+      "reasoning": "决赛圈质量优先",
+      "result": "两星主C + 吃鸡",
+      "hindsight": "correct",
+      "hindsightNote": "值得 D",
+      "createdAt": "2026-09-15T21:30:00.000Z"
+    },
+    {
+      "id": "demo-d09",
+      "matchId": "demo-m08",
+      "round": "4-1",
+      "type": "LEVELING",
+      "situation": "8 级差 12 块，血量只剩 45",
+      "decision": "不升级继续攒",
+      "reasoning": "想稳经济",
+      "result": "被压血，最后第 4",
+      "hindsight": "wrong",
+      "hindsightNote": "45 血就该硬上",
+      "createdAt": "2026-09-15T22:40:00.000Z"
+    },
+    {
+      "id": "demo-d10",
+      "matchId": "demo-m10",
+      "round": "5-2",
+      "type": "ROLLING",
+      "situation": "7 级找两星狙神",
+      "decision": "D 空经济",
+      "reasoning": "觉得质量能救命",
+      "result": "质量没起来，血量也没了",
+      "hindsight": "wrong",
+      "hindsightNote": "8 级再 D",
+      "createdAt": "2026-09-17T19:10:00.000Z"
+    },
+    {
+      "id": "demo-d11",
+      "matchId": "demo-m11",
+      "round": "4-5",
+      "type": "ITEM",
+      "situation": "副C 需要一件输出装",
+      "decision": "把青龙刀给了前排",
+      "reasoning": "抢不到别的组件",
+      "result": "副C 输出不够，决赛差伤害",
+      "hindsight": "wrong",
+      "hindsightNote": "宁可等装备循环",
+      "createdAt": "2026-09-18T02:05:00.000Z"
+    },
+    {
+      "id": "demo-d12",
+      "matchId": "demo-m13",
+      "round": "5-3",
+      "type": "WIN_STREAK",
+      "situation": "开局连胜，多 15 块经济",
+      "decision": "用利息补质量保连胜",
+      "reasoning": "连胜奖励能滚起来",
+      "result": "连胜到 6 阶段，经济领先",
+      "hindsight": "correct",
+      "hindsightNote": "教科书",
+      "createdAt": "2026-09-19T23:25:00.000Z"
+    },
+    {
+      "id": "demo-d13",
+      "matchId": "demo-m14",
+      "round": "6-2",
+      "type": "ECONOMY",
+      "situation": "8 级 45 块，血量 60",
+      "decision": "D 到只剩 5 块",
+      "reasoning": "想锁质量",
+      "result": "锁住了名次，利息没了",
+      "hindsight": "mixed",
+      "hindsightNote": "换名次可以，换质量不划算",
+      "createdAt": "2026-09-20T00:20:00.000Z"
+    },
+    {
+      "id": "demo-d14",
+      "matchId": "demo-m15",
+      "round": "7-1",
+      "type": "STABILIZE",
+      "situation": "血量 30，两家质量比我高",
+      "decision": "停 8 级全部 D 质量",
+      "reasoning": "保前四是第一目标",
+      "result": "苟到第 2",
+      "hindsight": "correct",
+      "hindsightNote": "该锁血就锁",
+      "createdAt": "2026-09-20T20:10:00.000Z"
+    },
+    {
+      "id": "demo-d15",
+      "matchId": "demo-m16",
+      "round": "4-3",
+      "type": "ECONOMY",
+      "situation": "血量 55，经济 40",
+      "decision": "升级和 D 牌同时做",
+      "reasoning": "两头都想抓",
+      "result": "两头都没做成",
+      "hindsight": "wrong",
+      "hindsightNote": "先选一个",
+      "createdAt": "2026-09-20T21:05:00.000Z"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-r01",
+      "matchId": "demo-m01",
+      "opening": "开局给了法装组件，确定法师方向",
+      "midGame": "经济一直很好，但 7 级忍不住 D",
+      "lateGame": "质量差一档，被两星主C压死",
+      "nextGameFocus": "8 级之前每波最多 D 10 块",
+      "bestDecision": "开局就锁死法师不转型",
+      "biggestMistake": "4-2 那波 D 牌把三局利息打空",
+      "primaryMistake": "ROLLING",
+      "selfScore": 2,
+      "createdAt": "2026-09-08T23:05:00.000Z",
+      "updatedAt": "2026-09-08T23:05:00.000Z"
+    },
+    {
+      "id": "demo-r02",
+      "matchId": "demo-m03",
+      "opening": "强化选了连胜，开局却连败",
+      "midGame": "为了保连胜一直 D，经济崩",
+      "lateGame": "没质量也没血量，第 7 出局",
+      "nextGameFocus": "第二强化优先选经济或稳定战力",
+      "bestDecision": "没有临时换阵容，硬撑到底",
+      "biggestMistake": "强化符文和实际节奏完全相反",
+      "primaryMistake": "AUGMENT",
+      "selfScore": 1,
+      "createdAt": "2026-09-10T07:35:00.000Z",
+      "updatedAt": "2026-09-10T07:35:00.000Z"
+    },
+    {
+      "id": "demo-r03",
+      "matchId": "demo-m05",
+      "opening": "抢装顺利，前排先成型",
+      "midGame": "运营卡利息，血量健康",
+      "lateGame": "决赛差一张两星主C",
+      "nextGameFocus": "决赛圈提前一轮开始找卡",
+      "createdAt": "2026-09-13T05:50:00.000Z",
+      "updatedAt": "2026-09-13T05:50:00.000Z"
+    },
+    {
+      "id": "demo-r04",
+      "matchId": "demo-m07",
+      "opening": "法师牌来得多，直接锁阵容",
+      "midGame": "全程卡 50 利息，只 D 两次",
+      "lateGame": "9 级两星主C，正面碾压",
+      "nextGameFocus": "保持这套经济节奏",
+      "createdAt": "2026-09-16T02:30:00.000Z",
+      "updatedAt": "2026-09-16T02:30:00.000Z"
+    },
+    {
+      "id": "demo-r05",
+      "matchId": "demo-m08",
+      "opening": "斗士开局，前排质量可以",
+      "midGame": "该升级的时候贪了经济",
+      "lateGame": "慢半级被压下血",
+      "nextGameFocus": "血量低于 50 先补等级",
+      "bestDecision": "前排选卡合理",
+      "biggestMistake": "4-1 没硬上 8",
+      "primaryMistake": "LEVELING",
+      "selfScore": 3,
+      "createdAt": "2026-09-16T03:40:00.000Z",
+      "updatedAt": "2026-09-16T03:40:00.000Z"
+    },
+    {
+      "id": "demo-r06",
+      "matchId": "demo-m10",
+      "opening": "狙神来得少，开局就不顺",
+      "midGame": "7 级 D 空经济",
+      "lateGame": "质量没起来直接走",
+      "nextGameFocus": "7 级最多 D 一次",
+      "bestDecision": "决定继续玩狙神",
+      "biggestMistake": "7 级 D 牌找两星",
+      "primaryMistake": "ROLLING",
+      "selfScore": 2,
+      "createdAt": "2026-09-18T00:10:00.000Z",
+      "updatedAt": "2026-09-18T00:10:00.000Z"
+    },
+    {
+      "id": "demo-r07",
+      "matchId": "demo-m12",
+      "opening": "开局装备一般，靠前排撑",
+      "midGame": "中期质量还行",
+      "lateGame": "同侧被挤，没换角落",
+      "nextGameFocus": "被同侧卡就换位",
+      "bestDecision": "副C 装备分配合理",
+      "biggestMistake": "站位问题第三次出现",
+      "primaryMistake": "POSITIONING",
+      "selfScore": 3,
+      "createdAt": "2026-09-18T23:30:00.000Z",
+      "updatedAt": "2026-09-18T23:30:00.000Z"
+    },
+    {
+      "id": "demo-r08",
+      "matchId": "demo-m13",
+      "opening": "强化符文对味，重装先成型",
+      "midGame": "全程锁血，经济领先",
+      "lateGame": "决赛正面站住了",
+      "nextGameFocus": "把这局的节奏写进笔记",
+      "createdAt": "2026-09-20T04:25:00.000Z",
+      "updatedAt": "2026-09-20T04:25:00.000Z"
+    },
+    {
+      "id": "demo-r09",
+      "matchId": "demo-m15",
+      "opening": "狙神运营，中期质量领先",
+      "midGame": "7-1 锁血决策正确",
+      "lateGame": "决赛差一步伤害",
+      "nextGameFocus": "锁血之后别再动经济",
+      "bestDecision": "决定停 8 级 D 质量",
+      "biggestMistake": "最后一轮伤害不够",
+      "primaryMistake": "ROLLING",
+      "selfScore": 3,
+      "createdAt": "2026-09-21T01:10:00.000Z",
+      "updatedAt": "2026-09-21T01:10:00.000Z"
+    },
+    {
+      "id": "demo-r10",
+      "matchId": "demo-m16",
+      "opening": "斗士前排，开局挨打",
+      "midGame": "4-3 想同时升级和 D 牌",
+      "lateGame": "两头空，第 4 出局",
+      "nextGameFocus": "一波只做一件事",
+      "bestDecision": "决定玩斗士",
+      "biggestMistake": "升级和 D 牌同时做",
+      "primaryMistake": "ECONOMY",
+      "selfScore": 2,
+      "createdAt": "2026-09-21T02:05:00.000Z",
+      "updatedAt": "2026-09-21T02:05:00.000Z"
+    }
+  ],
+  "trainingGoals": [
+    {
+      "id": "demo-g1",
+      "title": "建立 D 牌纪律：8 级前每波最多 D 10 块",
+      "description": "统计里 ROLLING 是最高频的问题。开局到 7 级只允许一次 D 牌，8 级以后按血量决定。",
+      "startDate": "2026-09-12",
+      "endDate": "2026-09-26",
+      "relatedMistakes": [
+        "ROLLING",
+        "ECONOMY"
+      ],
+      "status": "active",
+      "createdAt": "2026-09-12T09:00:00.000Z",
+      "updatedAt": "2026-09-12T09:00:00.000Z"
+    },
+    {
+      "id": "demo-g2",
+      "title": "被切两次必须换站位",
+      "description": "上一阶段练站位，最近三局已经没有出现站位失误。",
+      "startDate": "2026-09-08",
+      "endDate": "2026-09-17",
+      "relatedMistakes": [
+        "POSITIONING"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-08T09:00:00.000Z",
+      "updatedAt": "2026-09-08T09:00:00.000Z"
+    },
+    {
+      "id": "demo-g3",
+      "title": "第二强化只考虑经济或稳定战力",
+      "description": "先并入日常习惯，之后再看要不要单独练。",
+      "startDate": "2026-08-31",
+      "endDate": "2026-09-07",
+      "relatedMistakes": [
+        "AUGMENT"
+      ],
+      "status": "archived",
+      "createdAt": "2026-08-31T09:00:00.000Z",
+      "updatedAt": "2026-08-31T09:00:00.000Z"
+    }
+  ]
+}

@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { ArrowRight, CalendarClock, Flame, Play } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, CalendarClock, Flame, Play, Sparkles } from "lucide-react";
 import { allOverall, allStreak, commonMistakes, recentWindow } from "../services/stats-service";
 import { currentGoals } from "../services/training-service";
 import { recentMatches } from "../services/match-service";
+import { loadDemoData } from "../services/demo-service";
 import { goalStatusLabel } from "../domain/training/training-goal";
 import { mistakeLabel } from "../domain/labels";
 import { placementTone } from "../domain/match/match";
@@ -13,12 +15,13 @@ import { AddMatchButton } from "../components/matches/AddMatchButton";
 import { formatRateValue, StatCard } from "../components/stats/StatCard";
 import { formatNumber } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
-import { LinkButton } from "../components/ui/Button";
+import { Button, LinkButton } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/Badge";
 import { Panel, PageHeader, PanelHeader } from "../components/ui/Panel";
 import { Spinner } from "../components/ui/Spinner";
 
 export function DashboardPage() {
+  const [demoLoading, setDemoLoading] = useState(false);
   const overall = useLiveQuery(allOverall, []);
   const streak = useLiveQuery(allStreak, []);
   const last10 = useLiveQuery(() => recentWindow(10), []);
@@ -70,10 +73,22 @@ export function DashboardPage() {
                 title="还没有记录任何对局"
                 description="打完一局点右上角「新增对局」，或从侧边栏一键快速记录。1–2 分钟即可记完。"
                 action={
-                  <LinkButton to="/matches/new" variant="primary">
-                    <Play size={14} />
-                    记录第一局
-                  </LinkButton>
+                  <div className="flex flex-wrap items-center justify-center gap-2">
+                    <LinkButton to="/matches/new" variant="primary">
+                      <Play size={14} />
+                      记录第一局
+                    </LinkButton>
+                    <Button
+                      disabled={demoLoading}
+                      onClick={() => {
+                        setDemoLoading(true);
+                        void loadDemoData().finally(() => setDemoLoading(false));
+                      }}
+                    >
+                      <Sparkles size={14} />
+                      {demoLoading ? "载入中" : "载入示例数据"}
+                    </Button>
+                  </div>
                 }
               />
             ) : (
