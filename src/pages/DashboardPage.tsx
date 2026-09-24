@@ -6,14 +6,14 @@ import { allOverall, allStreak, commonMistakes, recentWindow } from "../services
 import { currentGoals } from "../services/training-service";
 import { recentMatches } from "../services/match-service";
 import { loadDemoData } from "../services/demo-service";
+import { useSession } from "../services/session-context";
 import { goalStatusLabel } from "../domain/training/training-goal";
 import { mistakeLabel } from "../domain/labels";
 import { placementTone } from "../domain/match/match";
-import { formatDuration } from "../lib/utils";
+import { formatDuration, formatNumber } from "../lib/utils";
 import { formatDateWeekday, formatTime } from "../lib/wallclock";
 import { AddMatchButton } from "../components/matches/AddMatchButton";
 import { formatRateValue, StatCard } from "../components/stats/StatCard";
-import { formatNumber } from "../lib/utils";
 import { Badge } from "../components/ui/Badge";
 import { Button, LinkButton } from "../components/ui/Button";
 import { EmptyState } from "../components/ui/Badge";
@@ -22,23 +22,32 @@ import { Spinner } from "../components/ui/Spinner";
 
 export function DashboardPage() {
   const [demoLoading, setDemoLoading] = useState(false);
-  const overall = useLiveQuery(allOverall, []);
-  const streak = useLiveQuery(allStreak, []);
-  const last10 = useLiveQuery(() => recentWindow(10), []);
-  const recent = useLiveQuery(() => recentMatches(8), []);
+  const { sessions, activeSession, activeSessionId, ready } = useSession();
+  // Every statistic below is scoped to the active session; "all sessions"
+  // stays available on the Matches / Statistics pages.
+  const overall = useLiveQuery(() => allOverall(activeSessionId), [activeSessionId, ready]);
+  const streak = useLiveQuery(() => allStreak(activeSessionId), [activeSessionId, ready]);
+  const last10 = useLiveQuery(() => recentWindow(10, activeSessionId), [activeSessionId, ready]);
+  const recent = useLiveQuery(
+    () => recentMatches(8, { sessionId: activeSessionId }),
+    [activeSessionId, ready],
+  );
   const goals = useLiveQuery(currentGoals, []);
-  const mistakes = useLiveQuery(() => commonMistakes(3), []);
+  const mistakes = useLiveQuery(() => commonMistakes(3, activeSessionId), [activeSessionId, ready]);
 
   if (overall === undefined || recent === undefined) return <Spinner label="读取训练状态" />;
 
   const goal = goals?.[0];
   const noData = overall.games === 0;
+  const sessionSubtitle = activeSession
+    ? `${activeSession.name}${activeSession.endDate ? `（${activeSession.startDate} – ${activeSession.endDate}）` : " · 持续进行"}`
+    : "日常训练";
 
   return (
     <>
       <PageHeader
         title="训练状态"
-        subtitle="云顶之巅 · 数据全部保存在本机"
+        subtitle={`${sessionSubtitle} · ${sessions.length > 0 ? "按当前训练统计" : "数据全部保存在本机"}`}
         action={
           <div className="flex items-center gap-2">
             <AddMatchButton compact />
@@ -48,7 +57,7 @@ export function DashboardPage() {
       />
 
       <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-        <StatCard label="总场次" value={String(overall.games)} />
+        <StatCard label="总场次" value={String(overall.games)} sub="当前训练" />
         <StatCard label="平均名次" value={formatNumber(overall.avgPlacement, 1)} tone="gold" />
         <StatCard label="Top4 率" value={formatRateValue(overall.top4Rate)} tone="good" />
         <StatCard label="吃鸡" value={String(overall.wins)} tone={overall.wins > 0 ? "gold" : "neutral"} />
@@ -65,13 +74,17 @@ export function DashboardPage() {
           <Panel>
             <PanelHeader
               title="最近对局"
-              subtitle="最新 8 局"
+              subtitle={`最新 8 局 · ${activeSession?.name ?? "日常训练"}`}
               action={<LinkButton to="/matches" size="sm">全部对局 <ArrowRight size={12} /></LinkButton>}
             />
             {noData ? (
               <EmptyState
-                title="还没有记录任何对局"
-                description="打完一局点右上角「新增对局」，或从侧边栏一键快速记录。1–2 分钟即可记完。"
+                title="这个训练下还没有记录对局"
+                description={
+                  activeSession?.type === "competition"
+                    ? "切回侧边栏把「当前训练」换成日常训练，或就在这里记录冲榜的第一局。"
+                    : "打完一局点右上角「新增对局」，或从侧边栏一键快速记录。1–2 分钟即可记完。"
+                }
                 action={
                   <div className="flex flex-wrap items-center justify-center gap-2">
                     <LinkButton to="/matches/new" variant="primary">
@@ -173,8 +186,7 @@ export function DashboardPage() {
                   <Badge tone="gold">{goalStatusLabel(goal.status)}</Badge>
                 ) : (
                   <Badge tone="muted">无</Badge>
-                )
-            }
+                )}
             />
             {goal ? (
               <div className="flex flex-col gap-2 p-4">
@@ -210,7 +222,7 @@ export function DashboardPage() {
           </Panel>
 
           <Panel>
-            <PanelHeader title="高频问题" subtitle="按 Primary Mistake 统计" />
+            <PanelHeader title="高频问题" subtitle="当前训练 · 按 Primary Mistake 统计" />
             {mistakes && mistakes.length > 0 ? (
               <div className="flex flex-wrap gap-2 p-4">
                 {mistakes.map((mm) => (

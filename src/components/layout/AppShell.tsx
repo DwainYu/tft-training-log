@@ -13,6 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { AddMatchButton } from "../../components/matches/AddMatchButton";
+import { Select } from "../ui/Field";
+import { useSession } from "../../services/session-context";
 
 const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
@@ -23,6 +25,33 @@ const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
   { to: "/data", label: "数据", icon: Database },
 ];
 
+/**
+ * Global session switcher: one control in the shell, shared by every page.
+ * The selected value is the persisted active training session.
+ */
+function SessionSwitcher({ compact = false }: { compact?: boolean }) {
+  const { sessions, activeSessionId, setActiveSession } = useSession();
+  return (
+    <label
+      className={`flex min-w-0 items-center gap-2 text-[11px] text-ink-600 ${compact ? "w-40 shrink" : "w-full"}`}
+    >
+      <span className="shrink-0 uppercase tracking-wide">当前训练</span>
+      <Select
+        aria-label="当前训练"
+        value={activeSessionId}
+        onChange={(e) => void setActiveSession(e.target.value)}
+        className={`min-w-0 flex-1 py-1.5 text-xs ${compact ? "max-w-[124px]" : "max-w-52"}`}
+      >
+        {(sessions.length > 0 ? sessions : [{ id: "daily", name: "日常训练" }]).map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.name}
+          </option>
+        ))}
+      </Select>
+    </label>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
@@ -30,7 +59,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh lg:grid lg:grid-cols-[236px_1fr]">
       <aside className="hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-line lg:bg-base-900/70 lg:backdrop-blur">
         <div className="flex h-full flex-col gap-6 px-4 py-6">
-          <Brand />
+          <div className="flex flex-col gap-4">
+            <Brand />
+            <SessionSwitcher />
+          </div>
           <nav className="flex flex-col gap-1">
             {NAV.map((item) => (
               <NavItem key={item.to} {...item} onNavigate={() => undefined} />
@@ -47,7 +79,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-3 border-b border-line bg-base-900/90 px-4 py-3 backdrop-blur">
+      <div className="lg:hidden sticky top-0 z-30 flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-base-900/90 px-4 py-3 backdrop-blur">
         <button
           type="button"
           aria-label="打开菜单"
@@ -59,6 +91,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <Brand />
         <div className="ml-auto">
           <AddMatchButton compact />
+        </div>
+        <div className="w-full lg:hidden">
+          <SessionSwitcher compact />
         </div>
       </div>
 
@@ -87,7 +122,7 @@ function Brand() {
       </span>
       <div className="leading-tight">
         <div className="text-sm font-semibold tracking-wide text-ink-50">TFT Training Log</div>
-        <div className="text-[10px] uppercase tracking-[0.16em] text-ink-600">S18 · 云顶之巅</div>
+        <div className="text-[10px] uppercase tracking-[0.16em] text-ink-600">S18 · 训练日志</div>
       </div>
     </div>
   );

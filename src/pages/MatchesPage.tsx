@@ -8,25 +8,37 @@ import { MatchList } from "../components/matches/MatchList";
 import { AddMatchButton } from "../components/matches/AddMatchButton";
 import { EmptyState } from "../components/ui/Badge";
 import { Panel, PageHeader } from "../components/ui/Panel";
+import { Select } from "../components/ui/Field";
 import { Pagination } from "../components/ui/Pagination";
 import { Spinner } from "../components/ui/Spinner";
+import { useSession } from "../services/session-context";
 
 const PAGE_SIZE = 20;
 
+type Scope = "session" | "all";
+
 export function MatchesPage() {
   const [params] = useSearchParams();
+  const { activeSession, activeSessionId, ready } = useSession();
   const [query, setQuery] = useState<MatchQuery>({
     ...EMPTY_MATCH_QUERY,
     // /matches?reviewed=unreviewed is the link from the Dashboard todo card
     reviewed: params.get("reviewed") === "unreviewed" ? "unreviewed" : "all",
   });
+  const [scope, setScope] = useState<Scope>("session");
   const [page, setPage] = useState(1);
 
-  const matches = useLiveQuery(() => listMatches(query), [JSON.stringify(query)]);
+  // Default scope is the active training session; “全部训练” widens it out.
+  const effectiveQuery = useMemo(
+    () => (scope === "session" && ready ? { ...query, sessionId: activeSessionId } : query),
+    [query, scope, activeSessionId, ready],
+  );
+
+  const matches = useLiveQuery(() => listMatches(effectiveQuery), [JSON.stringify(effectiveQuery)]);
   const totalLogged = useLiveQuery(() => allMatches(), []);
   const compositions = useLiveQuery(() => knownCompositions(), [], []);
 
-  useEffect(() => setPage(1), [query]);
+  useEffect(() => setPage(1), [effectiveQuery, scope]);
 
   const shown = useMemo(() => {
     const list = matches ?? [];
@@ -44,6 +56,23 @@ export function MatchesPage() {
 
       <div className="flex flex-col gap-4">
         <Panel>
+          <div className="flex flex-wrap items-center gap-3 border-b border-line px-4 py-3">
+            <label className="flex items-center gap-2 text-xs text-ink-400">
+              数据范围
+              <Select
+                aria-label="数据范围"
+                value={scope}
+                onChange={(e) => setScope(e.target.value as Scope)}
+                className="w-48 py-1.5 text-xs"
+              >
+                <option value="session">当前训练（{activeSession?.name ?? "日常训练"}）</option>
+                <option value="all">全部训练</option>
+              </Select>
+            </label>
+            {scope === "session" && (
+              <span className="text-[11px] text-ink-600">只看当前训练下的对局，复盘列表同样适用</span>
+            )}
+          </div>
           <MatchFilters
             query={query}
             compositions={compositions}
@@ -61,7 +90,9 @@ export function MatchesPage() {
               description={
                 (totalLogged?.length ?? 0) === 0
                   ? "打完一局用「快速记录一局」记录名次和阵容，两分钟之内就能完成。"
-                  : "试着放宽筛选条件，或清空筛选。"
+                  : scope === "session"
+                    ? "当前训练下没有符合条件的对局。可切换到「全部训练」查看历史记录，或清空筛选。"
+                    : "试着放宽筛选条件，或清空筛选。"
               }
             />
           ) : (

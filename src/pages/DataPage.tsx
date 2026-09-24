@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Database, Download, FileJson, Sparkles, Trash2, Upload } from "lucide-react";
+import { Database, Download, FileJson, Plus, Sparkles, Trash2, Upload } from "lucide-react";
 import {
   buildSnapshot,
   decisionsToCsv,
@@ -16,13 +16,41 @@ import { getActiveSetData } from "../data/tft/registry";
 import { loadDemoData, removeDemoData } from "../services/demo-service";
 import { decisionRepository } from "../data/repository/decision-repository";
 import { matchRepository } from "../data/repository/match-repository";
+import {
+  createSession,
+  deleteSession,
+  getSessions,
+  setActiveSession,
+  sessionMatchCounts,
+  updateSession,
+} from "../services/session-service";
+import { SESSION_TYPE_LABELS } from "../domain/session/session";
+import { SESSION_TYPES, type SessionType, type TrainingSession } from "../domain/types";
 import { errorMessage } from "../lib/errors";
+import { dateKey, wallClockNow } from "../lib/wallclock";
 import { Badge, EmptyState } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
+import { Field, Input, Select } from "../components/ui/Field";
 import { Modal } from "../components/ui/Modal";
 import { PageHeader, Panel, PanelHeader } from "../components/ui/Panel";
 import { Spinner } from "../components/ui/Spinner";
 import { useToast } from "../components/ui/Toast";
+
+interface SessionDraft {
+  type: SessionType;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+}
+
+const emptyDraft = (): SessionDraft => ({
+  type: "daily",
+  name: "",
+  description: "",
+  startDate: dateKey(wallClockNow()),
+  endDate: "",
+});
 
 export function DataPage() {
   const counts = useLiveQuery(storageCounts, []);
@@ -31,6 +59,12 @@ export function DataPage() {
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
+
+  const sessions = useLiveQuery(getSessions, []);
+  const sessionCounts = useLiveQuery(sessionMatchCounts, []);
+  const [editing, setEditing] = useState<TrainingSession | "new" | null>(null);
+  const [draft, setDraft] = useState<SessionDraft>(emptyDraft);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   if (counts === undefined) return <Spinner label="读取存储" />;
   const total = counts.matches + counts.decisions + counts.reviews + counts.trainingGoals;
@@ -74,6 +108,7 @@ export function DataPage() {
       const report = await importSnapshot(parseSnapshot(text));
       toast.push(
         `导入完成：${report.matches} 对局 · ${report.decisions} 决策 · ${report.reviews} 复盘 · ${report.trainingGoals} 目标` +
+          (report.sessions ? ` · ${report.sessions} 训练 Session` : "") +
           (report.skipped ? `（${report.skipped} 条无效被跳过）` : ""),
       );
     } catch (err) {
@@ -100,6 +135,78 @@ export function DataPage() {
     const removed = await removeDemoData();
     setBusy(false);
     toast.push(removed > 0 ? `已清除 ${removed} 条示例数据（真实数据保留）` : "没有示例数据");
+  }
+
+  async function onSetActive(id: string) {
+    try {
+      await setActiveSession(id);
+      toast.push("当前训练已切换");
+    } catch (err) {
+      toast.push(errorMessage(err), "warn");
+    }
+  }
+
+  function openCreate() {
+    setDraft(emptyDraft());
+    setEditing("new");
+  }
+
+  function openEdit(session: TrainingSession) {
+    setDraft({
+      type: session.type,
+      name: session.name,
+      description: session.description ?? "",
+      startDate: session.startDate,
+      endDate: session.endDate ?? "",
+    });
+    setEditing(session);
+  }
+
+  async function onSaveSession() {
+    if (editing === null) return;
+    const isCreate = editing === "new";
+    setBusy(true);
+    const input = {
+      type: draft.type,
+      name: draft.name,
+      description: draft.description || undefined,
+      startDate: draft.startDate,
+      endDate: draft.endDate || undefined,
+      active: isCreate ? true : editing.active,
+    };
+    try {
+      if (isCreate) {
+        await createSession(input);
+        toast.push("Session 已创建");
+      } else if (editing !== null) {
+        await updateSession(editing.id, input);
+        toast.push("Session 已更新");
+      }
+      setEditing(null);
+    } catch (err) {
+      toast.push(errorMessage(err), "warn");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function requestDeleteSession(session: TrainingSession) {
+    const owned = sessionCounts?.[session.id] ?? 0;
+    if (owned > 0) {
+      toast.push(`该 Session 仍有 ${owned} 局比赛，不能删除。请先移动或删除这些比赛。`, "warn");
+      return;
+    }
+    setConfirmDeleteId(session.id);
+  }
+
+  async function onConfirmDeleteSession(id: string) {
+    setConfirmDeleteId(null);
+    try {
+      await deleteSession(id);
+      toast.push("Session 已删除");
+    } catch (err) {
+      toast.push(errorMessage(err), "warn");
+    }
   }
 
   return (
@@ -142,8 +249,10 @@ export function DataPage() {
                 Export CSV（对局{counts.decisions ? " + 决策" : ""}）
               </Button>
               <p className="text-[11px] leading-relaxed text-ink-600">
-                JSON 包含 matches / decisions / reviews / trainingGoals 四张表，与本页导入格式一致，
-                可以跨浏览器迁移或作为备份。
+                JSON 包含 matches / decisions / reviews / trainingGoals / trainingSessions 五张表，
+                与本页导入格式一致，可以跨浏览器迁移或作为备份。CSV 对局表带
+                <code className="mx-1">session_id</code>
+                列（旧 CSV 不受影响）。
               </p>
             </div>
           </Panel>
@@ -158,10 +267,63 @@ export function DataPage() {
               </Button>
               <p className="text-[11px] leading-relaxed text-ink-600">
                 选择之前导出的 JSON 文件。导入采用合并策略，旧备份不会毁掉新数据。
+                对局缺少 sessionId 或引用了未知 Session 时，会归入「日常训练」。
               </p>
             </div>
           </Panel>
         </div>
+
+        <Panel>
+          <PanelHeader
+            title="训练 Sessions"
+            subtitle="训练上下文：当前训练决定新对局默认记入哪个 Session，删除前需先移走比赛"
+            action={
+              <Button size="sm" onClick={openCreate} disabled={busy}>
+                <Plus size={13} /> 新建 Session
+              </Button>
+            }
+          />
+          {sessions && sessions.length > 0 ? (
+            <div className="flex flex-col gap-2 p-4">
+              {sessions.map((s) => {
+                const owned = sessionCounts?.[s.id] ?? 0;
+                return (
+                  <div key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-line bg-base-900/60 px-3 py-2.5">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-sm text-ink-50">{s.name}</span>
+                        <Badge tone={s.type === "competition" ? "gold" : "muted"}>
+                          {SESSION_TYPE_LABELS[s.type]}
+                        </Badge>
+                      </div>
+                      <div className="mt-0.5 text-[11px] text-ink-600">
+                        {s.startDate}
+                        {s.endDate ? ` ~ ${s.endDate}` : " ~ 持续"}
+                        {" · "}
+                        {owned} 局
+                      </div>
+                    </div>
+                    <Button size="sm" variant="ghost" onClick={() => onSetActive(s.id)}>
+                      设为当前
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => openEdit(s)}>
+                      编辑
+                    </Button>
+                    <Button size="sm" variant={owned > 0 ? "ghost" : "danger"} onClick={() => requestDeleteSession(s)}>
+                      <Trash2 size={12} />
+                      删除
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <EmptyState
+              title="还没有训练 Session"
+              description="系统首次运行会自动创建「日常训练」与默认竞赛 Session。"
+            />
+          )}
+        </Panel>
 
         <Panel>
           <PanelHeader
@@ -175,7 +337,7 @@ export function DataPage() {
             <CountTile label="装备" value={tft.items.length} />
             <CountTile label="强化符文" value={tft.augments.length} />
           </div>
-          <p className="border-t border-line px-4 py-3 text-[11px] leading-relaxed text-ink-600">
+          <p className="border-t border-line px-4 py-3 text-[11px] text-ink-600">
             {tft.manifest.name} · 补丁 {tft.manifest.version} · 来源 {tft.manifest.source.name} ·
             抓取于 {tft.manifest.source.retrievedAt}。对局里的规范 id 以这份数据为准，
             来源与分类规则见 <code className="mx-1">data/tft/set18/README.md</code>。
@@ -201,7 +363,8 @@ export function DataPage() {
               清除示例数据
             </Button>
             <span className="text-[11px] leading-relaxed text-ink-600">
-              16 局虚构对局 + 决策 / 复盘 / 训练目标，日期自动对齐到今天；示例记录 id 以
+              16 局虚构对局 + 决策 / 复盘 / 训练目标，日期自动对齐到今天；示例记录固定属于
+              「日常训练」，id 以
               <code className="mx-1">demo-</code>
               开头，清除时不会影响你真实记录的数据。
             </span>
@@ -221,6 +384,75 @@ export function DataPage() {
           </div>
         </Panel>
       </div>
+
+      <Modal
+        open={editing !== null}
+        onClose={() => setEditing(null)}
+        title={editing === "new" ? "新建训练 Session" : "编辑训练 Session"}
+        subtitle="Session = 一段有明确目标和统计口径的训练周期"
+        footer={
+          editing ? (
+            <>
+              <Button variant="primary" onClick={onSaveSession} disabled={busy}>
+                保存
+              </Button>
+              <Button onClick={() => setEditing(null)}>取消</Button>
+            </>
+          ) : null
+        }
+      >
+        <div className="flex flex-col gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="类型" htmlFor="session-type">
+              <Select
+                id="session-type"
+                value={draft.type}
+                onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value as SessionType }))}
+              >
+                {SESSION_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {SESSION_TYPE_LABELS[t]}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+            <Field label="名称" htmlFor="session-name" required>
+              <Input
+                id="session-name"
+                value={draft.name}
+                placeholder="例如：杯赛准备 / S19 冲榜"
+                onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
+              />
+            </Field>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="开始日期" htmlFor="session-start" required>
+              <Input
+                id="session-start"
+                type="date"
+                value={draft.startDate}
+                onChange={(e) => setDraft((d) => ({ ...d, startDate: e.target.value }))}
+              />
+            </Field>
+            <Field label="结束日期（可选）" htmlFor="session-end">
+              <Input
+                id="session-end"
+                type="date"
+                value={draft.endDate}
+                onChange={(e) => setDraft((d) => ({ ...d, endDate: e.target.value }))}
+              />
+            </Field>
+          </div>
+          <Field label="描述（可选）" htmlFor="session-desc">
+            <Input
+              id="session-desc"
+              value={draft.description}
+              placeholder="一句话说明这个训练周期"
+              onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
+            />
+          </Field>
+        </div>
+      </Modal>
 
       <Modal
         open={confirmWipe}
@@ -253,6 +485,25 @@ export function DataPage() {
             {counts.trainingGoals} 训练目标
           </p>
         )}
+      </Modal>
+
+      <Modal
+        open={confirmDeleteId !== null}
+        onClose={() => setConfirmDeleteId(null)}
+        title="删除这个 Session？"
+        subtitle="没有比赛的 Session 才可以删除"
+        footer={
+          <>
+            <Button variant="danger" onClick={() => onConfirmDeleteSession(confirmDeleteId!)}>
+              确认删除
+            </Button>
+            <Button onClick={() => setConfirmDeleteId(null)}>取消</Button>
+          </>
+        }
+      >
+        <p className="text-sm text-ink-200">
+          {(sessions ?? []).find((s) => s.id === confirmDeleteId)?.name ?? confirmDeleteId}
+        </p>
       </Modal>
     </>
   );

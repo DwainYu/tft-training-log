@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import {
   allOverall,
@@ -8,36 +9,70 @@ import {
   timeSlotChart,
   trend,
 } from "../services/stats-service";
+import { useSession } from "../services/session-context";
 import { formatRateValue, StatCard } from "../components/stats/StatCard";
 import { MistakeBarChart } from "../components/stats/MistakeBarChart";
 import { PlacementTrendChart, type TrendPoint } from "../components/stats/PlacementTrendChart";
 import { StatTable, type StatTableColumn } from "../components/stats/StatTable";
 import { EmptyState } from "../components/ui/Badge";
+import { Select } from "../components/ui/Field";
 import { LinkButton } from "../components/ui/Button";
 import { Panel, PageHeader, PanelHeader } from "../components/ui/Panel";
 import { Spinner } from "../components/ui/Spinner";
 import { formatNumber } from "../lib/utils";
 
+type Scope = "current" | "all";
+
 export function StatisticsPage() {
-  const overall = useLiveQuery(allOverall, []);
-  const streak = useLiveQuery(allStreak, []);
-  const trendSeries = useLiveQuery(() => trend(20), []) as TrendPoint[] | undefined;
-  const last10 = useLiveQuery(() => recentWindow(10), []);
-  const last20 = useLiveQuery(() => recentWindow(20), []);
-  const mistakes = useLiveQuery(mistakeChart, []);
-  const compositions = useLiveQuery(compositionChart, []);
-  const slots = useLiveQuery(timeSlotChart, []);
+  const { activeSession, activeSessionId, ready } = useSession();
+  const [scope, setScope] = useState<Scope>("current");
+  // `undefined` = 全部训练; a session id = that training context only.
+  const sessionId = scope === "current" && ready ? activeSessionId : undefined;
+
+  const overall = useLiveQuery(() => allOverall(sessionId), [sessionId]);
+  const streak = useLiveQuery(() => allStreak(sessionId), [sessionId]);
+  const trendSeries = useLiveQuery(() => trend(20, sessionId), [sessionId]) as
+    | TrendPoint[]
+    | undefined;
+  const last10 = useLiveQuery(() => recentWindow(10, sessionId), [sessionId]);
+  const last20 = useLiveQuery(() => recentWindow(20, sessionId), [sessionId]);
+  const mistakes = useLiveQuery(() => mistakeChart(sessionId), [sessionId]);
+  const compositions = useLiveQuery(() => compositionChart(sessionId), [sessionId]);
+  const slots = useLiveQuery(() => timeSlotChart(sessionId), [sessionId]);
 
   if (overall === undefined) return <Spinner label="计算统计" />;
+
+  const scopeControl = (
+    <label className="flex items-center gap-2 text-xs text-ink-400">
+      数据范围
+      <Select
+        aria-label="数据范围"
+        value={scope}
+        onChange={(e) => setScope(e.target.value as Scope)}
+        className="w-44 py-1.5 text-xs"
+      >
+        <option value="current">当前训练（{activeSession?.name ?? "日常训练"}）</option>
+        <option value="all">全部训练</option>
+      </Select>
+    </label>
+  );
 
   if (overall.games === 0) {
     return (
       <>
-        <PageHeader title="统计" subtitle="整体表现 · 趋势 · 错误 · 阵容 · 时间段" />
+        <PageHeader
+          title="统计"
+          subtitle="整体表现 · 趋势 · 错误 · 阵容 · 时间段"
+          action={scopeControl}
+        />
         <Panel>
           <EmptyState
-            title="还没有数据可以统计"
-            description="记录几局之后，这里会出现平均名次、Top4 率、错误分布等。"
+            title={scope === "current" ? "当前训练下还没有数据可以统计" : "还没有数据可以统计"}
+            description={
+              scope === "current"
+                ? "这个训练下记录几局之后，这里会出现平均名次、Top4 率、错误分布等；也可以切换到「全部训练」。"
+                : "记录几局之后，这里会出现平均名次、Top4 率、错误分布等。"
+            }
             action={
               <LinkButton to="/matches/new" variant="primary">
                 去记录第一局
@@ -76,11 +111,15 @@ export function StatisticsPage() {
       <PageHeader
         title="统计"
         subtitle="只展示数据，不下结论 —— 判断留给你的复盘"
+        action={scopeControl}
       />
 
       <div className="flex flex-col gap-4">
         <Panel>
-          <PanelHeader title="Overall" subtitle={`${overall.games} 局`} />
+          <PanelHeader
+            title={`Overall${scope === "current" ? ` · ${activeSession?.name ?? "日常训练"}` : " · 全部训练"}`}
+            subtitle={`${overall.games} 局`}
+          />
           <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 xl:grid-cols-6">
             <StatCard label="Games" value={String(overall.games)} sub={`${overall.reviewedGames} 局已复盘`} />
             <StatCard label="Avg Placement" value={formatNumber(overall.avgPlacement, 1)} tone="gold" />
@@ -148,7 +187,7 @@ export function StatisticsPage() {
         </Panel>
 
         <div className="grid gap-4 xl:grid-cols-2">
-          <Panel>
+          <Panel className="min-w-0">
             <PanelHeader title="阵容统计" />
             <StatTable
               columns={compositionColumns}
@@ -156,7 +195,7 @@ export function StatisticsPage() {
               empty="还没有填过阵容"
             />
           </Panel>
-          <Panel>
+          <Panel className="min-w-0">
             <PanelHeader title="时间段统计" subtitle="云顶之巅 12:00 – 22:00" />
             <StatTable columns={slotColumns} rows={slots ?? []} empty="暂无数据" />
           </Panel>
