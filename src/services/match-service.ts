@@ -13,6 +13,7 @@ import { seedReview } from "./review-service";
 import { ValidationError } from "../lib/errors";
 import { dateKey, toDate } from "../lib/wallclock";
 import { nowIso } from "../lib/utils";
+import { getActiveSessionId } from "./session-service";
 import { validateMatchStaticData } from "../data/tft/match-links";
 import type { Decision, Match, MistakeType, Review } from "../domain/types";
 
@@ -31,12 +32,17 @@ function assertStaticLinks(input: MatchInput): void {
 /**
  * The only way the UI writes matches. It goes through the ManualAdapter so a
  * future LCU / screenshot adapter can feed the exact same pipeline.
+ *
+ * Session rule: an explicit `sessionId` in the payload wins; otherwise the
+ * match inherits the *active* session — new matches are never orphans.
  */
 export async function addMatch(payload: ManualMatchPayload): Promise<Match> {
   const result = ManualAdapter.toMatchInput(payload);
   if (!result.ok) throw new ValidationError(result.errors);
   assertStaticLinks(result.value);
-  return matchRepository.add(createMatch(result.value));
+  const match = createMatch(result.value);
+  if (!match.sessionId) match.sessionId = await getActiveSessionId();
+  return matchRepository.add(match);
 }
 
 export async function updateMatch(id: string, payload: ManualMatchPayload): Promise<Match> {
@@ -46,6 +52,7 @@ export async function updateMatch(id: string, payload: ManualMatchPayload): Prom
   if (!result.ok) throw new ValidationError(result.errors);
   assertStaticLinks(result.value);
   const next = applyMatchInput(existing, result.value);
+  if (!next.sessionId) next.sessionId = existing.sessionId ?? (await getActiveSessionId());
   await matchRepository.put(next);
   return next;
 }
@@ -59,11 +66,14 @@ export async function saveMatchInput(input: MatchInput, id?: string): Promise<Ma
     const existing = await matchRepository.get(id);
     if (existing) {
       const next = applyMatchInput(existing, input);
+      if (!next.sessionId) next.sessionId = existing.sessionId ?? (await getActiveSessionId());
       await matchRepository.put(next);
       return next;
     }
   }
-  return matchRepository.add(createMatch(input));
+  const match = createMatch(input);
+  if (!match.sessionId) match.sessionId = await getActiveSessionId();
+  return matchRepository.add(match);
 }
 
 export async function deleteMatch(id: string): Promise<void> {
@@ -132,11 +142,12 @@ export async function trainedDateKeys(): Promise<string[]> {
     .sort((a, b) => b.localeCompare(a));
 }
 
-
 /**
- * Quick Add: log a game in under a minute. `nextGameFocus` is stored on the
- * review record (seeded, not "reviewed") so the fast path and the detailed
- * review never disagree about what the player meant.
+ * Quick Add: log a game in under a minute. The match lands in the active
+ * session automatically — no session field in the fast path.
+ * `nextGameFocus` is stored on the review record (seeded, not "reviewed") so
+ * the fast path and the detailed review never disagree about what the
+ * player meant.
  */
 export async function quickAdd(
   payload: ManualMatchPayload,

@@ -1,5 +1,6 @@
 import type { ManualMatchPayload } from "../../data/adapters/manual-adapter";
 import type { Match } from "../../domain/types";
+import { DAILY_SESSION_ID } from "../../domain/types";
 import { formatList } from "../../lib/utils";
 import { hourOf, minuteOf } from "../../lib/wallclock";
 
@@ -23,6 +24,8 @@ export interface MatchFormDraft {
   augments: string;
   primaryMistake: string;
   notes: string;
+  /** Training session this match belongs to (defaults to the active one). */
+  sessionId: string;
 }
 
 const pad = (n: number) => n.toString().padStart(2, "0");
@@ -32,7 +35,7 @@ export const timeText = (value: string): string => {
   return `${pad(h)}:${pad(minuteOf(value) ?? 0)}`;
 };
 
-export function emptyDraft(date = new Date()): MatchFormDraft {
+export function emptyDraft(date = new Date(), sessionId = DAILY_SESSION_ID): MatchFormDraft {
   const p = (n: number) => n.toString().padStart(2, "0");
   return {
     date: `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`,
@@ -50,10 +53,14 @@ export function emptyDraft(date = new Date()): MatchFormDraft {
     augments: "",
     primaryMistake: "",
     notes: "",
+    sessionId,
   };
 }
 
-export function draftFromMatch(match: Match): MatchFormDraft {
+export function draftFromMatch(
+  match: Match,
+  fallbackSessionId = DAILY_SESSION_ID,
+): MatchFormDraft {
   return {
     date: match.playedAt.slice(0, 10),
     startTime: timeText(match.startedAt ?? ""),
@@ -71,6 +78,7 @@ export function draftFromMatch(match: Match): MatchFormDraft {
     augments: formatList(match.augments),
     primaryMistake: match.primaryMistake ?? "",
     notes: match.notes ?? "",
+    sessionId: match.sessionId ?? fallbackSessionId,
   };
 }
 
@@ -99,6 +107,7 @@ export function draftToPayload(draft: MatchFormDraft): MatchFormPayload {
     augments: draft.augments,
     primaryMistake: draft.primaryMistake,
     notes: draft.notes,
+    sessionId: draft.sessionId || undefined,
   };
 }
 

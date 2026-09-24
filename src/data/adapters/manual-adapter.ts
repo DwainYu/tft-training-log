@@ -21,6 +21,8 @@ export interface ManualMatchPayload {
   coreUnits?: string;
   coreItems?: string;
   augments?: string;
+  /** Training session the match belongs to; empty → active session. */
+  sessionId?: string;
   primaryMistake?: string;
   notes?: string;
 }
@@ -68,6 +70,7 @@ export const ManualAdapter: DataSourceAdapter<ManualMatchPayload> = {
       coreUnits: parseList(payload.coreUnits),
       coreItems: parseList(payload.coreItems),
       augments: parseList(payload.augments),
+      sessionId: payload.sessionId?.trim() || undefined,
       primaryMistake,
       notes: payload.notes?.trim() || undefined,
     };

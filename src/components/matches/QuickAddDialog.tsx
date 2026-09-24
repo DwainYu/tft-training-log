@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Clock, Save, Sparkles } from "lucide-react";
 import { knownCompositions, quickAdd, recentMatches } from "../../services/match-service";
+import { getActiveSession } from "../../services/session-service";
 import { errorMessage } from "../../lib/errors";
 import {
   TRAINING_WINDOW_LABEL,
@@ -52,6 +53,7 @@ export function QuickAddDialog({
   const navigate = useNavigate();
 
   const compositions = useLiveQuery(() => knownCompositions(), [], []);
+  const activeSession = useLiveQuery(getActiveSession, []);
   const last = useLiveQuery(() => recentMatches(1), [], [])[0];
 
   const set = useCallback(<K extends keyof QuickAddDraft>(key: K, value: QuickAddDraft[K]) => {
@@ -137,7 +139,7 @@ export function QuickAddDialog({
       open={open}
       onClose={onClose}
       title="快速记录一局"
-      subtitle="名次 → 阵容 → 问题 → 保存，一分钟内完成"
+      subtitle={`名次 → 阵容 → 问题 → 保存，一分钟内完成 · 记入「${activeSession?.name ?? "日常训练"}」`}
       size="lg"
       footer={
         <>

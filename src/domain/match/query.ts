@@ -16,6 +16,8 @@ export interface MatchQuery {
   /** `YYYY-MM-DD`, inclusive */
   from?: string;
   to?: string;
+  /** Limit to one training session; omit for all sessions. */
+  sessionId?: string;
   sortField?: SortField;
   sortDir?: SortDir;
   limit?: number;
@@ -33,6 +35,7 @@ export function queryMatches<T extends MatchForQuery>(matches: readonly T[], q: 
   const to = q.to ? toDate(`${q.to}T23:59`) : null;
 
   const filtered = matches.filter((m) => {
+    if (q.sessionId && m.sessionId !== q.sessionId) return false;
     if (q.placement && q.placement !== "all") {
       if (q.placement === "top4" && !isTop4(m)) return false;
       if (q.placement === "bottom4" && !isBottom4(m)) return false;

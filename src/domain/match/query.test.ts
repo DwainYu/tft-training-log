@@ -11,8 +11,8 @@ const m = (over: Partial<MatchForQuery> & { id: string }): MatchForQuery => ({
 
 const matches: MatchForQuery[] = [
   m({ id: "a", playedAt: "2026-02-05T13:00", placement: 1, composition: "Arcader", reviewed: true, primaryMistake: "ROLLING", durationSeconds: 1800, notes: "锁血成功" }),
-  m({ id: "b", playedAt: "2026-02-04T20:30", placement: 5, composition: "Arcader", durationSeconds: 1500, augments: ["升级"] }),
-  m({ id: "c", playedAt: "2026-02-03T18:10", placement: 3, composition: "Rebel", coreUnits: ["Kaisa"], primaryMistake: "POSITIONING" }),
+  m({ id: "b", playedAt: "2026-02-04T20:30", placement: 5, composition: "Arcader", durationSeconds: 1500, augments: ["升级"], sessionId: "daily" }),
+  m({ id: "c", playedAt: "2026-02-03T18:10", placement: 3, composition: "Rebel", coreUnits: ["Kaisa"], primaryMistake: "POSITIONING", sessionId: "yunding-s18" }),
 ];
 
 const ids = (list: MatchForQuery[]) => list.map((x) => x.id);
@@ -54,6 +54,13 @@ describe("queryMatches", () => {
     expect(ids(queryMatches(matches, { search: "锁血" }))).toEqual(["a"]);
     expect(ids(queryMatches(matches, { search: "升级" }))).toEqual(["b"]);
     expect(ids(queryMatches(matches, { search: "nomatch" }))).toEqual([]);
+  });
+
+  it("filters by training session", () => {
+    // session "a" has none (legacy-ish record), others carry explicit sessions
+    expect(ids(queryMatches(matches, { sessionId: "yunding-s18" }))).toEqual(["c"]);
+    expect(ids(queryMatches(matches, { sessionId: "daily" }))).toEqual(["b"]);
+    expect(ids(queryMatches(matches, { sessionId: "cup-prep" }))).toEqual([]);
   });
 
   it("applies several filters together", () => {

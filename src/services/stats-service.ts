@@ -14,29 +14,38 @@ import {
   type OverallStats,
   type TimeSlotStat,
 } from "../domain/stats/stats";
-import type { MistakeType } from "../domain/types";
+import type { MistakeType, Match } from "../domain/types";
 
 /**
  * Statistics are pure functions over the matches table; this service just
  * loads the data and hands the results to the pages. Keeping the math in
  * `domain/stats` means every number here is unit-testable without IndexedDB.
+ *
+ * Session scope: every function accepts an optional `sessionId`
+ * ("current training context"). Omitting it means *all* sessions — the
+ * statistics never close the data away from the player.
  */
 
-export async function allOverall(): Promise<OverallStats> {
-  return overallStats(await matchRepository.all());
+async function scopedMatches(sessionId?: string): Promise<Match[]> {
+  const all = await matchRepository.all();
+  return sessionId ? all.filter((m) => m.sessionId === sessionId) : all;
 }
 
-export async function allStreak(): Promise<number> {
-  return trainingStreak(await matchRepository.all());
+export async function allOverall(sessionId?: string): Promise<OverallStats> {
+  return overallStats(await scopedMatches(sessionId));
+}
+
+export async function allStreak(sessionId?: string): Promise<number> {
+  return trainingStreak(await scopedMatches(sessionId));
 }
 
 /** Newest-`limit` games, oldest → newest, ready for a line chart. */
-export async function trend(limit = 20) {
-  return placementTrendSeries(await matchRepository.all(), limit);
+export async function trend(limit = 20, sessionId?: string) {
+  return placementTrendSeries(await scopedMatches(sessionId), limit);
 }
 
-export async function recentWindow(window: number) {
-  return recentWindowStats(await matchRepository.all(), window);
+export async function recentWindow(window: number, sessionId?: string) {
+  return recentWindowStats(await scopedMatches(sessionId), window);
 }
 
 export interface MistakeChartEntry {
@@ -45,8 +54,8 @@ export interface MistakeChartEntry {
   count: number;
 }
 
-export async function mistakeChart(): Promise<MistakeChartEntry[]> {
-  return mistakeCounts(await matchRepository.all())
+export async function mistakeChart(sessionId?: string): Promise<MistakeChartEntry[]> {
+  return mistakeCounts(await scopedMatches(sessionId))
     .filter((c) => c.type !== UNCLASSIFIED || c.count > 0)
     .map((c) => ({
       key: c.type,
@@ -55,14 +64,14 @@ export async function mistakeChart(): Promise<MistakeChartEntry[]> {
     }));
 }
 
-export async function commonMistakes(limit = 3) {
-  return mostCommonMistakes(await matchRepository.all(), limit);
+export async function commonMistakes(limit = 3, sessionId?: string) {
+  return mostCommonMistakes(await scopedMatches(sessionId), limit);
 }
 
-export async function compositionChart(): Promise<CompositionStat[]> {
-  return compositionStats(await matchRepository.all());
+export async function compositionChart(sessionId?: string): Promise<CompositionStat[]> {
+  return compositionStats(await scopedMatches(sessionId));
 }
 
-export async function timeSlotChart(): Promise<TimeSlotStat[]> {
-  return timeSlotStats(await matchRepository.all());
+export async function timeSlotChart(sessionId?: string): Promise<TimeSlotStat[]> {
+  return timeSlotStats(await scopedMatches(sessionId));
 }

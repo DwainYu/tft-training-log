@@ -7,6 +7,7 @@ import {
   getMatchBundle,
   knownCompositions,
   listMatches,
+  quickAdd,
   recentMatches,
   saveMatchInput,
   trainedDateKeys,
@@ -16,6 +17,7 @@ import { addDecision } from "./decision-service";
 import { saveReview } from "./review-service";
 import { ValidationError } from "../lib/errors";
 import { resetDatabase } from "../test/db-helper";
+import { ensureDefaultSessions, setActiveSession } from "./session-service";
 import type { ReviewInput } from "../domain/review/review";
 
 const completeReview = (primaryMistake: "ECONOMY" | "ROLLING"): ReviewInput => ({
@@ -139,5 +141,49 @@ describe("match service + Set 18 static ids", () => {
       }),
     ).rejects.toThrow(ValidationError);
     expect(await allMatches()).toHaveLength(0);
+  });
+});
+
+
+describe("match + session integration", () => {
+  it("new matches inherit the active session (default: daily)", async () => {
+    await ensureDefaultSessions();
+    const m = await addMatch({ playedAt: "2026-10-13T13:00", placement: "3" });
+    expect(m.sessionId).toBe("daily");
+
+    await setActiveSession("yunding-s18");
+    const comp = await addMatch({ playedAt: "2026-10-14T13:00", placement: "5" });
+    expect(comp.sessionId).toBe("yunding-s18");
+
+    await setActiveSession("daily");
+    const back = await addMatch({ playedAt: "2026-10-15T13:00", placement: "2" });
+    expect(back.sessionId).toBe("daily");
+  });
+
+  it("an explicit sessionId in the payload wins over the active one", async () => {
+    await ensureDefaultSessions();
+    await setActiveSession("yunding-s18");
+    const m = await addMatch({ playedAt: "2026-10-13T13:00", placement: "4", sessionId: "daily" });
+    expect(m.sessionId).toBe("daily");
+  });
+
+  it("existing matches can be moved to another session", async () => {
+    await ensureDefaultSessions();
+    const m = await addMatch({ playedAt: "2026-10-13T13:00", placement: "6" });
+    expect(m.sessionId).toBe("daily");
+    const moved = await updateMatch(m.id, {
+      playedAt: m.playedAt,
+      placement: "6",
+      sessionId: "yunding-s18",
+    });
+    expect(moved.sessionId).toBe("yunding-s18");
+    expect((await getMatch(m.id))?.sessionId).toBe("yunding-s18");
+  });
+
+  it("Quick Add lands in the active session without a session field", async () => {
+    await ensureDefaultSessions();
+    await setActiveSession("yunding-s18");
+    const m = await quickAdd({ placement: "2", composition: "Rebel" });
+    expect(m.sessionId).toBe("yunding-s18");
   });
 });

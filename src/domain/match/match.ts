@@ -28,6 +28,8 @@ export interface MatchInput {
   coreUnitIds?: string[];
   coreItemIds?: string[];
   augmentIds?: string[];
+  /** Owning training session; the service layer fills the active one. */
+  sessionId?: string;
   primaryMistake?: MistakeType;
   notes?: string;
 }
@@ -49,6 +51,7 @@ export interface MatchForQuery {
   augments?: string[];
   primaryMistake?: MistakeType;
   notes?: string;
+  sessionId?: string;
 }
 
 export function createMatch(input: MatchInput): Match {
@@ -96,6 +99,7 @@ function normalize(input: MatchInput): MatchInput {
     coreUnitIds: idsOrUndefined(input.coreUnitIds),
     coreItemIds: idsOrUndefined(input.coreItemIds),
     augmentIds: idsOrUndefined(input.augmentIds),
+    sessionId: input.sessionId?.trim() || undefined,
     primaryMistake: input.primaryMistake || undefined,
     notes: input.notes?.trim() || undefined,
   }) as MatchInput;

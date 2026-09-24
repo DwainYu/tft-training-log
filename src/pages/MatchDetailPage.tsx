@@ -10,6 +10,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { deleteMatch, getMatchBundle } from "../services/match-service";
+import { getSessions } from "../services/session-service";
+import { DAILY_SESSION_ID } from "../domain/types";
 import { addDecision, removeDecision, updateDecision } from "../services/decision-service";
 import { currentGoals } from "../services/training-service";
 import { mistakeLabel } from "../domain/labels";
@@ -33,6 +35,7 @@ export function MatchDetailPage() {
 
   const bundle = useLiveQuery(() => getMatchBundle(id), [id]);
   const goals = useLiveQuery(() => currentGoals(), []);
+  const sessions = useLiveQuery(getSessions, []);
 
   if (bundle === undefined) return <Spinner label="读取对局" />;
   if (bundle === null) {
@@ -118,6 +121,13 @@ export function MatchDetailPage() {
               <Fact label="最终等级" value={match.finalLevel ?? "—"} />
               <Fact label="最终血量" value={match.finalHealth ?? "—"} />
               <Fact label="剩余金币" value={match.totalGold ?? "—"} />
+              <Fact
+                label="训练 Session"
+                value={
+                  sessions?.find((x) => x.id === (match.sessionId ?? DAILY_SESSION_ID))?.name ??
+                  "日常训练"
+                }
+              />
               <Fact
                 label="复盘状态"
                 value={match.reviewed ? "已复盘" : review ? "复盘中" : "未复盘"}

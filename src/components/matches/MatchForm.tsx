@@ -15,13 +15,14 @@ import {
   isWithinTrainingWindow,
 } from "../../lib/wallclock";
 import { Button } from "../ui/Button";
-import { Field, Input, Textarea } from "../ui/Field";
+import { Field, Input, Select, Textarea } from "../ui/Field";
 import { Panel, PanelHeader } from "../ui/Panel";
 import { Badge } from "../ui/Badge";
 import { useToast } from "../ui/Toast";
 import { MistakeSelect } from "./MistakeSelect";
 import { PlacementPicker } from "./PlacementPicker";
 import { championRepository } from "../../data/tft/repositories";
+import { useSession } from "../../services/session-context";
 import {
   draftFromMatch,
   draftToPayload,
@@ -42,8 +43,9 @@ export function MatchForm({
   match?: Match;
   onDelete?: () => void;
 }) {
+  const { sessions, activeSessionId } = useSession();
   const [draft, setDraft] = useState<MatchFormDraft>(() =>
-    match ? draftFromMatch(match) : emptyDraft(),
+    match ? draftFromMatch(match, activeSessionId) : emptyDraft(new Date(), activeSessionId),
   );
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -156,6 +158,29 @@ export function MatchForm({
                 </p>
               )}
             </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field
+              label="训练 Session"
+              htmlFor="f-session"
+              hint="新对局默认记入当前训练；在这里也可以把这局换到别的训练"
+            >
+              <Select
+                id="f-session"
+                value={draft.sessionId}
+                onChange={(e) => set("sessionId", e.target.value)}
+              >
+                {(sessions.length > 0
+                  ? sessions
+                  : [{ id: activeSessionId, name: "日常训练" }]
+                ).map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
+                  </option>
+                ))}
+              </Select>
+            </Field>
           </div>
         </div>
       </Panel>
