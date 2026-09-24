@@ -26,14 +26,21 @@ prerequisite for the tool being worth using today.
 
 ## Phase 1.5 — Release Engineering ✅
 
-- [x] CI: typecheck + 105 tests + production build on every push and pull request
+- [x] CI: typecheck + 139 tests + production build on every push and pull request
 - [x] GitHub Pages deployment from `main` (`https://dwainyu.github.io/tft-training-log/`)
 - [x] Vite `base` for the project-page sub-path, favicon and page description
 
 ## Phase 2 — S18 Static Data
 
-- [ ] Units, traits, items and augments as structured data
-- [ ] Replace free-text fields with pickers / autocomplete backed by that data
+- [x] Set 18 snapshot (65 champions / 36 traits / 186 items / 592 augments) in
+      `data/tft/set18/`, generated from Riot Data Dragon with a reproducible script
+      (`scripts/build-set18-data.mjs`) and documented provenance
+- [x] Static-data layer: set registry + lookup repositories + import-time
+      validation (`src/data/tft/`)
+- [x] Canonical S18 ids on `Match` (optional, backward-compatible), validated at
+      write and import time against the snapshot
+- [ ] Replace the remaining free-text trait / item / augment fields with
+      pickers / autocomplete backed by that data
 
 ## Phase 3 — China Client (LCU) Adapter
 

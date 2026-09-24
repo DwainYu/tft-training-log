@@ -83,7 +83,7 @@ npm run dev          # http://localhost:5183/tft-training-log/
 
 ```bash
 npm run build        # tsc --noEmit && vite build  -> dist/ (base: /tft-training-log/)
-npm run test         # vitest run (16 files / 105 tests)
+npm run test         # vitest run (18 files / 139 tests)
 npm run typecheck    # tsc --noEmit
 npm run preview      # serve the production build
 ```
@@ -110,7 +110,7 @@ date when loaded, so streaks and the weekly view stay meaningful whenever you cl
   served from any sub-path (GitHub Pages project site) without server-side rewrites
 - **Recharts** — trend lines and mistake bars
 - **lucide-react** — icons
-- **Vitest** + **Testing Library** + **fake-indexeddb** (jsdom) — 105 tests
+- **Vitest** + **Testing Library** + **fake-indexeddb** (jsdom) — 139 tests
 
 ## Architecture
 
@@ -124,6 +124,7 @@ services/       orchestration + invariants (what counts as "reviewed", cascade d
 domain/         pure functions: validation, mistake taxonomy, stats engine, query filters  ← unit tested
   ↓
 data/           Dexie schema, per-table repositories, source adapters
+data/tft/       Set 18 static snapshot (bundled JSON) + set registry + lookup repositories
   ↓
 IndexedDB       matches / decisions / reviews / trainingGoals
 ```
@@ -136,6 +137,11 @@ Layering rules that keep it testable:
   mistake statistics, mirrored from the review on save; Quick Add seeds a partial review without
   marking the match reviewed).
 - `data/repository/*` is the only layer that touches Dexie.
+- `data/tft/*` is the static-data layer: the bundled Set 18 snapshot plus a set
+  registry and lookup repositories (`getChampionById`, `getTraitById`, …). The
+  snapshot is validated at import time, so a broken `data/tft/set18/*.json`
+  fails CI before a human ever sees it. Business code talks to the
+  repositories — never to the JSON files.
 - Timestamps are **local wall-clock strings** (`YYYY-MM-DDTHH:mm`, no timezone): the target
   server is single-timezone, so sorting, date filters and the 12:00–22:00 window check are plain
   string comparisons. See `src/lib/wallclock.ts`.
@@ -154,9 +160,22 @@ UI → Services → Repository → IndexedDB
   `get_composition_stats`, `get_training_goals`, `get_weekly_summary`) so a future coach agent
   or MCP server reads the same data the UI does.
 
+## Data Layer
+
+- **Current dataset: TFT Set 18 static snapshot** (`data/tft/set18/`) —
+  65 champions, 36 traits, 186 items and 592 augments, generated from
+  Riot's public Data Dragon (CommunityDragon mirror, DDragon 16.19 / TFT
+  patch 18.3, zh-CN). Provenance, schema and known limitations:
+  [`data/tft/set18/README.md`](./data/tft/set18/README.md).
+- **Storage: browser local-first.** The snapshot is bundled into the app;
+  no runtime network dependency.
+- Regenerate after a patch update: `npm run data:build`
+  (pins the source URL + records sha256 in the manifest — see
+  `scripts/build-set18-data.mjs`).
+
 ## Data Source
 
-**Phase 1 is manual entry only.** Nothing is scraped, read from the client, or fetched from an API.
+**Match records come from manual entry.** Nothing is scraped, read from the client, or fetched from an API.
 
 - No automatic ingestion. You type what happened.
 - The project deliberately does **not** depend on a Riot Match API for the Chinese server —
@@ -191,9 +210,14 @@ UI → Services → Repository → IndexedDB
 - [x] JSON export / import, CSV export
 - [x] Agent tool facade (read-only)
 
-**Phase 2 — S18 static data**
+**Phase 2 — S18 static data** ✅
 
-- [ ] Units, traits, items, augments as structured data — replace free text with pickers and autocomplete
+- [x] Units, traits, items, augments as structured, validated static data
+  (`data/tft/set18/` + `src/data/tft/` repositories; provenance in the data README)
+- [x] Canonical S18 ids on `Match` (optional, backward-compatible) + write/import
+  validation against the snapshot
+- [x] Champion autocomplete in the match form; Set 18 panel on the Data page
+- [ ] Free-text trait / item / augment fields replaced by pickers (next phase)
 
 **Phase 3 — China client (LCU) adapter**
 
@@ -219,7 +243,8 @@ Full phase list with scope notes: [ROADMAP.md](./ROADMAP.md).
 
 ## Current Limitations
 
-- Compositions, items and augments are free text (Phase 2 will structure them).
+- Compositions, items and augments are still free text in the forms; the Set 18 static
+  layer exists so pickers can be added in the next phase.
 - Times are hand-entered Beijing wall-clock; there is no timezone or DST handling, by design.
 - The weekly summary is a rule engine, not an LLM.
 - Data is per-browser. Export JSON is the only migration path.
