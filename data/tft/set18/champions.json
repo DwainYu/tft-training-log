@@ -1,0 +1,1703 @@
+[
+  {
+    "id": "DA_Gromp18_AP",
+    "name": "魔沼蛙",
+    "cost": 2,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Adaptor"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 550,
+      "attack": 30,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "打嗝泡泡",
+      "description": "<Bright>【魔战士】</Bright>%i:scaleAP%<Bright>：</Bright>向当前目标吐出一团毒泡泡，在命中第一名敌人时爆炸，造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。半径1格内的敌人将在@PoisonDurationAP@秒里持续受到@MagicDamageCalc2@%i:scaleAP%魔法伤害。\r\\n\r\\n<dim>【魔战士】</dim>%i:scaleAD%<dim>：大幅减速目标。</dim>\r\\n\r\\n紫霸符：每@TraitTimer@秒，【魔沼蛙】获得@TraitTimedAP@法术加成。"
+    },
+    "icon": "{f3b734c3102f71ed}"
+  },
+  {
+    "id": "DA_Murkwolf18",
+    "name": "暗影狼",
+    "cost": 2,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Slayer"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 700,
+      "attack": 50,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "撕裂之爪",
+      "description": "跃向@LeapHexRadius@格内生命值最低的敌人，造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害。接下来的@NumEmpoweredAttacks@次攻击获得@EmpowerAspd@攻击速度并造成@PhysicalDamageCalc2@%i:scaleAD%额外物理伤害。\r\\n\r\\n灰霸符：获得【技能暴击】和@TraitBaseCrit@暴击几率，基于已损失生命值至多提升至@TraitBonusCrit@。"
+    },
+    "icon": "{0ea96b4d47691e31}"
+  },
+  {
+    "id": "DA_18_Sentry",
+    "name": "苍蓝哨戒",
+    "cost": 1,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Invoker"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 500,
+      "attack": 35,
+      "armor": 25,
+      "magicResist": 25,
+      "attackSpeed": 0.8,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "蔚蓝激光",
+      "description": "开始每秒消耗@PercentManaPerSecond@最大法力值，并对目标引导一道激光。引导期间，每秒对其造成@MagicDamageCalc1@%i:scaleAP%魔法伤害，并使其魔法抗性降低@MRReduction@。\r\\n\r\\n青霸符：每引导@TraitChannelSecondsTooltip@秒，就会获得@TraitManaRegenTooltip@法力回复。"
+    },
+    "icon": "{e8a95eea9697c960}"
+  },
+  {
+    "id": "DA_Cinderling18",
+    "name": "绯红树怪",
+    "cost": 1,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Hunter"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 500,
+      "attack": 40,
+      "armor": 25,
+      "magicResist": 25,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "刃叶",
+      "description": "召唤五片锋利如剃刀的叶子，朝当前目标聚拢，造成总计@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害，并施加持续@WoundDuration@秒的@WoundLevel@%<Keyword>重伤</Keyword>效果和@BurnAmount@%<Keyword>灼烧</Keyword>效果。\r\\n\r\\n绯红霸符：【绯红树怪】每次技能施放获得@TraitADOnCast@物理加成。\r\\n\r\\n<rules>重伤：降低受到的治疗效果。</rules>\r\\n<rules>灼烧：每秒造成目标一部分最大生命值的真实伤害。</rules>"
+    },
+    "icon": "{3bcbfdbd732c6323}"
+  },
+  {
+    "id": "DA_Scuttlecrab18",
+    "name": "峡谷迅捷蟹",
+    "cost": 2,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_Juggernaut18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 950,
+      "attack": 50,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 40
+    },
+    "ability": {
+      "name": "这种快乐你懂吗？",
+      "description": "<bright>被动：</bright>攻击被替换为一次舞蹈，对邻格的所有敌人造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害。\r\\n\r\\n<bright>主动：</bright>钻入地下，获得@BurrowDurability@伤害减免，持续@BurrowDuration@秒，并在此期间持续回复@HealthCalc1@%i:scaleAP%生命值。\r\\n\r\\n绿霸符：当友军跌下@TraitHealthThreshold@生命值时，其回复@TraitPercentHeal@最大生命值。"
+    },
+    "icon": "{56c0d241812da38a}"
+  },
+  {
+    "id": "DA_Krug18",
+    "name": "远古石甲虫",
+    "cost": 3,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Brawler"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1100,
+      "attack": 55,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 80
+    },
+    "ability": {
+      "name": "岩之摇滚",
+      "description": "<Bright>被动：</Bright>阵亡时，分裂成两个【小型石甲虫】，每个拥有@HealthCalc1@%i:scaleHealth%生命值，并且它们会立即进行嘲讽从而迫使敌人们对其进行攻击。\r\\n\r\\n<Bright>主动：</Bright>获得@HealthCalc2@%i:scaleAP%最大生命值，然后滚向目标，从而造成@PhysicalDamageCalc1@ %i:scaleAD%%i:scaleHealth%伤害。\r\\n\r\\n蓝灰霸符：阵亡时，【石甲虫】和【小型石甲虫】为友军提供@TraitShieldHealth@最大生命值的护盾值。"
+    },
+    "icon": "{3d59606a1e414504}"
+  },
+  {
+    "id": "DA_Sentinel18",
+    "name": "苍蓝雕纹魔像",
+    "cost": 4,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Vanguard",
+      "DA_18_Invoker"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1300,
+      "attack": 75,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 60
+    },
+    "ability": {
+      "name": "蔚蓝冲击波",
+      "description": "获得持续@ShieldDuration@秒的@ShieldCalc1@%i:scaleAP%%i:scaleHealth%护盾值。猛击地面，向敌人最密集的方向发出一道裂隙。被命中的敌人会被短暂击飞，受到@MagicDamageCalc1@%i:scaleAP%魔法伤害和@ManaReaveFlat@<keyword>破法</keyword>。\r\\n\r\\n蓝霸符：【苍蓝雕纹魔像】每次施放技能时，友军们就会获得@TraitAlliesManaRegen@法力回复。\r\\n\r\\n<rules>破法：提升下一次技能施放的法力消耗。</rules>"
+    },
+    "icon": "{94230c60604bffc1}"
+  },
+  {
+    "id": "DA_Brambleback18",
+    "name": "绯红印记树怪",
+    "cost": 4,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Slayer"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1100,
+      "attack": 120,
+      "armor": 65,
+      "magicResist": 65,
+      "attackSpeed": 0.55,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "猩红之怒",
+      "description": "<bright>被动：</bright>当目标阵亡时，跃至下个目标，从而造成@PhysicalDamageCalc1@ %i:scaleAD%物理伤害。\r\\n\r\\n<bright>主动：</bright>获得持续@Duration@秒的@FrenzyADPercent@物理加成。在此期间，无视@GenericCalc1@ %i:scaleAP%护甲。\r\\n\r\\n红霸符：攻击@BurnAmount@%灼烧敌人并治疗【绯红印记树怪】@TraitMaxHealthHeal@最大生命值。"
+    },
+    "icon": "{0c5a019370385aa2}"
+  },
+  {
+    "id": "DA_18_Xayah",
+    "name": "霞",
+    "cost": 1,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Fae",
+      "DA_18_Rapidfire"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 450,
+      "attack": 45,
+      "armor": 25,
+      "magicResist": 25,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "致死羽衣",
+      "description": "下@NumAttacks@次攻击获得@AttackSpeed@攻击速度。这些攻击会被替换为羽刃，造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害和@GenericCalc1@%i:scaleAP%护甲削减。"
+    },
+    "icon": "assets/characters/tft18_xayah/skins/base/images/tft18_xayah_splash_centered_8.tex"
+  },
+  {
+    "id": "DA_18_Ornn",
+    "name": "奥恩",
+    "cost": 1,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Defender"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 700,
+      "attack": 40,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 40
+    },
+    "ability": {
+      "name": "风箱炎息",
+      "description": "<Bright>主动：</Bright>获得持续@ShieldDuration@秒的@ShieldCalc1@%i:scaleAP%护盾值，并对一个锥形范围内的敌人造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。\r\\n\r\\n<Bright>任务：</Bright>每场玩家对战，【奥恩】将已格挡的伤害储存为【锻炉能量】，在3星时翻倍。他每次获得足够的【锻炉能量】时，就会获得1个【神器锻造器】。<Rules>（锻炉能量：</Rules>@Stack@<Rules> / </Rules>@GenericCalc1@<Rules>）</Rules>"
+    },
+    "icon": "assets/characters/tft18_ornn/skins/base/images/tft18_ornn_splash_centered_2.tex"
+  },
+  {
+    "id": "DA_Nidalee18_AP",
+    "name": "奈德丽",
+    "cost": 4,
+    "traits": [
+      "DA_Primal18",
+      "DA_18_Adaptor"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 35,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.8,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "标枪投掷",
+      "description": "<Bright>【魔战士】</Bright>%i:scaleAP%<Bright>：</Bright>下@NumEmpoweredAttacks@次攻击获得@BonusAttackSpeed@攻击速度。这些攻击被替换为标枪，造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。第3次攻击转而瞄准相距最远且携带最少装备的那个敌人，并造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。\r\\n\r\\n<dim>【魔战士】</dim>%i:scaleAD%<dim>：变形为一只近战美洲狮刺客来挥击敌人们。</dim>"
+    },
+    "icon": "assets/characters/tft18_nidalee/skins/base/images/tft18_nidalee_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Hecarim",
+    "name": "赫卡里姆",
+    "cost": 3,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Vanguard"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1100,
+      "attack": 50,
+      "armor": 50,
+      "magicResist": 50,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "恐惧之灵",
+      "description": "获得持续3秒的@Resists@护甲与魔抗，并在此期间持续回复@HealthCalc1@%i:scaleAP%生命值。向相距最近的@NumEnemies@名敌人派出幽魂骑兵，从而对其造成@MagicDamageCalc1@%i:scaleAP%魔法伤害和@StunDuration@秒晕眩。"
+    },
+    "icon": "assets/characters/tft18_hecarim/skins/base/images/tft18_hecarim_splash_centered_5.tex"
+  },
+  {
+    "id": "DA_18_Ezreal",
+    "name": "伊泽瑞尔",
+    "cost": 4,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Executioner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 45,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "森林疾风",
+      "description": "闪烁远离当前目标，对其造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害，并获得@AttackSpeedCalc1@%i:scaleAP%攻击速度。\r\\n\r\\n每第四次施放时，会消耗来自【自然之怒】的攻击速度，并释放一道贯穿最大的敌群的震波来造成@PhysicalDamageCalc2@%i:scaleAD%物理伤害，它每穿过一个敌人就会降低@DamageReductionPerHit@伤害(最低为@MinDamagePercent@)。"
+    },
+    "icon": "assets/characters/tft18_ezreal/skins/base/images/tft18_ezreal_splash_centered_1.tex"
+  },
+  {
+    "id": "DA_18_Azir",
+    "name": "阿兹尔",
+    "cost": 3,
+    "traits": [
+      "DA_18_Blackthorn",
+      "DA_18_Executioner",
+      "DA_18_Summoner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 30,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "沙兵现身",
+      "description": "接下来的@NumAttacks@次攻击获得@AttackSpeed@攻击速度并召唤@SoldiersToSpawn@个士兵。这些攻击会被替换为指令，来命令每个士兵进行攻击，每次攻击造成@MagicDamageCalc1@ %i:scaleAP%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_azir/skins/base/images/tft18_azir_splash_centered_5.tex"
+  },
+  {
+    "id": "DA_18_RekSai",
+    "name": "雷克塞",
+    "cost": 1,
+    "traits": [
+      "DA_18_Blackthorn",
+      "DA_18_Brawler"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 700,
+      "attack": 50,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.55,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 40
+    },
+    "ability": {
+      "name": "破土而出",
+      "description": "<bright>被动：</bright>每秒回复@HealthCalc2@%i:scaleHealth%生命值，施放技能后的@SpellMultiplierDuration@秒内该效果变为3倍。\r\\n\r\\n<bright>主动：</bright>冲出地面，使邻格的敌人们晕眩@KnockupDuration@秒并对其造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_reksai/skins/base/images/tft18_reksai_splash_centered_17.tex"
+  },
+  {
+    "id": "DA_18_Veigar",
+    "name": "维迦",
+    "cost": 1,
+    "traits": [
+      "DA_18_Blackthorn",
+      "DA_18_Sprykin",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 500,
+      "attack": 25,
+      "armor": 25,
+      "magicResist": 25,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "能量爆裂",
+      "description": "向目标发射一记巨大震波，造成@MagicDamageCalc1@%i:scaleAP%魔法伤害，若其生命值低于@HPThreshold@最大生命值，则提升至@MagicDamageCalc2@%i:scaleAP%。\r\\n\r\\n若目标阵亡，则永久获得@APOnKill@%法术加成。\r\\n\r\\n当前加成：@Stack@% %i:scaleAP%"
+    },
+    "icon": "assets/characters/tft18_veigar/skins/base/images/tft18_veigar_splash_centered_13.tex"
+  },
+  {
+    "id": "DA_18_Maokai",
+    "name": "茂凯",
+    "cost": 5,
+    "traits": [
+      "DA_18_Maokai_UniqueTrait",
+      "DA_Juggernaut18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1150,
+      "attack": 80,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "播种",
+      "description": "<Bright>被动：</Bright>每格挡@DamageMitigatedPerSapling@伤害后，一株树苗会跳向附近的一名敌人并造成@MagicDamageCalc1@%i:scaleHealth%魔法伤害。阵亡时，@SaplingsOnDeath@株树苗会跳出。\r\\n\r\\n<Bright>主动：</Bright>对目标造成@MagicDamageCalc2@%i:scaleHealth%魔法伤害并回复@HealthCalc1@%i:scaleAP%+@ActiveMissingHealthHeal@已损失生命值。"
+    },
+    "icon": "assets/characters/tft18_maokai/skins/base/images/tft18_maokai_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Malphite",
+    "name": "墨菲特",
+    "cost": 4,
+    "traits": [
+      "DA_18_Blackthorn",
+      "DA_18_Battlemage"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1300,
+      "attack": 70,
+      "armor": 70,
+      "magicResist": 70,
+      "attackSpeed": 0.55,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "石化树皮",
+      "description": "获得持续@ShieldDuration@秒的@ShieldCalc1@%i:scaleAP%护盾值，并进入石化状态。护盾被打破时，释放一道黑暗能量波，对@AoEHexRange@格内的敌人们造成@MagicDamageCalc1@%i:scaleAP%%i:scaleArmor%%i:scaleMR%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_malphite/skins/base/images/tft18_malphite_splash_centered_27.tex"
+  },
+  {
+    "id": "DA_18_Yorick",
+    "name": "约里克",
+    "cost": 1,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_Juggernaut18",
+      "DA_18_Summoner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 50,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 50
+    },
+    "ability": {
+      "name": "临终仪式",
+      "description": "<Bright>被动：</Bright>阵亡时，生成一个拥有@HealthCalc2@%i:scaleHealth%最大生命值的【夜幽游灵】，并且它会立即进行嘲讽从而迫使敌人们对其进行攻击。\r\\n\r\\n<Bright>主动：</Bright>回复@HealthCalc1@%i:scaleAP%生命值并打击目标，造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害。"
+    },
+    "icon": "assets/characters/tft18_yorick/skins/base/images/tft18_yorick_splash_centered_30.tex"
+  },
+  {
+    "id": "DA_18_Yunara",
+    "name": "芸阿娜",
+    "cost": 2,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_18_Executioner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 550,
+      "attack": 42,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "灵蕴拳",
+      "description": "冲刺并向当前目标发射一颗法球，造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害并分裂，对附近的@NumSecondaryTargets@名敌人造成@PhysicalDamageCalc2@%i:scaleAD%%i:scaleAP%物理伤害。"
+    },
+    "icon": "assets/characters/tft18_yunara/skins/base/images/tft18_yunara_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Sett",
+    "name": "瑟提",
+    "cost": 4,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_18_Brawler"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1200,
+      "attack": 80,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 60
+    },
+    "ability": {
+      "name": "蓄意轰拳",
+      "description": "<Bright>被动：</Bright>每场战斗中首次跌至@ManaHPThreshold@最大生命值以下时，获得100法力值。\r\\n\r\\n<Bright>主动：</Bright>蓄力打出一记重拳，从而快速回复@HealthCalc1@%i:scaleHealth%%i:scaleAP%生命值，随后在一个大型锥形范围内造成@PhysicalDamageCalc1@%i:scaleHealth%%i:scaleAD%物理伤害。"
+    },
+    "icon": "assets/characters/tft18_sett/skins/base/images/tft18_sett_splash_centered_38.tex"
+  },
+  {
+    "id": "DA_18_Ahri",
+    "name": "阿狸",
+    "cost": 4,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 40,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.8,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "灵魄炸弹",
+      "description": "对@AbilityCenterHexRange@格内被最多敌人环绕的那个位置发射一颗灵魄炸弹。它对半径@HexRadius@格内的敌人造成@MagicDamageCalc1@%i:scaleAP%魔法伤害，与中心的距离每增加1格，该伤害就会衰减@HexPercentDamageFalloffTooltip@。"
+    },
+    "icon": "assets/characters/tft18_ahri/skins/base/images/tft18_ahri_splash_centered_27.tex"
+  },
+  {
+    "id": "DA_18_Ashe",
+    "name": "艾希",
+    "cost": 5,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_18_Hunter"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 75,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.8,
+      "range": 6,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "灵魂裂隙",
+      "description": "沿敌人最多的那条直线发射一支箭矢，造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害，这个伤害每命中一个敌人就会衰减@DamageFalloffPerEnemy@(最低为@MinDamagePercent@)。\r\\n\r\\n这支箭矢会留下一道持续@RiftDuration@秒的痕迹，对其中的敌人每秒造成@PhysicalDamageCalc2@%i:scaleAD%%i:scaleAP%+@MaxHealthDamagePerSecond@最大生命值物理伤害，并施加@ChillPercent@%<Keyword>缓速</Keyword>效果。\r\\n\r\\n<Rules>缓速：降低攻击速度</Rules>"
+    },
+    "icon": "assets/characters/tft18_ashe/skins/base/images/tft18_ashe_splash_centered_76.tex"
+  },
+  {
+    "id": "DA_18_Elise",
+    "name": "伊莉丝",
+    "cost": 2,
+    "traits": [
+      "DA_18_Coven",
+      "DA_18_Vanguard"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 20,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "蜘蛛女皇",
+      "description": "变身为蜘蛛，并获得@SpiderHealthBuff@最大生命值。处于蜘蛛形态时的攻击造成@MagicDamageCalc1@%i:scaleAP%额外魔法伤害，并治疗自身@HealthCalc1@%i:scaleAP%生命值。后续施放提供在@ASBuffDuration@秒内持续衰减的@DecayingAS@攻击速度。"
+    },
+    "icon": "assets/characters/tft18_elise/skins/base/images/tft18_elise_splash_centered_24.tex"
+  },
+  {
+    "id": "DA_18_Caitlyn",
+    "name": "凯特琳",
+    "cost": 2,
+    "traits": [
+      "DA_18_Coven",
+      "DA_18_Hunter"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 550,
+      "attack": 50,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "爆头",
+      "description": "<Bright>被动：</Bright>每第三次攻击会被替换为一次爆头，造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害。"
+    },
+    "icon": "assets/characters/tft18_caitlyn/skins/base/images/tft18_caitlyn_splash_centered_30.tex"
+  },
+  {
+    "id": "DA_18_Cassiopeia",
+    "name": "卡西奥佩娅",
+    "cost": 3,
+    "traits": [
+      "DA_18_Coven",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 30,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "瘟毒爆炸",
+      "description": "向目标和相距最近未中毒的敌人投毒，从而在@Duration@秒利持续造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。这个毒可以叠加。"
+    },
+    "icon": "assets/characters/tft18_cassiopeia/skins/base/images/tft18_cassiopeia_splash_centered_18.tex"
+  },
+  {
+    "id": "DA_18_Morgana",
+    "name": "莫甘娜",
+    "cost": 4,
+    "traits": [
+      "DA_18_Coven",
+      "DA_18_Invoker"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1100,
+      "attack": 45,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.75,
+      "range": 2,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "枯萎诅咒",
+      "description": "<bright>被动：</bright>获得@Omnivamp@全能吸血。\r\\n\r\\n<bright>主动：</bright>向附近@NumEnemiesCursed@个敌人发射一道黑暗震波，造成@MagicDamageCalc1@%i:scaleAP%魔法伤害并诅咒他们@SpellDuration@秒。然后，生成一个半径@HexRangeAOE@格的枯萎地带，持续相同时长并且每秒造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。被诅咒的敌人们受到@MagicDamageCalc3@%i:scaleAP%x诅咒数的额外伤害。"
+    },
+    "icon": "assets/characters/tft18_morgana/skins/base/images/tft18_morgana_splash_centered_26.tex"
+  },
+  {
+    "id": "DA_18_Rakan",
+    "name": "洛",
+    "cost": 1,
+    "traits": [
+      "DA_18_Fae",
+      "DA_Juggernaut18",
+      "DA_18_Vanguard"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 700,
+      "attack": 45,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 35
+    },
+    "ability": {
+      "name": "登场之舞",
+      "description": "获得持续@ShieldDuration@秒的@ShieldCalc1@%i:scaleAP%护盾值。然后为本回合造成伤害最高的友军提供在@AttackSpeedDuration@秒内持续衰减的@AttackSpeedCalc1@%i:scaleAP%%攻击速度。 "
+    },
+    "icon": "assets/characters/tft18_rakan/skins/base/images/tft18_rakan_splash_centered_9.tex"
+  },
+  {
+    "id": "DA_18_Lillia",
+    "name": "莉莉娅",
+    "cost": 4,
+    "traits": [
+      "DA_18_Fae",
+      "DA_18_Defender"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1300,
+      "attack": 40,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 40
+    },
+    "ability": {
+      "name": "夜阑谣",
+      "description": "回复@HealthCalc1@%i:scaleAP%生命值，并向附近的敌人们放出@NumEnemiesToFireAt@只蝴蝶。在命中敌人时造成@MagicDamageCalc1@%i:scaleAP%魔法伤害并施加@SleepDuration@秒昏睡。如果目标受到的伤害达到@DamageNeededToAwaken@，则会醒来并额外受到@WakeupDamage@最大生命值的魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_lillia/skins/base/images/tft18_lillia_splash_centered_28.tex"
+  },
+  {
+    "id": "DA_18_Kobuko",
+    "name": "可酷伯",
+    "cost": 1,
+    "traits": [
+      "DA_18_Sprykin",
+      "DA_18_Brawler"
+    ],
+    "set": 18,
+    "role": "APTank",
+    "stats": {
+      "hp": 700,
+      "attack": 55,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "生命之舞",
+      "description": "在@Duration@秒里持续回复共@HealthCalc1@ %i:scaleHealth%%i:scaleAP%生命值。下一次攻击被替换为猛击，造成@MagicDamageCalc1@%i:scaleHealth%%i:scaleAP%魔法伤害。"
+    },
+    "icon": "{7ae9d8870aed1489}"
+  },
+  {
+    "id": "DA_18_Teemo",
+    "name": "提莫",
+    "cost": 2,
+    "traits": [
+      "DA_18_Sprykin",
+      "DA_18_Invoker"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 550,
+      "attack": 35,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "内有真菌",
+      "description": "投掷2簇蘑菇，对相距最近的@NumEnemiesHit@个敌人造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。然后猛摔出一个巨型蘑菇，对目标造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。\r\\n\r\\n每次施放有@PercentChanceOfForage@几率搜寻到一个额外的蘑菇，可供收集以获得额外效果。\r\\n\r\\n<bright>红蘑菇：</bright> @RedRerolls@次刷新<Rules>(已搜寻到的红蘑菇：</Rules>@Stack@<Rules>)</Rules>\r\\n<bright>绿蘑菇：</bright> @GreenHealth@小小英雄生命值<Rules>(已搜寻到的绿蘑菇：</Rules> @GenericCalc1@<Rules>)</Rules>\r\\n<bright>黄蘑菇：</bright> @YellowXP@经验值<Rules>(已搜寻到的黄蘑菇：</Rules> @GenericCalc2@<Rules>)</Rules>"
+    },
+    "icon": "{9d832f70c923aaf6}"
+  },
+  {
+    "id": "DA_18_Rammus",
+    "name": "拉莫斯",
+    "cost": 3,
+    "traits": [
+      "DA_18_Sprykin",
+      "DA_18_Defender"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1100,
+      "attack": 50,
+      "armor": 50,
+      "magicResist": 50,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "尖刺防御",
+      "description": "嘲讽，从而强迫附近的敌人们攻击该弈子。获得持续@Duration@秒的@ShieldCalc1@%i:scaleAP%护盾值和@ArmorMR@护甲与魔抗。\r\\n\r\\n护盾被打破时，对@DamageHexRange@格内的敌人造成@PhysicalDamageCalc1@%i:scaleArmor%%i:scaleMR%物理伤害。"
+    },
+    "icon": "assets/characters/tft18_rammus/skins/base/images/tft18_rammus_splash_centered_26.tex"
+  },
+  {
+    "id": "DA_18_GnarSmall",
+    "name": "纳尔",
+    "cost": 5,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Sprykin",
+      "DA_18_Brawler"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 100,
+      "armor": 55,
+      "magicResist": 55,
+      "attackSpeed": 0.9,
+      "range": 2,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "狂怒基因",
+      "description": "<Bright>被动：</Bright>每秒获得@RagePerSecond@怒气并且每次攻击提供@RagePerAttack@怒气。\r\\n\r\\n<Bright>主动：</Bright>变形为【巨型纳尔】并跃至@TransformSearchRadius@格内最大的敌群。然后，对@TransformHexRadius@格内的敌人们造成@PhysicalDamageCalc3@%i:scaleAD%物理伤害，将其护甲和魔抗降低@GenericCalc1@%i:scaleAP%，并令其晕眩@StunDuration@秒。【巨型纳尔】获得@HealthCalc1@生命值，并将其技能替换为“抓投”。\r\\n\r\\n<Bright>抓投：</Bright>抓住目标并将其投向相距最远的那个敌人，对主要目标造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害，并对途经的敌人造成@PhysicalDamageCalc2@%i:scaleAD%物理伤害。如果目标是最后存活的1名敌人，则转而将其抛出战场。"
+    },
+    "icon": "assets/characters/tft18_gnar/skins/base/images/tft18_gnar_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Tristana",
+    "name": "崔丝塔娜",
+    "cost": 3,
+    "traits": [
+      "DA_18_Fae",
+      "DA_18_Sprykin",
+      "DA_18_Hunter"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 55,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "爆炸火花",
+      "description": "将一个爆炸火花吸附到目标上，持续@Duration@秒。生效期间，获得无限射程和@AttackSpeedCalc1@%i:scaleAP%攻击速度。持续时间结束后，爆炸火花会爆炸并造成由2格内的所有敌人间分摊的伤害，伤害值为@PhysicalDamageCalc1@%i:scaleAD%物理伤害+施放期间每次攻击提供额外@PhysicalDamageCalc2@%i:scaleAD%物理伤害。\r\\n\r\\n<Rules>如果携带爆炸火花的敌人阵亡，那么爆炸火花会吸附至【崔丝塔娜】的新目标。</Rules>"
+    },
+    "icon": "assets/characters/tft18_tristana/skins/base/images/tft18_tristana_splash_centered_61.tex"
+  },
+  {
+    "id": "DA_18_Sivir",
+    "name": "希维尔",
+    "cost": 4,
+    "traits": [
+      "DA_Primal18",
+      "DA_18_Hunter"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 50,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.8,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "回旋之刃",
+      "description": "投掷一把巨大的十字刃，它会对当前敌人造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害，并在附近敌人之间弹跳@NumBounces@次，每次弹跳造成@PhysicalDamageCalc2@%i:scaleAD%%i:scaleAP%物理伤害。当这个技能击杀了一个敌人，它会额外弹跳@BonusKillBounces@次。"
+    },
+    "icon": "assets/characters/tft18_sivir/skins/base/images/tft18_sivir_splash_centered_61.tex"
+  },
+  {
+    "id": "DA_Vi18",
+    "name": "蔚",
+    "cost": 3,
+    "traits": [
+      "DA_Primal18",
+      "DA_Juggernaut18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1100,
+      "attack": 45,
+      "armor": 50,
+      "magicResist": 50,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "狂怒之拳",
+      "description": "<bright>被动：</bright>攻击时，回复@HealthCalc1@ %i:scaleHealth%生命值。\r\\n\r\\n<bright>主动：</bright>发出一声原始怒吼，从而回复@HealthCalc3@ %i:scaleAP%生命值。然后获得@SpellAS@攻击速度、@SpellDurability@伤害减免和控制免疫效果，持续@SpellDuration@秒。"
+    },
+    "icon": "assets/characters/tft18_vi/skins/base/images/tft18_vi_splash_centered_39.tex"
+  },
+  {
+    "id": "DA_18_Akali_AD",
+    "name": "阿卡丽",
+    "cost": 1,
+    "traits": [
+      "DA_18_Inferno",
+      "DA_18_Adaptor",
+      "DA_18_Slayer"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 40,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "苦无打击",
+      "description": "<Bright>【魔战士】</Bright>%i:scaleAD%<Bright>：</Bright>对目标发射一连串苦无，造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害。如果目标处于<keyword>灼烧</keyword>状态，则额外造成@PhysicalDamageCalc2@%i:scaleAD%伤害。\r\\n\r\\n<dim>【魔战士】</dim>%i:scaleAP%<dim>：若该技能完成击杀，则再次施放它。</dim>"
+    },
+    "icon": "assets/characters/tft18_akali/skins/base/images/tft18_akali_splash_centered_2.tex"
+  },
+  {
+    "id": "DA_18_Varus",
+    "name": "韦鲁斯",
+    "cost": 1,
+    "traits": [
+      "DA_18_Inferno",
+      "DA_18_Rapidfire"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 500,
+      "attack": 40,
+      "armor": 25,
+      "magicResist": 25,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "穿刺之箭",
+      "description": "蓄力，然后向目标所在且敌人最多的一条直线射出箭矢。它对命中的敌人造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害，每穿过一个敌人，该伤害降低@DamageReductionPerHit@(最低为@MinDamagePercent@)。"
+    },
+    "icon": "assets/characters/tft18_varus/skins/base/images/tft18_varus_splash_centered_9.tex"
+  },
+  {
+    "id": "DA_Amumu18",
+    "name": "阿木木",
+    "cost": 4,
+    "traits": [
+      "DA_18_Inferno",
+      "DA_Juggernaut18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1300,
+      "attack": 70,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.7,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "勃然大怒",
+      "description": "<Bright>被动：</Bright>每秒回复@HealthCalc1@%i:scaleHealth%生命值并对@PassiveHexRadius@格内的敌人们造成@MagicDamageCalc1@魔法伤害。\r\\n\r\\n<Bright>主动：</Bright>对@BigHexRadius@格内的敌人造成@MagicDamageCalc3@魔法伤害和@StunDuration@秒晕眩，如果目标处于<Keyword>灼烧</Keyword>状态则延长至@GenericCalc1@秒。\r\\n\r\\n<Rules>灼烧：每秒造成目标一部分最大生命值的真实伤害。</Rules>"
+    },
+    "icon": "assets/characters/tft18_amumu/skins/base/images/tft18_amumu_splash_centered_17.tex"
+  },
+  {
+    "id": "DA_18_Kennen",
+    "name": "凯南",
+    "cost": 5,
+    "traits": [
+      "DA_18_Inferno",
+      "DA_18_Executioner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1200,
+      "attack": 50,
+      "armor": 60,
+      "magicResist": 60,
+      "attackSpeed": 0.85,
+      "range": 2,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "火焰风暴",
+      "description": "蓄力，每有一名被<Keyword>灼烧</Keyword>的敌人便获得@APPerBurningEnemy@法术加成。随后，获得持续@ShieldDuration@秒的@ShieldCalc1@%i:scaleAP%护盾值，然后冲刺穿过附近的一群敌人，对每个敌人造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。\r\\n\r\\n冲刺后，释放一场半径@FirestormHexRadius@格的火焰风暴，在@FirestormDuration@秒内持续造成共计@MagicDamageCalc2@%i:scaleAP%魔法伤害，由所有被命中的敌人均摊。"
+    },
+    "icon": "assets/characters/tft18_kennen/skins/base/images/tft18_kennen_splash_centered_8.tex"
+  },
+  {
+    "id": "DA_18_Aphelios",
+    "name": "厄斐琉斯",
+    "cost": 4,
+    "traits": [
+      "DA_18_Lunar",
+      "DA_18_Rapidfire"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 60,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.8,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "月光对影",
+      "description": "装备断魄，并在@GenericCalc1@%i:scaleAS%秒内对目标连续挥击@Duration@次，每次造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害。\r\\n\r\\n攻势结束后，发射一道月光，造成@PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP%物理伤害，由半径2格内的所有敌人分摊。"
+    },
+    "icon": "assets/characters/tft18_aphelios/skins/base/images/tft18_aphelios_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Diana",
+    "name": "黛安娜",
+    "cost": 3,
+    "traits": [
+      "DA_18_Lunar",
+      "DA_18_Slayer",
+      "DA_18_Vanguard"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 30,
+      "armor": 50,
+      "magicResist": 50,
+      "attackSpeed": 0.8,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "苍白屏障",
+      "description": "获得持续@ShieldDuration@秒的@ShieldCalc1@护盾值，并放出@NumOrbs@颗月光法球，由2格内的所有敌人分摊，每颗造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。 "
+    },
+    "icon": "assets/characters/tft18_diana/skins/base/images/tft18_diana_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Alune",
+    "name": "拉露恩",
+    "cost": 5,
+    "traits": [
+      "DA_AluneUniqueTrait18",
+      "DA_18_Lunar",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "role": "APCaster",
+    "stats": {
+      "hp": 900,
+      "attack": 40,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.8,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "月之降临",
+      "description": "向@NumEnemies@个最近的敌人降下@NumMoonshards@枚月光碎片，每枚造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。\r\\n\r\\n满月时，月曜降临，造成由所有敌人分摊的@MagicDamageCalc2@%i:scaleAP%魔法伤害。"
+    },
+    "icon": "{8dc562676f27747d}"
+  },
+  {
+    "id": "DA_18_Leona",
+    "name": "蕾欧娜",
+    "cost": 1,
+    "traits": [
+      "DA_18_Solar",
+      "DA_18_Defender"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 750,
+      "attack": 50,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "护盾猛击",
+      "description": "<Bright>被动：</Bright>在战斗开始时获得@GenericCalc1@%i:scaleAP%额外护甲和魔抗，在@DecayDuration@秒内持续衰减。\r\\n\r\\n<Bright>主动：</Bright>猛击当前目标，造成@MagicDamageCalc1@%i:scaleArmor%魔法伤害和@StunDuration@秒晕眩。"
+    },
+    "icon": "assets/characters/tft18_leona/skins/base/images/tft18_leona_splash_centered_10.tex"
+  },
+  {
+    "id": "DA_18_Kayle",
+    "name": "凯尔",
+    "cost": 2,
+    "traits": [
+      "DA_18_Solar",
+      "DA_18_Rapidfire"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 550,
+      "attack": null,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "太阳裁决",
+      "description": "<Bright>被动：</Bright>【凯尔】基于其星级获得飞升，并获得可叠加的增益。\r\\n\r\\n<Bright>第1次飞升：</Bright> 普攻造成@MagicDamageCalc1@%i:scaleAP%额外魔法伤害。\r\\n<Bright>第2次飞升：</Bright> 普攻对命中的敌人施加持续@ShredDuration@秒的@ShredLevel@%<Keyword>魔抗击碎</Keyword>。\r\\n<Bright>第3次飞升：</Bright> 普攻发射冲击波，对命中的所有其他弈子造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。\r\\n<Bright>第4次飞升：</Bright> 获得无限距离。每第@NumAttacksForBigWave4Star@次焰浪变得更大。\r\\n\r\\n<Rules>魔抗击碎：降低魔抗值</Rules>"
+    },
+    "icon": "assets/characters/tft18_kayle/skins/base/images/tft18_kayle_splash_centered_42.tex"
+  },
+  {
+    "id": "DA_18_Sejuani",
+    "name": "瑟庄妮",
+    "cost": 2,
+    "traits": [
+      "DA_18_Solar",
+      "DA_Juggernaut18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 50,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 40
+    },
+    "ability": {
+      "name": "烈阳之怒",
+      "description": "获得持续@ShieldDuration@秒的@ShieldCalc1@%i:scaleHealth%%i:scaleAP%护盾值。然后在一个锥形范围内进行顺劈以造成@MagicDamageCalc1@%i:scaleAP%魔法伤害，并沿直线进行打击，对被命中的敌人们造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_sejuani/skins/base/images/tft18_sejuani_splash_centered_26.tex"
+  },
+  {
+    "id": "DA_18_KhaZix",
+    "name": "卡兹克",
+    "cost": 3,
+    "traits": [
+      "DA_18_Rival"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 950,
+      "attack": 40,
+      "armor": 55,
+      "magicResist": 55,
+      "attackSpeed": 0.85,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "品尝恐惧",
+      "description": "跃向@LeapRangeHexes@格内相距最远的敌人，对其造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。如果其邻格没有其友军，则转而造成@MagicDamageCalc2@%i:scaleAP%魔法伤害并获得@IsolateManaGrant@法力值。{Augment.Variant.RivalsAugment.AbilityTooltip}"
+    },
+    "icon": "assets/characters/tft18_khazix/skins/base/images/tft18_khazix_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_18_Rengar",
+    "name": "雷恩加尔",
+    "cost": 3,
+    "traits": [
+      "DA_18_Rival"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 60,
+      "armor": 55,
+      "magicResist": 55,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 10
+    },
+    "ability": {
+      "name": "残忍无情",
+      "description": "跳向@JumpHexRange@格内生命值百分比最低的那个敌人并刺击，从而造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害。然后治疗@HealthCalc1@%i:scaleAP% 生命值，治疗量基于已损失的生命值至多到 @HealthCalc2@%i:scaleAP%。{Augment.Variant.RivalsAugment.AbilityTooltip}"
+    },
+    "icon": "assets/characters/tft18_rengar/skins/base/images/tft18_rengar_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_KogMaw18_AD",
+    "name": "克格莫",
+    "cost": 3,
+    "traits": [
+      "DA_18_Caustic",
+      "DA_18_Adaptor",
+      "DA_18_Invoker"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 40,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.8,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 15
+    },
+    "ability": {
+      "name": "天降重炮",
+      "description": "<Bright>【魔战士】</Bright>%i:scaleAD%<Bright>：</Bright>向目标和相距最近的一个其他敌人喷射酸液，造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害。低于@ADBonusDamageThreshold@最大生命值的敌人们转而受到@PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP%物理伤害。\r\\n\r\\n<dim>【魔战士】</dim>%i:scaleAP%<dim>：对敌人持续造成伤害。</dim>"
+    },
+    "icon": "assets/characters/tft18_kogmaw/skins/base/images/tft18_kogmaw_splash_centered_3.tex"
+  },
+  {
+    "id": "DA_18_Zyra",
+    "name": "婕拉",
+    "cost": 4,
+    "traits": [
+      "DA_18_ZyraUniqueTrait",
+      "DA_18_Summoner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 40,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "狂野生长",
+      "description": "在战场周围生成@NumPlantsToSpawn@株植物，它们会攻击相距最近的敌人@ThornSpitterNumAttacks@次。每次攻击造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。 "
+    },
+    "icon": "assets/characters/tft18_zyra/skins/base/images/tft18_zyra_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_Fiddlesticks18",
+    "name": "费德提克",
+    "cost": 3,
+    "traits": [
+      "DA_FloraFatalis18",
+      "DA_18_Defender",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1000,
+      "attack": 50,
+      "armor": 55,
+      "magicResist": 55,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "收获",
+      "description": "使@NumTargets@个相距最近的敌人的魔抗降低@MRReduction@。然后在@CastDuration@秒里持续从它们身上汲取生命力，从而治疗自身@HealthCalc1@%i:scaleAP%生命值并在此期间持续对每个敌人造成共@MagicDamageCalc1@%i:scaleAP%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_fiddlesticks/skins/base/images/tft18_fiddlesticks_splash_centered_46.tex"
+  },
+  {
+    "id": "DA_18_Soraka",
+    "name": "索拉卡",
+    "cost": 4,
+    "traits": [
+      "DA_FloraFatalis18",
+      "DA_18_Executioner"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 30,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "流星坠落",
+      "description": "召唤一颗星星落在当前目标身上，从而造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。如果此前曾有一颗星星落至其上，则额外召唤@NumAdditionalStars@颗星星，每颗造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_soraka/skins/base/images/tft18_soraka_splash_centered_53.tex"
+  },
+  {
+    "id": "DA_Taric18",
+    "name": "塔里克",
+    "cost": 5,
+    "traits": [
+      "DA_Emerald18",
+      "DA_18_Vanguard"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1300,
+      "attack": 55,
+      "armor": 65,
+      "magicResist": 65,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "翡翠辉耀",
+      "description": "<Bright>被动：</Bright>【塔里克】或其绑定的友军首次跌到@PassivePercentHealthThreshold@生命值以下时，两人身上会释放翡翠能量，为@PassiveHexRadius@格内的友军提供持续@PassiveShieldDuration@秒的@ShieldCalc1@%i:scaleHealth%护盾值。\r\\n\r\\n<Bright>主动：</Bright>回复@HealthCalc1@%i:scaleAP%生命值。【塔里克】和其绑定的友军的下@NumAttacks@次攻击造成@MagicDamageCalc1@%i:scaleAP%额外魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_taric/skins/base/images/tft18_taric_splash_centered_1.tex"
+  },
+  {
+    "id": "DA_18_Ivern",
+    "name": "艾翁",
+    "cost": 5,
+    "traits": [
+      "DA_18_Greenfather"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1000,
+      "attack": 60,
+      "armor": 55,
+      "magicResist": 55,
+      "attackSpeed": 0.8,
+      "range": 3,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 50
+    },
+    "ability": {
+      "name": "种豆得瓜",
+      "description": "<bright>被动：</bright>来自这个技能的护盾值可以通过<Keyword>技能暴击</Keyword>来产生暴击。\r\\n\r\\n<bright>主动</bright>：为@NumAlliesToShield@名友军提供@ShieldCalc1@%i:scaleAP%%i:scaleDA%护盾和@DamageAmpAmount@伤害增幅，持续@ShieldDuration@秒。随后对其邻格的敌人们造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。施放@CastThreshold@次后，该技能还会为目标提供@AttackSpeed@可叠加的攻击速度。 "
+    },
+    "icon": "assets/characters/tft18_ivern/skins/base/images/tft18_ivern_splash_centered_0.tex"
+  },
+  {
+    "id": "DA_Lux18_Base",
+    "name": "拉克丝",
+    "cost": 5,
+    "traits": [
+      "DA_18_LuxUniqueTrait"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 40,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.8,
+      "range": 6,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "终极闪光",
+      "description": "<bright>被动：</bright>施放时，所有与【拉克丝】拥有同一羁绊的己方弈子获得@ManaCalc1@%i:scaleAP%法力值。\r\\n\r\\n<bright>主动：</bright>向最大的敌群发射一道激光，造成@MagicDamageCalc1@%i:scaleAP%魔法伤害，每命中一个敌人，该伤害衰减@DamageReductionPerUnit@。"
+    },
+    "icon": "assets/characters/tft18_lux/skins/base/images/tft18_lux_splash_centered_7.tex"
+  },
+  {
+    "id": "DA_18_Alistar",
+    "name": "阿利斯塔",
+    "cost": 2,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Brawler"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 950,
+      "attack": 50,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.6,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "凯旋怒吼",
+      "description": "怒吼，回复@HealthCalc1@%i:scaleHealth%%i:scaleAP%生命值，净化限制效果，并为生命值最低的两名友军回复@HealthCalc2@%i:scaleAP%生命值。然后猛击当前目标，造成@MagicDamageCalc1@%i:scaleAP%魔法伤害和@StunDuration@秒晕眩。"
+    },
+    "icon": "assets/characters/tft18_alistar/skins/base/images/tft18_alistar_splash_centered_40.tex"
+  },
+  {
+    "id": "DA_Draven18",
+    "name": "德莱文",
+    "cost": 5,
+    "traits": [
+      "DA_DravenUniqueTrait18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 48,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.85,
+      "range": 6,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "冷血追命",
+      "description": "<bright>被动：</bright>对距离内的随机敌人进行攻击并对其施加一层流血效果，在@BleedDuration@秒里持续造成共@PhysicalDamageCalc1@%i:scaleAD%物理伤害。每次攻击还有@GenericCalc1@%i:scaleAP%几率造成@SpinningAxeDamageRatio@额外物理伤害并转而施加@SpinningAxeBleedStacks@层流血效果。\r\\n\r\\n<bright>主动：</bright>朝流血层数最多的敌人投掷两把巨斧。对被命中的敌人造成@PhysicalDamageCalc3@%i:scaleAD%物理伤害并消耗他们的流血效果，即刻造成剩余伤害。然后巨斧返回，对被命中的敌人造成@GenericCalc2@%i:scaleAD%物理伤害。"
+    },
+    "icon": "assets/characters/tft18_draven/skins/base/images/tft18_draven_splash_centered_5.tex"
+  },
+  {
+    "id": "DA_18_ElderDragon",
+    "name": "远古巨龙",
+    "cost": 5,
+    "traits": [
+      "DA_18_ApexPredator",
+      "DA_Riftbeast18"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 1800,
+      "attack": 125,
+      "armor": 75,
+      "magicResist": 75,
+      "attackSpeed": 0.5,
+      "range": 2,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "绝伦火热",
+      "description": "<Bright>被动：</Bright>普攻对目标邻格的敌人们造成@AttackAoERatio@伤害。\r\\n\r\\n<Bright>主动：</Bright>变成免疫伤害状态并飞到空中。在返程时，对所有敌人造成@StunDuration@秒晕眩，获得@Omnivamp@全能吸血，并对他们施加持续@IgniteDuration@秒的【引燃】。被【引燃】的敌人每秒受到@IgniteMaxHealthDamage@最大生命值的物理伤害。将该技能替换为【烈焰吐息】并立刻施放它。\r\\n\r\\n<Bright>烈焰吐息：</Bright>对贯穿目标的一条敌人最多的直线喷吐火焰，从而造成@PhysicalDamageCalc2@ %i:scaleAD%%i:scaleAP%物理伤害，每经过1名敌人该伤害衰减@DamageReductionPerHit@(最低至@MinimumDamageThreshold@)。对那些敌人施加持续@IgniteDuration@秒的【引燃】。\r\\n\r\\n远古巨龙霸符：对低于@TraitExecuteThreshold@生命值的敌人造成伤害时会将其处决。"
+    },
+    "icon": "{1ae0a111a91a05ab}"
+  },
+  {
+    "id": "DA_Karma18",
+    "name": "卡尔玛",
+    "cost": 1,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 500,
+      "attack": 25,
+      "armor": 25,
+      "magicResist": 25,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "宿业羁绊",
+      "description": "系住当前目标，在@TetherDuration@秒里持续造成@MagicDamageCalc1@%i:scaleAP%魔法伤害。随后在其周围释放一道能量爆裂，对半径@AoEHexRange@格内的所有敌人造成@MagicDamageCalc2@%i:scaleAP%魔法伤害，并施加持续@SlowDuration@秒的@SlowPercent@%的<keyword>减速</keyword>效果。\r\\n\r\\n<Rules>减速：降低攻击速度</Rules>"
+    },
+    "icon": "assets/characters/tft18_karma/skins/base/images/tft18_karma_splash_centered_70.tex"
+  },
+  {
+    "id": "DA_18_LeBlanc",
+    "name": "乐芙兰",
+    "cost": 2,
+    "traits": [
+      "DA_18_Elderwood",
+      "DA_18_Spellweaver"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 550,
+      "attack": 30,
+      "armor": 30,
+      "magicResist": 30,
+      "attackSpeed": 0.7,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "镜花水月",
+      "description": "<bright>被动：</bright>在玩家对战结束后，你最强的那个【乐芙兰】有@PercentChanceToPrint@的几率生成你场上一个友军的1星复制品，每次参与击杀后提升@PercentChanceToPrintKillBonus@。\r\\n\r\\n<bright>主动：</bright>向当前目标发射一个镜像，从而造成@MagicDamageCalc1@%i:scaleAP%魔法伤害，并对邻格的敌人们造成@MagicDamageCalc2@%i:scaleAP%魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_leblanc/skins/base/images/tft18_leblanc_splash_centered_5.tex"
+  },
+  {
+    "id": "DA_18_MasterYi_AD",
+    "name": "易",
+    "cost": 3,
+    "traits": [
+      "DA_18_Blossom",
+      "DA_18_Adaptor"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 850,
+      "attack": 62,
+      "armor": 55,
+      "magicResist": 55,
+      "attackSpeed": 0.8,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "无极剑道",
+      "description": "<Bright>被动：</Bright>每第三次攻击为双重打击。参与击杀时，获得爆发性的移动速度。\r\\n\r\\n<Bright>【魔战士】</Bright>%i:scaleAD%：双重打击提供@AttackSpeedCalc1@%i:scaleAP%可叠加的攻击速度。\r\\n\r\\n<dim>【魔战士】</dim>%i:scaleAP%<dim>：双重打击会造成额外伤害并提供治疗。</dim>"
+    },
+    "icon": "assets/characters/tft18_masteryi/skins/base/images/tft18_masteryi_splash_centered_52.tex"
+  },
+  {
+    "id": "DA_18_Shen",
+    "name": "慎",
+    "cost": 2,
+    "traits": [
+      "DA_18_Inferno",
+      "DA_18_Defender"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 900,
+      "attack": 50,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.65,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 30
+    },
+    "ability": {
+      "name": "忍法！气合盾",
+      "description": "为【慎】提供@ShieldCalc1@ %i:scaleAP%护盾值，以及为其附近1个受到伤害的友军提供@ShieldCalc2@ %i:scaleAP%护盾值，均持续@MagicShieldDuration@秒。两者接下来的@NumAttacksBuff@次攻击获得@AttackSpeedBuff@攻击速度并造成@MagicDamageCalc1@%i:scaleAP%额外魔法伤害。"
+    },
+    "icon": "assets/characters/tft18_shen/skins/base/images/tft18_shen_splash_centered_16.tex"
+  },
+  {
+    "id": "DA_18_Warwick",
+    "name": "沃里克",
+    "cost": 2,
+    "traits": [
+      "DA_18_Blackthorn",
+      "DA_18_Slayer"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 750,
+      "attack": 45,
+      "armor": 45,
+      "magicResist": 45,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "野兽之口",
+      "description": "撕咬当前目标，造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害，并治疗自身@GenericCalc1@%i:scaleAP%造成伤害的生命值。获得持续到战斗结束的@AttackSpeedBuff@攻击速度。"
+    },
+    "icon": "assets/characters/tft18_warwick/skins/base/images/tft18_warwick_splash_centered_35.tex"
+  },
+  {
+    "id": "DA_18_Camille",
+    "name": "卡蜜尔",
+    "cost": 1,
+    "traits": [
+      "DA_18_Coven",
+      "DA_18_Slayer"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 700,
+      "attack": 40,
+      "armor": 40,
+      "magicResist": 40,
+      "attackSpeed": 0.75,
+      "range": 1,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 0
+    },
+    "ability": {
+      "name": "防御横扫",
+      "description": "切割目标，造成@PhysicalDamageCalc1@%i:scaleAD%%i:scaleAP%物理伤害，并获得持续@ShieldDuration@秒的@AbilityShield@护盾值。"
+    },
+    "icon": "assets/characters/tft18_camille/skins/base/images/tft18_camille_splash_centered_2.tex"
+  },
+  {
+    "id": "DA_CrimsonRaptor18",
+    "name": "深红锋喙鸟",
+    "cost": 3,
+    "traits": [
+      "DA_Riftbeast18",
+      "DA_18_Summoner",
+      "DA_18_Rapidfire"
+    ],
+    "set": 18,
+    "stats": {
+      "hp": 650,
+      "attack": 55,
+      "armor": 35,
+      "magicResist": 35,
+      "attackSpeed": 0.75,
+      "range": 4,
+      "critChance": 0.25,
+      "critMultiplier": 1.4,
+      "initialMana": 20
+    },
+    "ability": {
+      "name": "鸟群之家",
+      "description": "在附近召唤4只不可被选取的【小锋喙鸟】，持续@GenericCalc1@%i:scaleAP%秒。每次【深红锋喙鸟】攻击时，【小锋喙鸟】也会攻击同一敌人，造成@PhysicalDamageCalc1@%i:scaleAD%物理伤害。\r\\n\r\\n橙霸符：造成物理伤害时会使敌人的护甲降低@ArmorReduc@。"
+    },
+    "icon": "{e81b0dca177b4dbf}"
+  }
+]

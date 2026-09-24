@@ -18,6 +18,8 @@ data/*
 !data/examples/
 data/examples/*
 !data/examples/*.json
+!data/tft/
+
 *.db
 *.sqlite
 *.sqlite3

@@ -1,0 +1,1710 @@
+[
+  {
+    "id": "TFT_Item_Artifact_ProwlersClaw",
+    "name": "暗行者之爪",
+    "category": "artifact",
+    "set": 18,
+    "description": "在击杀一个目标后，摆脱负面效果并冲刺到@HexRange@格内相距最远的那个目标处。下两次暴击攻击造成@CritDamageBonusPercent@%额外暴击伤害。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_prowlersclaw.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_ShadowPuppet",
+    "name": "暗影木偶",
+    "category": "artifact",
+    "set": 18,
+    "description": "生成一个复制体，且该复制体复制了携带者的各装备。复制体拥有@ClonePercentHealth*100@%最大生命值，并造成@ClonePercentDamage*100@%伤害。<br><br><rules>[唯一：一个弈子仅限一件]</rules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_shadowpuppet.tex"
+  },
+  {
+    "id": "TFT_Item_SpectralGauntlet",
+    "name": "薄暮法袍",
+    "category": "completed",
+    "set": 18,
+    "description": "@HexRange@格内的敌人们会被施加@ARReductionAmount@%<TFTKeyword>护甲削减</TFTKeyword>。在战斗的最初@BonusResistDuration@秒获得@BonusResists@护甲和魔抗。<br><br><tftitemrules><tftbold>护甲击碎</tftbold>：降低护甲值</tftitemrules>",
+    "composition": [
+      "TFT_Item_NegatronCloak",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_spectralgauntlet.tex"
+  },
+  {
+    "id": "DA_Component_BFSword",
+    "name": "暴风大剑",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_bfsword.tex"
+  },
+  {
+    "id": "TFT_Item_BFSword",
+    "name": "暴风之剑",
+    "category": "component",
+    "set": 18,
+    "description": "%i:scaleAD% +@AD*100@%物理加成",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_bfsword.tex"
+  },
+  {
+    "id": "TFT_Item_UnstableTreasureChest",
+    "name": "不稳定的财宝箱",
+    "category": "other",
+    "set": 18,
+    "description": "携带者阵亡时，@ItemsGranted@个拥有最高百分比生命值的友军获得一件临时成装。<br><br>​​<tftitemrules></tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_unstabletreasurechest.tex"
+  },
+  {
+    "id": "DA_18_EmblemExecutioner",
+    "name": "裁决使纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_SparringGloves"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_executioner.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_LesserMirroredPersona",
+    "name": "次级镜像人格面具",
+    "category": "artifact",
+    "set": 18,
+    "description": "分享携带者@StatSharePercent*100@%的额外物理加成、法术加成、攻击速度、护甲、魔抗和生命值至其它【镜像人格面具】携带者们。<br><br><rules>无法被重铸</rules><br><rules>唯一：一个弈子仅限一件</rules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_lessermirroredpersona.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleMogulsMail",
+    "name": "大亨之铠",
+    "category": "artifact",
+    "set": 18,
+    "description": "在承受伤害时提供@BaseResistsPerStack@护甲、@BaseResistsPerStack@魔抗和@BaseHealthPerStack@生命值，这个效果至多叠加至@StackCap@次。<br><br>在满层时，提供%i:goldCoins%@GoldAtFullStacks@金币并且每@GoldInterval@秒继续获得%i:goldCoins%@GoldAtFullStacks@金币。<br><br><tftitemrules>这局游戏已生成的金币：@TFTUnitProperty.item:TFT_Item_GoldGenerated@</tftitemrules><br><br><tftitemrules>[唯一 - 每位英雄仅可装备1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalemogulsmail.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleMogulsMail_HR",
+    "name": "大亨之铠",
+    "category": "artifact",
+    "set": 18,
+    "description": "在承受伤害时提供@BaseResistsPerStack@护甲、@BaseResistsPerStack@魔抗和@BaseHealthPerStack@生命值，这个效果至多叠加至@StackCap@次。<br><br>在满层时，提供%i:goldCoins%@GoldAtFullStacks@金币并且每@GoldInterval@秒继续获得%i:goldCoins%@GoldAtFullStacks@金币。<br><br><tftitemrules>这局游戏已生成的金币：@TFTUnitProperty.item:TFT_Item_GoldGenerated@</tftitemrules><br><br><tftitemrules>[唯一 - 每位英雄仅可装备1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalemogulsmail.tex"
+  },
+  {
+    "id": "TFT_Item_ArchangelsStaff",
+    "name": "大天使之杖",
+    "category": "completed",
+    "set": 18,
+    "description": "战斗开始时：在战斗期间，每@IntervalSeconds@秒获得@APPerInterval@%法术加成。",
+    "composition": [
+      "TFT_Item_NeedlesslyLargeRod",
+      "TFT_Item_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_archangelsstaff.tex"
+  },
+  {
+    "id": "DA_18_EmblemInferno",
+    "name": "地狱火纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_RecurveBow"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_inferno.tex"
+  },
+  {
+    "id": "DA_18_EmblemBrawler",
+    "name": "斗士纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_GiantsBelt"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_brawler.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_HellfireHatchet",
+    "name": "恶火小斧",
+    "category": "artifact",
+    "set": 18,
+    "description": "攻击造成相当于携带者@MaxHealthPercentDamage*100@%最大生命值的额外物理伤害。每@MissingHealthPercent*100@%已损失生命值，获得@ASPerMissingHealthPercent*100@%攻击速度。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_hellfirehatchet.tex"
+  },
+  {
+    "id": "DA_18_EmblemSpellweaver",
+    "name": "法师纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_NeedlesslyLargeRod"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_spellweaver.tex"
+  },
+  {
+    "id": "DA_Component_RecurveBow",
+    "name": "反曲之弓",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_recurvebow.tex"
+  },
+  {
+    "id": "TFT_Item_RecurveBow",
+    "name": "反曲之弓",
+    "category": "component",
+    "set": 18,
+    "description": "%i:scaleAS%+@AS@%攻击速度",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_recurvebow.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_TalismanOfAscension",
+    "name": "飞升护符",
+    "category": "artifact",
+    "set": 18,
+    "description": "在@Seconds@秒后，获得@MaxHealthPercent@%最大生命值和@DamageAmp*100@%伤害增幅，持续到战斗环节结束。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_talismanofascension.tex"
+  },
+  {
+    "id": "TFT11_Item_ThiefsGlovesSupport",
+    "name": "辅助手套",
+    "category": "support",
+    "set": 18,
+    "description": "每一回合：装备2件随机辅助装。<br><br><tftitemrules>[需要用掉3个装备格。]</tftitemrules><br>@TFTUnitProperty.:TFT_BindOnEquipTRA@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft11_item_thiefsglovessupport.tex"
+  },
+  {
+    "id": "DA_Component_NegatronCloak",
+    "name": "负极斗篷",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_negatroncloak.tex"
+  },
+  {
+    "id": "TFT_Item_NegatronCloak",
+    "name": "负极斗篷",
+    "category": "component",
+    "set": 18,
+    "description": "%i:scaleMR% +@MagicResist@魔法抗性",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_negatroncloak.tex"
+  },
+  {
+    "id": "TFT_Item_LocketOfTheIronSolari",
+    "name": "钢铁烈阳之匣",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：携带者和同一排@HexRange@格内的友军们获得持续@ShieldDuration@秒的@ShieldValue@护盾值、@BonusResists@护甲与@BonusResists@魔抗。<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_locketoftheironsolari.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_LightshieldCrest",
+    "name": "光盾徽章",
+    "category": "artifact",
+    "set": 18,
+    "description": "每@TriggerRate@秒，为生命值百分比最低的那个友军提供护盾，护盾值相当于携带者@PercentOfResists@%的护甲与魔抗总和，持续@ShieldDuration@秒。<br><br>在阵亡时，将这个护盾效果提供给所有友军。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_lightshieldcrest.tex"
+  },
+  {
+    "id": "TFT5_Item_SpectralGauntletRadiant",
+    "name": "光明版薄暮法袍",
+    "category": "radiant",
+    "set": 18,
+    "description": "@HexRange@格内的敌人们会被施加@ARReductionAmount@%<TFTKeyword>护甲削减</TFTKeyword>。在战斗的最初<TFTRadiantItemBonus>@BonusResistDuration@秒</TFTRadiantItemBonus>获得<TFTRadiantItemBonus>@BonusResists@护甲和魔抗</TFTRadiantItemBonus>。<br><br><tftitemrules><tftbold>护甲击碎</tftbold>：降低护甲值</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_spectralgauntletradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_ArchangelsStaffRadiant",
+    "name": "光明版大天使之杖",
+    "category": "radiant",
+    "set": 18,
+    "description": "战斗开始时：在战斗期间，每@IntervalSeconds@秒获得<TFTRadiantItemBonus>@APPerInterval@%</TFTRadiantItemBonus>法术加成。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_archangelsstaffradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_GuinsoosRagebladeRadiant",
+    "name": "光明版鬼索的狂暴之刃",
+    "category": "radiant",
+    "set": 18,
+    "description": "每秒获得<TFTRadiantItemBonus>@AttackSpeedPerStack@%</TFTRadiantItemBonus>可叠加的攻击速度。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_guinsoosragebladeradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_HextechGunbladeRadiant",
+    "name": "光明版海克斯科技枪刃",
+    "category": "radiant",
+    "set": 18,
+    "description": "为生命值百分比最低的友军提供相当于<TFTRadiantItemBonus>@AllyHealing*100@%</TFTRadiantItemBonus>造成伤害值的治疗。<br><br><TFTTrackerLabel>友军治疗：</TFTTrackerLabel> <TFTHighlight>@TFTUnitProperty.item:TFT_Tracker_Value1@</TFTHighlight>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_hextechgunbladeradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_RunaansHurricaneRadiant",
+    "name": "光明版海妖之怒",
+    "category": "radiant",
+    "set": 18,
+    "description": "攻击提供<TFTRadiantItemBonus>@ADOnAttack*100@%</TFTRadiantItemBonus>可叠加的物理加成，至多至@MaxStacks@次攻击。在@MaxStacks@次攻击后，获得<TFTRadiantItemBonus>@ASCapstone*100@%</TFTRadiantItemBonus>攻击速度。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_krakenslayerradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_RapidFirecannonRadiant",
+    "name": "光明版红霸符",
+    "category": "radiant",
+    "set": 18,
+    "description": "攻击和技能的伤害对敌人们造成持续@Duration@秒的<TFTRadiantItemBonus>@BurnPercent@%</TFTRadiantItemBonus><TFTKeyword>灼烧</TFTKeyword>效果和@HealingReductionPct@%<TFTKeyword>重伤</TFTKeyword>效果。<br><br><tftitemrules><tftbold>灼烧</tftbold>：每秒造成目标一部分最大生命值的真实伤害<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules><br>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_rapidfirecannonradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_BrambleVestRadiant",
+    "name": "光明版棘刺背心",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTRadiantItemBonus>@PercentMaxHP*100@%</TFTRadiantItemBonus>最大生命值。<br><br>使来自攻击的伤害降低<TFTRadiantItemBonus>@AutoDamageReduction*100@%</TFTRadiantItemBonus>。在被任一攻击命中时，对邻格所有敌人造成<TFTRadiantItemBonus>@1StarAoEDamage@</TFTRadiantItemBonus>魔法伤害。<br><br><tftitemrules>冷却时间：@ICD@秒</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_bramblevestradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_NightHarvesterRadiant",
+    "name": "光明版坚定之心",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTRadiantItemBonus>@BaseDurability*100@%</TFTRadiantItemBonus>伤害减免。在高于@ThresholdForEmpower*100@%生命值时，转而获得<TFTRadiantItemBonus>@EmpoweredDurability*100@%</TFTRadiantItemBonus>伤害减免。<br><br>@TFTUnitProperty.:TFT_Augment_WarmogsBuckle_TRAKey@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_nightharvesterradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_DragonsClawRadiant",
+    "name": "光明版巨龙之爪",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTRadiantItemBonus>@PercentMaxHP*100@%</TFTRadiantItemBonus>最大生命值。<br><br>每@HealthRegenInterval@秒治疗<TFTRadiantItemBonus>@PercentHealthDamage@%</TFTRadiantItemBonus>最大生命值。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_dragonsclawradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_GiantSlayerRadiant",
+    "name": "光明版巨人杀手",
+    "category": "radiant",
+    "set": 18,
+    "description": "对抗坦克时获得<TFTRadiantItemBonus>@DamageAmp*100@%</TFTRadiantItemBonus>额外伤害增幅。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_giantslayerradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_WarmogsArmorRadiant",
+    "name": "光明版狂徒铠甲",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTRadiantItemBonus>@BonusPercentHP*100@%</TFTRadiantItemBonus>最大生命值。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_warmogsarmorradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_BlueBuffRadiant",
+    "name": "光明版蓝霸符",
+    "category": "radiant",
+    "set": 18,
+    "description": "从所有来源中获得<TFTRadiantItemBonus>@ModifiedADAP*100@%</TFTRadiantItemBonus>额外物理加成和法术加成。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_bluebuffradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_IonicSparkRadiant",
+    "name": "光明版离子火花",
+    "category": "radiant",
+    "set": 18,
+    "description": "对@HexRange@格内的敌人们施加@MRShred@%<TFTKeyword>魔抗击碎</TFTKeyword>。在敌人施放一次技能时，对该敌人造成相当于该敌人<TFTRadiantItemBonus>@ManaRatio@%</TFTRadiantItemBonus>法力值消耗的魔法伤害。<br><tftitemrules>[直接伤害类装备]<br><tftbold>魔抗击碎</tftbold>：降低魔抗值</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_ionicsparkradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_CrownguardRadiant",
+    "name": "光明版冕卫",
+    "category": "radiant",
+    "set": 18,
+    "description": "战斗开始时：获得持续@ShieldDuration@秒的相当于<TFTRadiantItemBonus>@ShieldSize@%</TFTRadiantItemBonus>最大生命值的护盾值。<br><br>在护盾到期时，获得<TFTRadiantItemBonus>@ShieldBonusAP@%法术加成</TFTRadiantItemBonus>。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_crownguardradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_RabadonsDeathcapRadiant",
+    "name": "光明版灭世者的死亡之帽",
+    "category": "radiant",
+    "set": 18,
+    "description": "<tftitemrules>它见证过——并释放过——奇迹和灾难。</tftitemrules><br><br>@TFTUnitProperty.:TFT_Augment_DeadlierCaps_TRAKey@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_rabadonsdeathcapradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_MorellonomiconRadiant",
+    "name": "光明版莫雷洛秘典",
+    "category": "radiant",
+    "set": 18,
+    "description": "攻击和技能的伤害对敌人们造成持续<TFTRadiantItemBonus>@BurnDuration@</TFTRadiantItemBonus>秒的@BurnPercent@%<TFTKeyword>灼烧</TFTKeyword>效果和@GrievousWoundsPercent@%<TFTKeyword>重伤</TFTKeyword>效果。<br><br><tftitemrules><tftbold>灼烧</tftbold>：每秒造成目标一部分最大生命值的真实伤害<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_morellonomiconradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_LeviathanRadiant",
+    "name": "光明版纳什之牙",
+    "category": "radiant",
+    "set": 18,
+    "description": "每次普攻提供<TFTRadiantItemBonus>@BaseManaOnHit@</TFTRadiantItemBonus>额外法力值，如果暴击则提升至<TFTRadiantItemBonus>@ManaOnCrit@</TFTRadiantItemBonus>额外法力值。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_leviathanradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_TrapClawRadiant",
+    "name": "光明版强袭者的链枷",
+    "category": "radiant",
+    "set": 18,
+    "description": "暴击提供持续@Duration@秒的<TFTRadiantItemBonus>@BuffDamageAmp*100@%</TFTRadiantItemBonus>伤害增幅，可叠加至多@MaxStacks@次。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_trapclawradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_ThiefsGlovesRadiant",
+    "name": "光明版窃贼手套",
+    "category": "radiant",
+    "set": 18,
+    "description": "每一回合：装备2件随机<TFTRadiantItemBonus>光明</TFTRadiantItemBonus>武器。<br><br><tftitemrules>[需要用掉3个装备格。]</tftitemrules><br>@TFTUnitProperty.:TFT_BindOnEquipTRA@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_thiefsglovesradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_SunfireCapeRadiant",
+    "name": "光明版日炎斗篷",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTRadiantItemBonus>@BonusPercentHP*100@%</TFTRadiantItemBonus>最大生命值。<br><br>每@ICD@秒，对@HexRange@格内的一名敌人施加持续@BurnDuration@秒的<TFTRadiantItemBonus>@BurnPercent@%</TFTRadiantItemBonus><TFTKeyword>灼烧</TFTKeyword>效果和@GrievousWoundsPercent@%<TFTKeyword>重伤</TFTKeyword>效果。<br><br><tftitemrules><tftbold>灼烧</tftbold>：每秒造成目标一部分最大生命值的真实伤害<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_sunfirecaperadiant.tex"
+  },
+  {
+    "id": "TFT5_Item_FrozenHeartRadiant",
+    "name": "光明版圣盾使的誓约",
+    "category": "radiant",
+    "set": 18,
+    "description": "战斗开始时：获得<TFTRadiantItemBonus>@CombatStartMana@</TFTRadiantItemBonus>法力值。<br><br>在@HealthThreshold@%生命值时，获得<TFTRadiantItemBonus>@TriggerMana@法力值</TFTRadiantItemBonus>和相当于<TFTRadiantItemBonus>@ShieldHealthPercent@%最大生命值</TFTRadiantItemBonus>的护盾值。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_frozenheartradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_GargoyleStoneplateRadiant",
+    "name": "光明版石像鬼石板甲",
+    "category": "radiant",
+    "set": 18,
+    "description": "每有一个敌人正在以携带者为目标，携带者就会获得<TFTRadiantItemBonus>@ArmorPerEnemy@</TFTRadiantItemBonus>护甲和<TFTRadiantItemBonus>@MRPerEnemy@</TFTRadiantItemBonus>魔抗。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_gargoylestoneplateradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_AdaptiveHelmRadiant",
+    "name": "光明版适应性头盔",
+    "category": "radiant",
+    "set": 18,
+    "description": "从所有来源中获得额外的<TFTRadiantItemBonus>@ManaPercIncrease*100@%</TFTRadiantItemBonus>法力值。携带者获得基于角色定位的一个额外加成：<br><br>坦克/战士：获得<TFTRadiantItemBonus>@FrontlineResists@</TFTRadiantItemBonus>护甲和魔抗。<br><br>射手/术师：获得<TFTRadiantItemBonus>@BacklineADAP@%</TFTRadiantItemBonus>物理加成和法术加成。 ",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_adaptivehelmradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_QuicksilverRadiant",
+    "name": "光明版水银",
+    "category": "radiant",
+    "set": 18,
+    "description": "战斗开始时：获得持续<TFTRadiantItemBonus>@SpellShieldDuration@</TFTRadiantItemBonus>秒的控制免疫效果。<br><br>每秒获得<TFTRadiantItemBonus>@ProcAttackSpeed*100@%</TFTRadiantItemBonus>可叠加的攻击速度。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_quicksilverradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_SpearOfShojinRadiant",
+    "name": "光明版朔极之矛",
+    "category": "radiant",
+    "set": 18,
+    "description": "每次普攻提供<TFTRadiantItemBonus>@FlatManaRestore@额外法力值。</TFTRadiantItemBonus>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_spearofshojinradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_SteraksGageRadiant",
+    "name": "光明版斯特拉克的挑战护手",
+    "category": "radiant",
+    "set": 18,
+    "description": "在@HealthThreshold@%生命值时，获得相当于携带者<TFTRadiantItemBonus>@PercentHealthShield*100@%</TFTRadiantItemBonus>最大生命值的护盾值，在<TFTRadiantItemBonus>@ShieldDuration@</TFTRadiantItemBonus>秒内快速衰减。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_steraksgageradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_DeathbladeRadiant",
+    "name": "光明版死亡之刃",
+    "category": "radiant",
+    "set": 18,
+    "description": "<tftitemrules>它在敌人面前发光。或在朋友面前。或在任何活着的东西面前，真的。</tftitemrules><br><br>@TFTUnitProperty.:TFT_Augment_TragicalBlade_TRAKey@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_deathbladeradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_TitansResolveRadiant",
+    "name": "光明版泰坦的坚决",
+    "category": "radiant",
+    "set": 18,
+    "description": "在攻击或承受伤害时获得<TFTRadiantItemBonus>@StackingAD*100@%</TFTRadiantItemBonus>物理加成和<TFTRadiantItemBonus>@StackingSP@%</TFTRadiantItemBonus>法术加成，至多可叠加@StackCap@次。<br><br>在叠满层数后，获得<TFTRadiantItemBonus>@StackedAmp*100@%</TFTRadiantItemBonus>伤害增幅，并获得控制免疫。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_titansresolveradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_InfinityEdgeRadiant",
+    "name": "光明版无尽之刃",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTKeyword>【技能暴击】</TFTKeyword>。<br><br>{{TFT_Keyword_Precision}}",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_infinityedgeradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_StatikkShivRadiant",
+    "name": "光明版虚空之杖",
+    "category": "radiant",
+    "set": 18,
+    "description": "来自攻击和技能的伤害会对目标施加持续<TFTRadiantItemBonus>至战斗环节结束</TFTRadiantItemBonus>的@MRShred@%<TFTKeyword>魔抗击碎</TFTKeyword>。这个效果不会叠加。<br><br><tftitemrules><tftbold>魔抗击碎</tftbold>：降低魔抗值</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_voidstaffradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_GuardianAngelRadiant",
+    "name": "光明版夜之锋刃",
+    "category": "radiant",
+    "set": 18,
+    "description": "在@HealthThreshold@%生命值时，短暂变为不可被选取状态、摆脱负面效果、并<TFTRadiantItemBonus>治疗所有已损失生命值</TFTRadiantItemBonus>。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_guardianangelradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_BloodthirsterRadiant",
+    "name": "光明版饮血剑",
+    "category": "radiant",
+    "set": 18,
+    "description": "每场战斗一次：在@HealthThreshold@%生命值时，获得一个护盾，护盾值相当于携带者<TFTRadiantItemBonus>@ShieldHealthPercent@%</TFTRadiantItemBonus>的最大生命值，至多持续@ShieldDuration@秒。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_bloodthirsterradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_RedemptionRadiant",
+    "name": "光明版振奋盔甲",
+    "category": "radiant",
+    "set": 18,
+    "description": "每秒回复<TFTRadiantItemBonus>@MissingHealthHeal*100@%</TFTRadiantItemBonus>已损失生命值。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_spiritvisagerr.tex"
+  },
+  {
+    "id": "TFT5_Item_HandOfJusticeRadiant",
+    "name": "光明版正义之手",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得2个效果：<li><TFTRadiantItemBonus>@AD_NotStatBar*100@%</TFTRadiantItemBonus>物理加成和<TFTRadiantItemBonus>@AP_NotStatBar@%</TFTRadiantItemBonus>法术加成。<li><TFTRadiantItemBonus>@StatOmnivamp_NotStatBar*100@%</TFTRadiantItemBonus>全能吸血。<br><br>生命值高于@HealthThreshold*100@%时，物理加成和法术加成翻倍。生命值低于@HealthThreshold*100@%时，全能吸血效果翻倍。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_handofjusticeradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_JeweledGauntletRadiant",
+    "name": "光明版珠光护手",
+    "category": "radiant",
+    "set": 18,
+    "description": "获得<TFTKeyword>【技能暴击】</TFTKeyword>。<br><br>{{TFT_Keyword_Precision}}",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_jeweledgauntletradiant.tex"
+  },
+  {
+    "id": "TFT5_Item_LastWhisperRadiant",
+    "name": "光明版最后的轻语",
+    "category": "radiant",
+    "set": 18,
+    "description": "来自攻击和技能的伤害会对目标施加持续<TFTRadiantItemBonus>到战斗环节结束</TFTRadiantItemBonus>的@ArmorReductionPercent@% <TFTKeyword>护甲击碎</TFTKeyword>。这个效果不会叠加。<br><br><tftitemrules><tftbold>护甲击碎</tftbold>：降低护甲值</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_lastwhisperradiant.tex"
+  },
+  {
+    "id": "TFT9_Item_OrnnTrickstersGlass",
+    "name": "诡术师之镜",
+    "category": "artifact",
+    "set": 18,
+    "description": "召唤一个拥有@HealthPercent@%基础生命值并且最大法力值+@ManaIncrease*100@%的复制体。你无法给复制体装上装备。<br><br><tftitemrules>复制体会受益于已激活的羁绊。</tftitemrules><br><br><tftitemrules>[唯一 - 每位英雄仅限1件]</tftitemrules><br>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft9_item_ornntrickstersglass.tex"
+  },
+  {
+    "id": "TFT_Item_GuinsoosRageblade",
+    "name": "鬼索的狂暴之刃",
+    "category": "completed",
+    "set": 18,
+    "description": "每秒获得@AttackSpeedPerStack@%可叠加的攻击速度。",
+    "composition": [
+      "TFT_Item_RecurveBow",
+      "TFT_Item_NeedlesslyLargeRod"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_guinsoosrageblade.tex"
+  },
+  {
+    "id": "TFT_Item_HextechGunblade",
+    "name": "海克斯科技枪刃",
+    "category": "completed",
+    "set": 18,
+    "description": "为生命值百分比最低的友军提供相当于@AllyHealing*100@%造成伤害值的治疗。<br><br><TFTTrackerLabel>友军治疗：</TFTTrackerLabel> <TFTHighlight>@TFTUnitProperty.item:TFT_Tracker_Value1@</TFTHighlight>",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_NeedlesslyLargeRod"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_hextechgunblade.tex"
+  },
+  {
+    "id": "TFT_Item_RunaansHurricane",
+    "name": "海妖之怒",
+    "category": "completed",
+    "set": 18,
+    "description": "攻击提供@ADOnAttack*100@%可叠加的物理加成，至多至@MaxStacks@次攻击。在@MaxStacks@次攻击后，获得@ASCapstone*100@%攻击速度。",
+    "composition": [
+      "TFT_Item_NegatronCloak",
+      "TFT_Item_RecurveBow"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_krakenslayer.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_CursedVampiricScepter",
+    "name": "黑暗吸血鬼节杖",
+    "category": "artifact",
+    "set": 18,
+    "description": "攻击造成相当于@PercentDamage@%物理加成%i:scaleAD%的额外物理伤害并且携带者治疗相当于这个已造成伤害值的生命值。<br><br><TFTShadowItemBonus>携带者不能施放其技能或获得法力值。</TFTShadowItemBonus><br>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_cursedvampiricscepter.tex"
+  },
+  {
+    "id": "DA_18_EmblemBlackthorn",
+    "name": "黑荆棘纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_GiantsBelt"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_blackthorn.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnObsidianCleaver",
+    "name": "黑曜石切割者",
+    "category": "artifact",
+    "set": 18,
+    "description": "伤害造成持续@Duration@秒的@Shred@% <TFTKeyword>魔抗击碎</TFTKeyword>和@Shred@% <TFTKeyword>护甲击碎</TFTKeyword>。<br><br>己方弈子获得@TeamAD*100@%物理加成和@TeamAP@法术加成。<br><br><tftitemrules>[辅助装][唯一 - 每位英雄仅限1件]<br><tftbold>魔抗击碎</tftbold>：减少魔抗值<br><tftbold>护甲击碎</tftbold>：降低护甲值</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornnobsidiancleaver.tex"
+  },
+  {
+    "id": "TFT_Item_RapidFireCannon",
+    "name": "红霸符",
+    "category": "completed",
+    "set": 18,
+    "description": "攻击和技能的伤害对敌人们造成持续@Duration@秒的@BurnPercent@%<TFTKeyword>灼烧</TFTKeyword>效果和@HealingReductionPct@%<TFTKeyword>重伤</TFTKeyword>效果。<br><br><tftitemrules><tftbold>灼烧</tftbold>：每秒造成目标一部分最大生命值的真实伤害<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules>",
+    "composition": [
+      "TFT_Item_RecurveBow",
+      "TFT_Item_RecurveBow"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_rapidfirecannon.tex"
+  },
+  {
+    "id": "DA_18_EmblemDefender",
+    "name": "护卫纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_defender.tex"
+  },
+  {
+    "id": "DA_18_EmblemFae",
+    "name": "花仙子纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_BFSword"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_fae.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_AegisOfDusk",
+    "name": "黄昏圣盾",
+    "category": "artifact",
+    "set": 18,
+    "description": "每@TickRate@秒，从1格内的敌人们处偷取@MRStealPerTick@魔抗，并造成相当于携带者@TFTUnitProperty.item:TFT_Item_Artifact_AegisDuskDawn_Damage@%魔抗值的魔法伤害。<br><br>如果还携带了【黎明圣盾】，则转而每@TickRateWithAegisOfDawn@秒触发这件装备的效果。<br><br><tftitemrules>伤害基于阶段提升。</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_aegisofdusk.tex"
+  },
+  {
+    "id": "TFT_Item_ZekesHerald",
+    "name": "基克的先驱",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：提供%i:scaleAS% @AttackSpeed@%攻击速度给携带者和同一排2格内的友军们。​​<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_zekesherald.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_InnervatingLocket",
+    "name": "激发之匣",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者每被一次攻击命中时，都会获得其@PercentMana@%的总法力值。<br><br>每次技能施放会在@Duration@秒里持续回复携带者的@PercentHealth@%最大生命值。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_innervatinglocket.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_RapidFirecannon",
+    "name": "疾射火炮",
+    "category": "artifact",
+    "set": 18,
+    "description": "获得+1攻击距离，并且这个距离会在携带者每击杀一个敌人时提升1。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_rapidfirecannon.tex"
+  },
+  {
+    "id": "TFT_Item_BrambleVest",
+    "name": "棘刺背心",
+    "category": "completed",
+    "set": 18,
+    "description": "获得@PercentMaxHP*100@%最大生命值。<br><br>使来自攻击的伤害降低@AutoDamageReduction*100@%。在被任一攻击命中时，对邻格所有敌人造成<magicDamage>@1StarAoEDamage@魔法伤害</magicDamage>。<br><br><tftitemrules>冷却时间：@ICD@秒</tftitemrules>",
+    "composition": [
+      "TFT_Item_ChainVest",
+      "TFT_Item_ChainVest"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_bramblevest.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleDeterminedInvestor",
+    "name": "坚定投资器",
+    "category": "artifact",
+    "set": 18,
+    "description": "在携带者阵亡@StackLimit@次之后，这件装备会被摧毁。在被摧毁时，提供装备【钻石之手】、1个【英雄复制器】和%i:goldCoins%@GoldGranted@金币。 ",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscaledeterminedinvestor.tex"
+  },
+  {
+    "id": "TFT_Item_NightHarvester",
+    "name": "坚定之心",
+    "category": "completed",
+    "set": 18,
+    "description": "获得@BaseDurability*100@%伤害减免。在高于@ThresholdForEmpower*100@%生命值时，转而获得@EmpoweredDurability*100@%伤害减免。<br><br>@TFTUnitProperty.:TFT_Augment_WarmogsBuckle_TRAKey@",
+    "composition": [
+      "TFT_Item_ChainVest",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_nightharvester.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnTheCollector",
+    "name": "金币收集者",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者的攻击和技能会处决低于@ExecutePercent@%最大生命值的目标。处决有@GoldChance@%几率掉落%i:goldCoins%1金币。<br><br><TFTTrackerLabel>已收集的金币：</TFTTrackerLabel> <TFTHighlight>@TFTUnitProperty.item:TFT_Tracker_Value1@金币</TFTHighlight><br><tftitemrules>[唯一 - 每个弈子仅可装备1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornnthecollector.tex"
+  },
+  {
+    "id": "DA_Component_Spatula",
+    "name": "金铲铲",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_spatula.tex"
+  },
+  {
+    "id": "TFT_Item_Spatula",
+    "name": "金铲铲",
+    "category": "component",
+    "set": 18,
+    "description": "<tftitemrules>它必须做点什么...</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_spatula.tex"
+  },
+  {
+    "id": "TFT_Item_ForceOfNature",
+    "name": "金铲铲冠冕",
+    "category": "completed",
+    "set": 18,
+    "description": "你的队伍获得+@MaxArmySizeIncrease@最大队伍规模。<br><br>在你赢下战斗时，有@PercentGoldChance@%几率掉落1金币。<br><br><tftitemrules>“……某位英雄的心……”</tftitemrules>",
+    "composition": [
+      "TFT_Item_Spatula",
+      "TFT_Item_Spatula"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_forceofnature.tex"
+  },
+  {
+    "id": "TFT_Item_TacticiansRing",
+    "name": "金锅铲冠冕",
+    "category": "completed",
+    "set": 18,
+    "description": "你的队伍获得+@MaxArmySizeIncrease@最大队伍规模。<br><br>在战斗@Timer@秒后，有@PercentGoldChance@%几率掉落1金币。<br><br><tftitemrules>“……以及一点运气。”</tftitemrules>",
+    "composition": [
+      "TFT_Item_Spatula",
+      "TFT_Item_FryingPan"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_tacticiansring.tex"
+  },
+  {
+    "id": "DA_Component_FryingPan",
+    "name": "金锅锅",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_fryingpan.tex"
+  },
+  {
+    "id": "TFT_Item_FryingPan",
+    "name": "金锅锅",
+    "category": "component",
+    "set": 18,
+    "description": "<tftitemrules>.……不然它怎么会在这里？</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_fryingpan.tex"
+  },
+  {
+    "id": "TFT_Item_TacticiansScepter",
+    "name": "金锅锅冠冕",
+    "category": "completed",
+    "set": 18,
+    "description": "你的队伍获得+@MaxArmySizeIncrease@最大队伍规模。<br><br>在携带者阵亡时，有@PercentGoldChance@%几率掉落1金币。<br><br><tftitemrules>“充满了某位哲学家的智慧……”</tftitemrules>",
+    "composition": [
+      "TFT_Item_FryingPan",
+      "TFT_Item_FryingPan"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_tacticiansscepter.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_ForbiddenIdol",
+    "name": "禁忌雕像",
+    "category": "artifact",
+    "set": 18,
+    "description": "护盾效果会将其@PercentShieldConversion@%的护盾值转化为最大生命值作为替代。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_forbiddenidol.tex"
+  },
+  {
+    "id": "TFT_Item_Shroud",
+    "name": "静止法衣",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：射出一道光束，对敌人们施加@CostIncrease@%<TFTKeyword>破法</TFTKeyword>。<br><br>己方获得@BonusAllyHealth@生命值。<br><br><tftitemrules>[辅助装][唯一 - 每位英雄仅可装备一件]<br><tftbold>破法</tftbold>：最大法力值提升，持续到施放技能为止。</tftitemrules><br>@TFTUnitProperty.:TFT_BindOnEquipTRA@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_shroud.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_MirroredPersona",
+    "name": "镜像人格面具",
+    "category": "artifact",
+    "set": 18,
+    "description": "每@NumCombats@场玩家对战提供【镜像人格面具】的一个次级副本(@TFTUnitProperty.trait:TFT_Item_Artifact_MirroredPersona_Combats@/@NumCombats@)。<br><br>分享携带者@StatSharePercent*100@%的额外物理加成、法术加成、攻击速度、护甲、魔抗和生命值至其它【镜像人格面具】携带者们。<br><br><rules>无法被重铸，次级副本不会产生副本。</rules><br><rules>唯一：一个弈子仅限一件</rules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_mirroredpersona.tex"
+  },
+  {
+    "id": "TFT9_Item_OrnnHorizonFocus",
+    "name": "狙击手的专注",
+    "category": "artifact",
+    "set": 18,
+    "description": "在对抗相距@HexRequirement@格或更远的目标们时获得@DamageAmpPerHex*100@%伤害增幅。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft9_item_ornnhorizonfocus.tex"
+  },
+  {
+    "id": "TFT_Item_DragonsClaw",
+    "name": "巨龙之爪",
+    "category": "completed",
+    "set": 18,
+    "description": "获得@PercentMaxHP*100@%最大生命值。<br><br>每@HealthRegenInterval@秒治疗@PercentHealthDamage@%最大生命值。",
+    "composition": [
+      "TFT_Item_NegatronCloak",
+      "TFT_Item_NegatronCloak"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_dragonsclaw.tex"
+  },
+  {
+    "id": "TFT_Item_MadredsBloodrazor",
+    "name": "巨人杀手",
+    "category": "completed",
+    "set": 18,
+    "description": "对抗坦克时获得@DamageAmp*100@%额外伤害增幅。",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_RecurveBow"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_madredsbloodrazor.tex"
+  },
+  {
+    "id": "DA_Component_GiantsBelt",
+    "name": "巨人腰带",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_giantsbelt.tex"
+  },
+  {
+    "id": "TFT_Item_GiantsBelt",
+    "name": "巨人腰带",
+    "category": "component",
+    "set": 18,
+    "description": "%i:scaleHealth% +@Health@生命值",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_giantsbelt.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_TitanicHydra",
+    "name": "巨型九头蛇",
+    "category": "artifact",
+    "set": 18,
+    "description": "攻击对目标和邻格敌人造成相当于携带者@PercentMaxHealthSplash@%最大生命值外加@PercentAttackDamageSplash@%物理加成的额外物理伤害。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_titanichydra.tex"
+  },
+  {
+    "id": "DA_18_EmblemFloraFatalis",
+    "name": "绝命花妖纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_florafatalis.tex"
+  },
+  {
+    "id": "DA_18_EmblemFloraFatalisAugment",
+    "name": "绝命花妖纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_florafatalis.tex"
+  },
+  {
+    "id": "TFT_Item_AegisOfTheLegion",
+    "name": "军团圣盾",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：提供@ASBuff@%攻击速度和@BonusResists@护甲与魔抗给携带者、同一排的邻格友军、以及携带者身后的友军，持续@BuffDuration@秒。​​<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_aegisofthelegion.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_BlightingJewel",
+    "name": "枯萎珠宝",
+    "category": "artifact",
+    "set": 18,
+    "description": "造成魔法伤害时会将目标的魔抗削减@MRReduction@。如果目标的魔抗是0，则转而会为携带者提供@ManaGain@法力值。<br><br><rules>技能伤害每@ICD@秒仅能在每个敌人身上触发一次此效果。</rules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_blightingjewel.tex"
+  },
+  {
+    "id": "TFT_Item_WarmogsArmor",
+    "name": "狂徒铠甲",
+    "category": "completed",
+    "set": 18,
+    "description": "获得@BonusPercentHP*100@%最大生命值。<br>",
+    "composition": [
+      "TFT_Item_GiantsBelt",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_warmogsarmor.tex"
+  },
+  {
+    "id": "DA_18_EmblemSlayer",
+    "name": "狂战士纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_NegatronCloak"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_ravager.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnRanduinsSanctum",
+    "name": "兰顿之兆",
+    "category": "artifact",
+    "set": 18,
+    "description": "战斗开始时：提供%i:scaleArmor% @BonusDefense@护甲和%i:scaleMR% @BonusDefense@魔抗给携带者和邻格的友军们。<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornnranduinssanctum.tex"
+  },
+  {
+    "id": "TFT_Item_BlueBuff",
+    "name": "蓝霸符",
+    "category": "completed",
+    "set": 18,
+    "description": "从所有来源中获得@ModifiedADAP*100@%额外物理加成和法术加成。",
+    "composition": [
+      "TFT_Item_TearOfTheGoddess",
+      "TFT_Item_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_bluebuff.tex"
+  },
+  {
+    "id": "TFT_Item_IonicSpark",
+    "name": "离子火花",
+    "category": "completed",
+    "set": 18,
+    "description": "对@HexRange@格内的敌人们施加@MRShred@%<TFTKeyword>魔抗击碎</TFTKeyword>。在敌人施放一次技能时，对该敌人造成相当于该敌人@ManaRatio@%法力值消耗的魔法伤害。<br><tftitemrules><tftbold>魔抗击碎</tftbold>：降低魔抗值</tftitemrules>",
+    "composition": [
+      "TFT_Item_NeedlesslyLargeRod",
+      "TFT_Item_NegatronCloak"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_ionicspark.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_Dawncore",
+    "name": "黎明核心",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者的最大法力值缩减@FlatManaReduction@。后续的技能施放会使最大法力值缩减@ReductionPerCast*100@%，直至最小值@MinimumTotalMana@。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_dawncore.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_AegisOfDawn",
+    "name": "黎明圣盾",
+    "category": "artifact",
+    "set": 18,
+    "description": "每@TickRate@秒，从1格内的敌人们处偷取@ArmorStealPerTick@护甲，并治疗相当于携带者@TFTUnitProperty.item:TFT_Item_Artifact_AegisDuskDawn_Damage@%护甲值的生命值。<br><br>如果还携带了【黄昏圣盾】，则转而每@TickRateWithAegisOfDusk@秒触发这件装备的效果。<br><br><tftitemrules>治疗效果基于阶段提升。</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_aegisofdawn.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_Mittens",
+    "name": "连指手套",
+    "category": "artifact",
+    "set": 18,
+    "description": "将携带者缩小，为其提供移动速度提升并免疫<TFTKeyword>减速</TFTKeyword>、<TFTKeyword>灼烧</TFTKeyword>以及<TFTKeyword>重伤</TFTKeyword>。<br><br>{{TFT_Keyword_Chill}}<br>{{TFT_Keyword_Burn}}<br>{{TFT_Keyword_Wound}}",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_mittens.tex"
+  },
+  {
+    "id": "DA_18_EmblemHunter",
+    "name": "猎人纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_BFSword"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_hunter.tex"
+  },
+  {
+    "id": "TFT_Item_Zephyr",
+    "name": "灵风",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：在棋盘对面召唤一道飓风，来将与飓风相距最近的那个敌人移出战斗@BanishDuration@秒。<br><br>己方获得@AllyBonusAS@%攻击速度。<br><br><tftitemrules>[辅助装]<br>[无视控制免疫效果。]<br>[唯一 - 每位英雄仅可装备一件]</tftitemrules><br>@TFTUnitProperty.:TFT_BindOnEquipTRA@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_zephyr.tex"
+  },
+  {
+    "id": "DA_18_EmblemBlossom",
+    "name": "灵魂莲华纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_NeedlesslyLargeRod"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_blossom.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_LudensTempest",
+    "name": "卢登的激荡",
+    "category": "artifact",
+    "set": 18,
+    "description": "在击杀目标时，会对与目标相距最近的两个敌人造成魔法伤害，伤害值为过量伤害的@PercentOfOverkill@%外加@BaseDamage@。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_ludenstempest.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_CappaJuice",
+    "name": "帽子饮品",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者在每次参与击杀后带上一顶帽子。携带者从每顶帽子中获得@ADAPPerTakedown@%物理加成和法术加成。阵亡时，失去@PercentHatLoss*100@%总帽子数。&nbsp;(帽子数：&nbsp;@TFTUnitProperty.trait:TFT_Item_Artifact_CappaJuice_NumHats@)",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_kappajuice.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_SuspiciousTrenchCoat",
+    "name": "迷离风衣",
+    "category": "artifact",
+    "set": 18,
+    "description": "每回合一次，在@PercentHealthTrigger@%生命值时，携带者分裂为自己的3个复制体，每个都有拥有其@PercentHealthOfCopies@%最大生命值。<br><br><tftitemrules>[唯一 - 每位英雄仅限1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_suspicioustrenchcoat.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_SilvermereDawn",
+    "name": "密银黎明",
+    "category": "artifact",
+    "set": 18,
+    "description": "为携带者提供免疫晕眩，并且携带者的攻击可以使目标晕眩@StunDuration@秒。<br><br><TFTShadowItemBonus>携带者的攻击速度被锁定在@AttackSpeedCap@。</TFTShadowItemBonus>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_silvermeredawn.tex"
+  },
+  {
+    "id": "TFT_Item_Crownguard",
+    "name": "冕卫",
+    "category": "completed",
+    "set": 18,
+    "description": "战斗开始时：获得持续@ShieldDuration@秒的相当于@ShieldSize@%最大生命值的护盾值。<br><br>在护盾到期时，获得@ShieldBonusAP@%法术加成。<br>",
+    "composition": [
+      "TFT_Item_NeedlesslyLargeRod",
+      "TFT_Item_ChainVest"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_crownguard.tex"
+  },
+  {
+    "id": "TFT_Item_RabadonsDeathcap",
+    "name": "灭世者的死亡之帽",
+    "category": "completed",
+    "set": 18,
+    "description": "<tftitemrules>这顶不起眼的帽子可以帮助你创造，或毁灭，这个世界本身。</tftitemrules><br><br>@TFTUnitProperty.:TFT_Augment_DeadlierCaps_TRAKey@",
+    "composition": [
+      "TFT_Item_NeedlesslyLargeRod",
+      "TFT_Item_NeedlesslyLargeRod"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_rabadonsdeathcap.tex"
+  },
+  {
+    "id": "TFT9_Item_OrnnDeathfireGrasp",
+    "name": "冥火之拥",
+    "category": "artifact",
+    "set": 18,
+    "description": "战斗开始时：震击当前目标造成相当于其@PercentMaxHealthDamage@%最大生命值的魔法伤害。每@RepeatTime@秒重复一次此效果。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft9_item_ornndeathfiregrasp.tex"
+  },
+  {
+    "id": "DA_18_EmblemCoven",
+    "name": "魔女纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_coven.tex"
+  },
+  {
+    "id": "TFT_Item_SentinelSwarm",
+    "name": "魔像狂潮",
+    "category": "other",
+    "set": 18,
+    "description": "每3秒，召唤一个强大的【苍蓝雕纹魔像】且它装备着成装、神器和光明武器。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_sentinelswarm.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnMuramana",
+    "name": "魔蕴",
+    "category": "artifact",
+    "set": 18,
+    "description": "在施放第一个技能后，在@ManaDuration@秒里持续回复共@ManaRestore@法力值。<br><br><tftitemrules>[唯一 - 每位英雄仅限1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornnmuramana.tex"
+  },
+  {
+    "id": "TFT_Item_Morellonomicon",
+    "name": "莫雷洛秘典",
+    "category": "completed",
+    "set": 18,
+    "description": "攻击和技能的伤害对敌人们造成持续@BurnDuration@秒的@BurnPercent@%<TFTKeyword>灼烧</TFTKeyword>效果和@GrievousWoundsPercent@%<TFTKeyword>重伤</TFTKeyword>效果。<br><br><tftitemrules><tftbold>灼烧</tftbold>：每秒造成目标一部分最大生命值的真实伤害<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules>",
+    "composition": [
+      "TFT_Item_NeedlesslyLargeRod",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_morellonomicon.tex"
+  },
+  {
+    "id": "TFT_Item_Leviathan",
+    "name": "纳什之牙",
+    "category": "completed",
+    "set": 18,
+    "description": "每次普攻提供@BaseManaOnHit@额外法力值，如果暴击则提升至@ManaOnCrit@额外法力值。",
+    "composition": [
+      "TFT_Item_RecurveBow",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_leviathan.tex"
+  },
+  {
+    "id": "TFT_Item_Chalice",
+    "name": "能量圣杯",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：提供@ChaliceAP@法术加成和@BonusInitialMana@法力值给携带者和同一排2格内的友军们。​​<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_chalice.tex"
+  },
+  {
+    "id": "DA_Component_TearOfTheGoddess",
+    "name": "女神之泪",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_tearofthegoddess.tex"
+  },
+  {
+    "id": "TFT_Item_TearOfTheGoddess",
+    "name": "女神之泪",
+    "category": "component",
+    "set": 18,
+    "description": "%i:TFTManaRegen% +@ManaRegen@法力回复",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_tearofthegoddess.tex"
+  },
+  {
+    "id": "TFT_Item_BansheesVeil",
+    "name": "女妖面纱",
+    "category": "other",
+    "set": 18,
+    "description": "战斗开始时：为携带者和同一排@HexRange@格内的友军们提供持续@Duration@秒的控制免疫效果和@BuffAttackSpeed*100@%攻击速度。<br><br><tftitemrules>[辅助装] [唯一 - 每位英雄仅能装备1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_bansheesveil.tex"
+  },
+  {
+    "id": "TFT_Item_SupportKnightsVow",
+    "name": "骑士之誓",
+    "category": "support",
+    "set": 18,
+    "description": "战斗开始时：提供@AllyHealth@生命值和@Omnivamp*100@%全能吸血给携带者和同一排1格内的友军们。​​<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_supportknightsvow.tex"
+  },
+  {
+    "id": "TFT_Item_PowerGauntlet",
+    "name": "强袭者的链枷",
+    "category": "completed",
+    "set": 18,
+    "description": "暴击提供持续@Duration@秒的@BuffDamageAmp*100@%伤害增幅，可叠加至多@MaxStacks@次。",
+    "composition": [
+      "TFT_Item_GiantsBelt",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_powergauntlet.tex"
+  },
+  {
+    "id": "TFT_Item_ThiefsGloves",
+    "name": "窃贼手套",
+    "category": "completed",
+    "set": 18,
+    "description": "每一回合：装备2件随机装备。<br><br><tftitemrules>[需要用掉3个装备格。]</tftitemrules><br>@TFTUnitProperty.:TFT_BindOnEquipTRA@",
+    "composition": [
+      "TFT_Item_SparringGloves",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_thiefsgloves.tex"
+  },
+  {
+    "id": "DA_Component_SparringGloves",
+    "name": "拳套",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_sparringgloves.tex"
+  },
+  {
+    "id": "TFT_Item_SparringGloves",
+    "name": "拳套",
+    "category": "component",
+    "set": 18,
+    "description": "+@CritChance@%暴击几率",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_sparringgloves.tex"
+  },
+  {
+    "id": "TFT_Item_RedBuff",
+    "name": "日炎斗篷",
+    "category": "completed",
+    "set": 18,
+    "description": "获得@BonusPercentHP*100@%最大生命值。<br><br>每过@ICD@秒，对@HexRange@格内的一名敌人施加持续@BurnDuration@秒的@BurnPercent@%<TFTKeyword>灼烧</TFTKeyword>效果和@GrievousWoundsPercent@%<TFTKeyword>重伤</TFTKeyword>效果。<br><br><tftitemrules><tftbold>灼烧</tftbold>：每秒造成目标一部分最大生命值的真实伤害<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules>",
+    "composition": [
+      "TFT_Item_ChainVest",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_redbuff.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnInfinityForce",
+    "name": "三相之力",
+    "category": "artifact",
+    "set": 18,
+    "description": "<tftitemrules>成吨的一切！</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornninfinityforce.tex"
+  },
+  {
+    "id": "DA_18_EmblemInvoker",
+    "name": "神谕纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_invoker.tex"
+  },
+  {
+    "id": "TFT_Item_FrozenHeart",
+    "name": "圣盾使的誓约",
+    "category": "completed",
+    "set": 18,
+    "description": "战斗开始时：获得@CombatStartMana@法力值。<br><br>在@HealthThreshold@%生命值时，获得@TriggerMana@法力值和相当于@ShieldHealthPercent@%最大生命值的护盾值。",
+    "composition": [
+      "TFT_Item_TearOfTheGoddess",
+      "TFT_Item_ChainVest"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_frozenheart.tex"
+  },
+  {
+    "id": "TFT_Item_GargoyleStoneplate",
+    "name": "石像鬼石板甲",
+    "category": "completed",
+    "set": 18,
+    "description": "每有一个敌人正在以携带者为目标，携带者就会获得@ArmorPerEnemy@护甲和@MRPerEnemy@魔抗。",
+    "composition": [
+      "TFT_Item_ChainVest",
+      "TFT_Item_NegatronCloak"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_gargoylestoneplate.tex"
+  },
+  {
+    "id": "TFT_Item_AdaptiveHelm",
+    "name": "适应性头盔",
+    "category": "completed",
+    "set": 18,
+    "description": "从所有来源中获得额外的@ManaPercIncrease*100@%法力值。携带者获得基于角色定位的一个额外加成：<br><br>坦克和战士：获得@FrontlineResists@护甲和魔抗。<br><br>其它角色定位：获得@BacklineADAP@%物理加成和法术加成。 ",
+    "composition": [
+      "TFT_Item_NegatronCloak",
+      "TFT_Item_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_adaptivehelm.tex"
+  },
+  {
+    "id": "TFT_Item_Quicksilver",
+    "name": "水银",
+    "category": "completed",
+    "set": 18,
+    "description": "战斗开始时：获得持续@SpellShieldDuration@秒的控制免疫效果。<br><br>每秒获得@ProcAttackSpeed*100@%可叠加的攻击速度。",
+    "composition": [
+      "TFT_Item_SparringGloves",
+      "TFT_Item_NegatronCloak"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_quicksilver.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_NavoriFlickerblades",
+    "name": "烁刃",
+    "category": "artifact",
+    "set": 18,
+    "description": "攻击提供@ASPerStack*100@%可叠加的攻击速度。每@StacksPerBonus@次攻击还会提供@ADPerBonus*100@%物理加成和@APPerBonus@%法术加成。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_navoriflickerplade.tex"
+  },
+  {
+    "id": "TFT_Item_SpearOfShojin",
+    "name": "朔极之矛",
+    "category": "completed",
+    "set": 18,
+    "description": "每次普攻提供@FlatManaRestore@额外法力值。",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_spearofshojin.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_StatikkShiv",
+    "name": "斯塔缇克电刃",
+    "category": "artifact",
+    "set": 18,
+    "description": "每第3次攻击对4名敌人造成@Damage@+@APScalar*100@%携带者法术加成的额外魔法伤害。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_stattikshiv.tex"
+  },
+  {
+    "id": "TFT_Item_SteraksGage",
+    "name": "斯特拉克的挑战护手",
+    "category": "completed",
+    "set": 18,
+    "description": "在@HealthThreshold@%生命值时，获得相当于携带者@PercentHealthShield*100@%最大生命值的护盾值，在@ShieldDuration@秒内快速衰减。",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_steraksgage.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnDeathsDefiance",
+    "name": "死亡之蔑",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者受到的@IgnorePainPercent@%伤害会转而在@BleedDuration@秒里作为非致命伤害来持续扣除。<br><br><tftitemrules>[唯一 - 每位英雄仅限1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornndeathsdefiance.tex"
+  },
+  {
+    "id": "TFT_Item_Deathblade",
+    "name": "死亡之刃",
+    "category": "completed",
+    "set": 18,
+    "description": "<tftitemrules>将完美的安宁和平静带给携带者——和所有面对它的人。</tftitemrules><br><br><br>@TFTUnitProperty.:TFT_Augment_TragicalBlade_TRAKey@",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_BFSword"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_deathblade.tex"
+  },
+  {
+    "id": "TFT9_Item_OrnnHullbreaker",
+    "name": "碎舰者",
+    "category": "artifact",
+    "set": 18,
+    "description": "战斗开始时：如果邻格内没有己方弈子，获得@ExtraHealth@生命值、@ExtraADandAP@%物理加成和@ExtraADandAP@%法术加成。",
+    "icon": "assets/maps/particles/tft/item_icons/ornn_items/tft9_ornnitem_hullbreaker.tex"
+  },
+  {
+    "id": "DA_Component_ChainVest",
+    "name": "锁子甲",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_chainvest.tex"
+  },
+  {
+    "id": "TFT_Item_ChainVest",
+    "name": "锁子甲",
+    "category": "component",
+    "set": 18,
+    "description": "%i:scaleArmor% +@Armor@护甲",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_chainvest.tex"
+  },
+  {
+    "id": "TFT_Item_TitansResolve",
+    "name": "泰坦的坚决",
+    "category": "completed",
+    "set": 18,
+    "description": "在攻击或承受伤害时获得@StackingAD*100@%物理加成和@StackingSP@%法术加成，至多可叠加@StackCap@次。<br><br>在叠满层数后，获得@StackedAmp*100@%伤害增幅，并获得控制免疫。",
+    "composition": [
+      "TFT_Item_ChainVest",
+      "TFT_Item_RecurveBow"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_titansresolve.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_SeekersArmguard",
+    "name": "探索者的护臂",
+    "category": "artifact",
+    "set": 18,
+    "description": "参与击杀后会使携带者的护甲、魔抗和法术加成提升@StatsPerTakedown@。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_seekersarmguard.tex"
+  },
+  {
+    "id": "TFT9_Item_OrnnPrototypeForge",
+    "name": "铁匠手套",
+    "category": "artifact",
+    "set": 18,
+    "description": "每一回合：装备2件随机【奥恩神器】。<br><br><tftitemrules>[需要用掉3个装备格。]</tftitemrules><br>@TFTUnitProperty.:TFT_BindOnEquipTRA@",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft9_item_ornnprototypeforge.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleGamblersBlade",
+    "name": "投机者之刃",
+    "category": "artifact",
+    "set": 18,
+    "description": "提供%i:scaleAS% @AttackSpeedPerGold*100@%x你的%i:goldCoins%金币存款的额外攻击速度(在%i:goldCoins% @AttackSpeedGoldLimit@金币时达到最大值)。<br><br>每次攻击有@ChanceToProc*100@%几率掉落%i:goldCoins% @GoldPerProc@金币。<br><br><tftitemrules>这局游戏已生成的金币：@TFTUnitProperty.item:TFT_Item_GoldGenerated@</tftitemrules><br><br><tftitemrules>[唯一 - 每位英雄仅可装备1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalegamblersblade.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleGamblersBlade_HR",
+    "name": "投机者之刃",
+    "category": "artifact",
+    "set": 18,
+    "description": "提供%i:scaleAS% @AttackSpeedPerGold*100@%x你的%i:goldCoins%金币存款的额外攻击速度(在%i:goldCoins% @AttackSpeedGoldLimit@金币时达到最大值)。<br><br>每次攻击有@ChanceToProc*100@%几率掉落%i:goldCoins% @GoldPerProc@金币。<br><br><tftitemrules>这局游戏已生成的金币：@TFTUnitProperty.item:TFT_Item_GoldGenerated@</tftitemrules><br><br><tftitemrules>[唯一 - 每位英雄仅可装备1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalegamblersblade_hr.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_TheIndomitable",
+    "name": "顽强不屈",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者的移动速度大幅降低。<br><br>获得@HealthPercBonus*100@%最大生命值、晕眩免疫，并将当前目标拉到近战距离。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_theindomitable.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_LichBane",
+    "name": "巫妖之祸",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者在每次技能施放后的第一次攻击造成@TFTUnitProperty.item:TFT_Item_Artifact_LichBane_Damage@额外魔法伤害。<br><br><tftitemrules>这个伤害基于阶段而提升。</tftitemrules>",
+    "icon": "assets/maps/particles/tft/item_icons/ornn_items/tft_item_artifact_lichbane.tex"
+  },
+  {
+    "id": "TFT_Item_InfinityEdge",
+    "name": "无尽之刃",
+    "category": "completed",
+    "set": 18,
+    "description": "获得<TFTKeyword>【技能暴击】</TFTKeyword>。<br><br>{{TFT_Keyword_Precision}}",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_infinityedge.tex"
+  },
+  {
+    "id": "DA_Component_NeedlesslyLargeRod",
+    "name": "无用大棒",
+    "category": "component",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_needlesslylargerod.tex"
+  },
+  {
+    "id": "TFT_Item_NeedlesslyLargeRod",
+    "name": "无用大棒",
+    "category": "component",
+    "set": 18,
+    "description": "%i:scaleAP% +@AP@法术加成",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_needlesslylargerod.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleHeartOfGold",
+    "name": "无用大宝石",
+    "category": "artifact",
+    "set": 18,
+    "description": "己方弈子获得@BaseBonusDamage*100@%伤害增幅。携带者每存活1秒，己方弈子们就会获得追加的@AmpPerSec*100@%伤害增幅，总和至多至@MaxDamageAmp*100@%。<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/particles/tft/item_icons/traits/set7_shimmerscale/shimmerscale_heartofgold_base.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleHeartOfGold_HR",
+    "name": "无用大宝石",
+    "category": "artifact",
+    "set": 18,
+    "description": "己方弈子获得@BaseBonusDamage*100@%伤害增幅。携带者每存活1秒，己方弈子们就会获得追加的@AmpPerSec*100@%伤害增幅，总和至多至@MaxDamageAmp*100@%。<br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscaleheartofgold_hr.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_UnendingDespair",
+    "name": "无终恨意",
+    "category": "artifact",
+    "set": 18,
+    "description": "每当携带者身上的一个护盾被打破时，就会对相距最近的那个敌人造成该护盾的@PercentDamage@%初始护盾值的魔法伤害。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_unendingdespair.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_MendingEchoes",
+    "name": "修复型回响",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者身上的治疗效果提升@IncreasedHealing*100@%。当携带者给予或收到一次治疗时，也为生命值最低的那个友军提供@HealPercentToGrant*100@%该治疗效果。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_mendingechoes.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_VoidGauntlet",
+    "name": "虚空护手",
+    "category": "artifact",
+    "set": 18,
+    "description": "战斗开始时：储存@InitialPercentHealthStore*100@％最大生命值，并且每秒多储存@PercentHealthStore*100@%。在阵亡时，释放相当于生命值储量的魔法伤害，分摊给半径@HexRadius@格内的敌人们。<br><br><rules>[唯一：一个弈子仅限一件]</rules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_voidgauntlet.tex"
+  },
+  {
+    "id": "TFT_Item_StatikkShiv",
+    "name": "虚空之杖",
+    "category": "completed",
+    "set": 18,
+    "description": "来自攻击和技能的伤害会对目标施加持续@MRShredDuration@秒的@MRShred@%<TFTKeyword>魔抗击碎</TFTKeyword>。这个效果不会叠加。<br><br><tftitemrules><tftbold>魔抗击碎</tftbold>：降低魔抗值</tftitemrules>",
+    "composition": [
+      "TFT_Item_RecurveBow",
+      "TFT_Item_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_voidstaff.tex"
+  },
+  {
+    "id": "DA_18_EmblemRapidfire",
+    "name": "迅捷射手纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_RecurveBow"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_rapidfire.tex"
+  },
+  {
+    "id": "TFT_Item_RadiantVirtue",
+    "name": "殉道美德",
+    "category": "radiant",
+    "set": 18,
+    "description": "每@HealTickRate@秒治疗所有己方弈子@MaxHealthHeal@%最大生命值。当携带者阵亡时，治疗效果提升至@TOOLTIPEmpoweredHeal@%最大生命值并进行@NumBonusHeals@次额外的治疗。<br><br><TFTTrackerLabel>治疗效果：</TFTTrackerLabel> <TFTHighlight>@TFTUnitProperty.item:TFT_Tracker_Value1@</TFTHighlight><br><br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_radiantvirtue.tex"
+  },
+  {
+    "id": "DA_18_EmblemPrimal",
+    "name": "野兽之灵纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_SparringGloves"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_primal.tex"
+  },
+  {
+    "id": "TFT_Item_GuardianAngel",
+    "name": "夜之锋刃",
+    "category": "completed",
+    "set": 18,
+    "description": "在@HealthThreshold@%生命值时，短暂变为不可被选取状态、摆脱负面效果、并治疗@MissingHealthRestore*100@%已损失生命值。",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_ChainVest"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_guardianangel.tex"
+  },
+  {
+    "id": "TFT_Item_Bloodthirster",
+    "name": "饮血剑",
+    "category": "completed",
+    "set": 18,
+    "description": "每场战斗仅触发1次：在@HealthThreshold@%生命值时，获得一个护盾，护盾值相当于携带者@ShieldHealthPercent@%的最大生命值，至多持续@ShieldDuration@秒。",
+    "composition": [
+      "TFT_Item_BFSword",
+      "TFT_Item_NegatronCloak"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_bloodthirster.tex"
+  },
+  {
+    "id": "TFT_Item_EternalFlame",
+    "name": "永恒烈焰",
+    "category": "other",
+    "set": 18,
+    "description": "携带者处于存活状态时，所有敌人被施加@TOOLTIPWoundAmount@%<TFTKeyword>重伤</TFTKeyword>并且所有友军获得@DamageAmp*100@%伤害增幅。这个效果每@WoundDuration@秒刷新一次。<br><br><tftitemrules>​​[辅助装]<br><tftbold>重伤</tftbold>：降低受到的治疗效果</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_eternalflame.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnEternalWinter",
+    "name": "永恒凛冬",
+    "category": "artifact",
+    "set": 18,
+    "description": "对携带者造成伤害的敌人们会被施加持续@SlowDuration@秒的@AttackSpeedSlowPercent@%<TFTKeyword>冰冷</TFTKeyword>效果。在被施加了来自这件装备的@NumApplications@层<TFTKeyword>冰冷</TFTKeyword>后，攻击者会转而被<TFTKeyword>晕眩</TFTKeyword>(冷却时间：@FreezeCooldown@秒)。<br><br><tftitemrules>[唯一 - 每位英雄仅限1件]<br><tftbold>冰冷</tftbold>：使攻击速度减缓<br><tftbold>晕眩</tftbold>：不能移动、攻击或施放技能</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornneternalwinter.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_EternalPact",
+    "name": "永恒契约",
+    "category": "artifact",
+    "set": 18,
+    "description": "战斗开始时：与生命值最高的那个友方弈子形成一个契约，如果其阵亡，则获得@ManaRegenToGrant@法力回复和@APToGrant@%法术加成。<br><br>当该友军使用其技能时，获得@ManaToGrant@法力值。每@ShieldCadence@秒，为该友军提供护盾值，数额相当于携带者的@PercentAPShield*100@%法术加成。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft16_artifact_eternalpact.tex"
+  },
+  {
+    "id": "DA_18_EmblemElderwood",
+    "name": "永恒之森纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_ChainVest"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_elderwood.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_SpectralCutlass",
+    "name": "幽魂弯刀",
+    "category": "artifact",
+    "set": 18,
+    "description": "战斗开始时：将携带者传送到敌方一侧的镜像格上。在@Duration@秒后，携带者返回其原本的位置。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_spectralcutlass.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_Fishbones",
+    "name": "鱼骨头",
+    "category": "artifact",
+    "set": 18,
+    "description": "携带者的攻击会瞄准随机的敌人。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_fishbones.tex"
+  },
+  {
+    "id": "DA_18_EmblemSprykin",
+    "name": "约德尔人和朋友纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_NegatronCloak"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_sprykin.tex"
+  },
+  {
+    "id": "TFT_Item_Moonstone",
+    "name": "月石再生器",
+    "category": "other",
+    "set": 18,
+    "description": "每@ShieldRate@秒，提供持续@ShieldDuration@秒的@BaseShieldAmount@-@MaxShield@护盾值 (基于阶段) 给@ShieldTargets@个生命值百分比最低的友军。<br>​​<br>​​<tftitemrules>[辅助装]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_moonstone.tex"
+  },
+  {
+    "id": "DA_18_EmblemLunar",
+    "name": "月蚀骑士纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_Spatula",
+      "DA_Component_TearOfTheGoddess"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_lunar.tex"
+  },
+  {
+    "id": "TFT_Item_Redemption",
+    "name": "振奋盔甲",
+    "category": "completed",
+    "set": 18,
+    "description": "每秒回复@MissingHealthHeal*100@%已损失生命值。",
+    "composition": [
+      "TFT_Item_TearOfTheGoddess",
+      "TFT_Item_GiantsBelt"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_spiritvisagerr.tex"
+  },
+  {
+    "id": "TFT_Item_UnstableConcoction",
+    "name": "正义之手",
+    "category": "completed",
+    "set": 18,
+    "description": "获得2个效果：<li>@AD_NotStatBar*100@%物理加成和@AP_NotStatBar@%法术加成。<li>@StatOmnivamp_NotStatBar*100@%全能吸血。<br><br>生命值高于@HealthThreshold*100@%时，物理加成和法术加成翻倍。生命值低于@HealthThreshold*100@%时，全能吸血效果翻倍。",
+    "composition": [
+      "TFT_Item_TearOfTheGoddess",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_unstableconcoction.tex"
+  },
+  {
+    "id": "TFT_Item_Artifact_WitsEnd",
+    "name": "智慧末刃",
+    "category": "artifact",
+    "set": 18,
+    "description": "攻击造成@TFTUnitProperty.item:TFT_Item_Artifact_WitsEnd_Damage@额外魔法伤害。<br><br>治疗携带者，数额为@PercentHealing@%的所有已造成魔法伤害。<br><br><tftitemrules>这个伤害基于阶段而提升。</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_artifact_witsend.tex"
+  },
+  {
+    "id": "TFT4_Item_OrnnZhonyasParadox",
+    "name": "中娅悖论",
+    "category": "artifact",
+    "set": 18,
+    "description": "每场战斗一次：在@PercentHealthThreshold@%生命值时，携带者进入持续@InvulnDuration@秒的免疫伤害和无法被选取状态。<br><br><tftitemrules>[唯一 - 每位英雄仅限1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft4_item_ornnzhonyasparadox.tex"
+  },
+  {
+    "id": "DA_18_EmblemVanguard",
+    "name": "重装战士纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "composition": [
+      "DA_Component_FryingPan",
+      "DA_Component_ChainVest"
+    ],
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_vanguard.tex"
+  },
+  {
+    "id": "TFT_Item_JeweledGauntlet",
+    "name": "珠光护手",
+    "category": "completed",
+    "set": 18,
+    "description": "获得<TFTKeyword>【技能暴击】</TFTKeyword>。<br><br>{{TFT_Keyword_Precision}}",
+    "composition": [
+      "TFT_Item_NeedlesslyLargeRod",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_jeweledgauntlet.tex"
+  },
+  {
+    "id": "DA_18_EmblemJuggernaut",
+    "name": "主宰纹章",
+    "category": "emblem",
+    "set": 18,
+    "description": "",
+    "icon": "assets/maps/particles/tft/item_icons/traits/spatula/set18/tft18_emblem_juggernaut.tex"
+  },
+  {
+    "id": "TFT_Item_TitanicHydra",
+    "name": "兹若特传送门",
+    "category": "other",
+    "set": 18,
+    "description": "战斗环节开始时：<TFTKeyword>嘲讽</TFTKeyword>。<br>在阵亡后，一个【虚空生物】会爬起来<TFTKeyword>嘲讽</TFTKeyword>附近的敌人。从召唤单位上爬起来的【虚空生物】会被大幅削弱。<br><br><tftitemrules><tftbold>嘲讽</tftbold>：能够攻击且已将嘲讽者纳入攻击距离的敌人都必须攻击嘲讽者</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_titanichydra.tex"
+  },
+  {
+    "id": "TFT5_Item_ZzRotPortalRadiant",
+    "name": "兹若特传送门",
+    "category": "radiant",
+    "set": 18,
+    "description": "召唤一个大型虚空生物。它的强度会在每个阶段提升。<br><br>​​<tftitemrules>[辅助装]<br>[唯一 - 每位英雄仅限1件]</tftitemrules>",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft5_item_zzrotportalradiant.tex"
+  },
+  {
+    "id": "TFT7_Item_ShimmerscaleDiamondHands",
+    "name": "钻石之手",
+    "category": "artifact",
+    "set": 18,
+    "description": "每场战斗一次：在@HPThreshold1*100@%生命值时，获得持续@BaseDamageImmunityTime@秒的伤害免疫效果和%i:goldCoins% @GoldPerImmunityProc@金币。",
+    "icon": "assets/maps/tft/icons/items/hexcore/tft7_item_shimmerscalediamondhands.tex"
+  },
+  {
+    "id": "TFT_Item_LastWhisper",
+    "name": "最后的轻语",
+    "category": "completed",
+    "set": 18,
+    "description": "来自攻击和技能的伤害会对目标施加持续@ArmorBreakDuration@秒的@ArmorReductionPercent@%<TFTKeyword>护甲击碎</TFTKeyword>。这个效果不会叠加。<br><br><tftitemrules><tftbold>护甲击碎</tftbold>：降低护甲值</tftitemrules>",
+    "composition": [
+      "TFT_Item_RecurveBow",
+      "TFT_Item_SparringGloves"
+    ],
+    "icon": "assets/maps/tft/icons/items/hexcore/tft_item_lastwhisper.tex"
+  }
+]
