@@ -7,6 +7,8 @@ export async function resetDatabase(): Promise<void> {
     db.decisions.clear(),
     db.reviews.clear(),
     db.trainingGoals.clear(),
+    db.trainingSessions.clear(),
+    db.settings.clear(),
   ]);
 }
 

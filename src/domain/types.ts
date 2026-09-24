@@ -80,6 +80,13 @@ export interface Match {
   coreItemIds?: string[];
   augmentIds?: string[];
 
+  /**
+   * Owning `TrainingSession`. New matches inherit the active session;
+   * import / demo paths fill in `DAILY_SESSION_ID` so no match is ever an
+   * orphan record without a session.
+   */
+  sessionId?: string;
+
   reviewed: boolean;
   primaryMistake?: MistakeType;
   notes?: string;
@@ -151,6 +158,34 @@ export interface TrainingGoal {
   updatedAt: string;
 }
 
+export const SESSION_TYPES = ["daily", "competition"] as const;
+export type SessionType = (typeof SESSION_TYPES)[number];
+
+/** Stable id of the built-in daily training session. */
+export const DAILY_SESSION_ID = "daily";
+
+/**
+ * A named training context: a period with its own goal and statistics.
+ * `type` is a generic category ("daily" / "competition"); the concrete
+ * event name ("云顶之巅冲榜 S18", a cup, S19 …) lives in `name` and can
+ * be edited or replaced without touching the domain types.
+ */
+export interface TrainingSession {
+  id: string;
+  type: SessionType;
+  name: string;
+  description?: string;
+  /** `YYYY-MM-DD`. */
+  startDate: string;
+  /** `YYYY-MM-DD`, optional; must be >= startDate. */
+  endDate?: string;
+  /** Is this training context currently in progress? */
+  active: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
 /** Everything the app persists, in one envelope — used by JSON export/import. */
 export interface DatabaseSnapshot {
   schemaVersion: number;
@@ -160,6 +195,7 @@ export interface DatabaseSnapshot {
   decisions: Decision[];
   reviews: Review[];
   trainingGoals: TrainingGoal[];
+  trainingSessions: TrainingSession[];
 }
 
-export const SNAPSHOT_SCHEMA_VERSION = 1;
+export const SNAPSHOT_SCHEMA_VERSION = 2;
