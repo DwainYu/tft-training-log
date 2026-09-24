@@ -2,15 +2,20 @@ import { decisionRepository } from "../data/repository/decision-repository";
 import { matchRepository } from "../data/repository/match-repository";
 import { reviewRepository } from "../data/repository/review-repository";
 import { trainingGoalRepository } from "../data/repository/training-goal-repository";
+import { trainingSessionRepository } from "../data/repository/training-session-repository";
 import {
+  DAILY_SESSION_ID,
+  SESSION_TYPES,
   SNAPSHOT_SCHEMA_VERSION,
   type DatabaseSnapshot,
   type Decision,
   type Match,
   type Review,
   type TrainingGoal,
+  type TrainingSession,
 } from "../domain/types";
 import { nowIso } from "../lib/utils";
+import { toDate } from "../lib/wallclock";
 import { validateMatchStaticData } from "../data/tft/match-links";
 
 /* ------------------------------------------------------------------ */
@@ -18,11 +23,12 @@ import { validateMatchStaticData } from "../data/tft/match-links";
 /* ------------------------------------------------------------------ */
 
 export async function buildSnapshot(): Promise<DatabaseSnapshot> {
-  const [matches, decisions, reviews, trainingGoals] = await Promise.all([
+  const [matches, decisions, reviews, trainingGoals, trainingSessions] = await Promise.all([
     matchRepository.all(),
     decisionRepository.all(),
     reviewRepository.all(),
     trainingGoalRepository.all(),
+    trainingSessionRepository.all(),
   ]);
   return {
     schemaVersion: SNAPSHOT_SCHEMA_VERSION,
@@ -32,6 +38,7 @@ export async function buildSnapshot(): Promise<DatabaseSnapshot> {
     decisions,
     reviews,
     trainingGoals,
+    trainingSessions,
   };
 }
 
@@ -54,6 +61,7 @@ const CSV_COLUMNS: { key: keyof Match & string; header: string }[] = [
   { key: "primaryMistake", header: "primary_mistake" },
   { key: "reviewed", header: "reviewed" },
   { key: "notes", header: "notes" },
+  { key: "sessionId", header: "session_id" },
 ];
 
 function csvCell(value: unknown): string {
@@ -92,6 +100,7 @@ export interface ImportReport {
   decisions: number;
   reviews: number;
   trainingGoals: number;
+  sessions: number;
   skipped: number;
   importedAt: string;
 }
@@ -101,6 +110,9 @@ const isRecord = (v: unknown): v is Record<string, unknown> =>
 
 const hasId = (r: Record<string, unknown>): boolean =>
   typeof r.id === "string" && r.id.length > 0;
+
+const isDateOnly = (v: unknown): v is string =>
+  typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v) && toDate(v) !== null;
 
 /** Parse + sanity-check the JSON the player uploaded. Throws on bad shape. */
 export function parseSnapshot(text: string): DatabaseSnapshot {
@@ -119,22 +131,76 @@ export function parseSnapshot(text: string): DatabaseSnapshot {
       throw new Error(`文件缺少 ${key} 数组`);
     }
   }
+  // `trainingSessions` is optional: snapshots exported before Phase 2.5
+  // (schema v1) simply do not carry it and import as `[]`.
+  if (snap.trainingSessions !== undefined && !Array.isArray(snap.trainingSessions)) {
+    throw new Error("trainingSessions 不是数组");
+  }
   return snap as DatabaseSnapshot;
 }
 
 /**
  * Merge semantics (upsert by id): importing a backup never destroys newer
  * local records — this keeps the tool safe to use with old exports.
+ *
+ * Session rules:
+ *  - a match's `sessionId` is kept only when it names a session that exists
+ *    in the local DB or travels inside the same snapshot;
+ *  - missing or unknown `sessionId` normalizes to the built-in `daily`
+ *    session, so an import can never create orphan "session-less" matches.
  */
 export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<ImportReport> {
   let skipped = 0;
 
+  const rawSessions = Array.isArray(snapshot.trainingSessions) ? snapshot.trainingSessions : [];
+  const validSessions: TrainingSession[] = [];
+  for (const s of rawSessions) {
+    if (
+      !isRecord(s) ||
+      !hasId(s) ||
+      !SESSION_TYPES.includes(s.type) ||
+      typeof s.name !== "string" ||
+      !s.name.trim() ||
+      !isDateOnly(s.startDate) ||
+      (s.endDate !== undefined && !isDateOnly(s.endDate))
+    ) {
+      continue;
+    }
+    const now = nowIso();
+    validSessions.push({
+      id: s.id,
+      type: s.type,
+      name: s.name.trim(),
+      description: typeof s.description === "string" ? s.description : undefined,
+      startDate: s.startDate,
+      endDate: s.endDate ?? undefined,
+      active: typeof s.active === "boolean" ? s.active : true,
+      createdAt: typeof s.createdAt === "string" ? s.createdAt : now,
+      updatedAt: typeof s.updatedAt === "string" ? s.updatedAt : now,
+    });
+  }
+  // sessions first — imported matches may reference the new sessions
+  await trainingSessionRepository.bulkPut(validSessions);
+
+  const knownSessionIds = new Set<string>([
+    DAILY_SESSION_ID,
+    ...(await trainingSessionRepository.all()).map((s) => s.id),
+  ]);
+
   // Matches carrying canonical S18 ids are additionally gated: an id that the
   // static snapshot does not know about is skipped, not silently imported.
-  const matches = snapshot.matches.filter(
+  const validMatches = snapshot.matches.filter(
     (m) =>
       isRecord(m) && hasId(m) && typeof m.placement === "number" && validateMatchStaticData(m).length === 0,
   );
+  const matches: Match[] = validMatches.map((m) => ({
+    ...m,
+    sessionId:
+      typeof m.sessionId === "string" && m.sessionId.length > 0 && knownSessionIds.has(m.sessionId)
+        ? m.sessionId
+        : DAILY_SESSION_ID,
+  }));
+
   const validMatchIds = new Set(matches.map((m) => m.id));
   const decisions = snapshot.decisions.filter(
     (d) => isRecord(d) && hasId(d) && typeof d.matchId === "string" && validMatchIds.has(d.matchId),
@@ -144,7 +210,8 @@ export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<Import
   );
   const trainingGoals = snapshot.trainingGoals.filter((g) => isRecord(g) && hasId(g) && typeof g.title === "string");
 
-  skipped =
+  skipped +=
+    (rawSessions.length - validSessions.length) +
     (snapshot.matches.length - matches.length) +
     (snapshot.decisions.length - decisions.length) +
     (snapshot.reviews.length - reviews.length) +
@@ -152,7 +219,7 @@ export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<Import
 
   // children first, parents last — a review/decision is only useful with its match
   await Promise.all([
-    matchRepository.bulkPut(matches as Match[]),
+    matchRepository.bulkPut(matches),
     decisionRepository.bulkPut(decisions as Decision[]),
     reviewRepository.bulkPut(reviews as Review[]),
     trainingGoalRepository.bulkPut(trainingGoals as TrainingGoal[]),
@@ -163,6 +230,7 @@ export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<Import
     decisions: decisions.length,
     reviews: reviews.length,
     trainingGoals: trainingGoals.length,
+    sessions: validSessions.length,
     skipped,
     importedAt: nowIso(),
   };

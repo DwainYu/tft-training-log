@@ -6,6 +6,8 @@ import { allOverall } from "./stats-service";
 import { addMatch } from "./match-service";
 import { demoSnapshot, loadDemoData, removeDemoData } from "./demo-service";
 import { storageCounts } from "./export-service";
+import { DAILY_SESSION_ID } from "../domain/types";
+import { ensureDefaultSessions, getSessions, setActiveSession } from "./session-service";
 import { resetDatabase } from "../test/db-helper";
 
 beforeEach(resetDatabase);
@@ -83,5 +85,33 @@ describe("loadDemoData / removeDemoData", () => {
     expect(counts.decisions).toBe(0);
     expect(counts.reviews).toBe(0);
     expect(await matchRepository.get(real.id)).toBeDefined();
+  });
+});
+
+describe("demo data ↔ sessions", () => {
+  it("demo matches always land in the daily session, even when competition is active", async () => {
+    await ensureDefaultSessions();
+    await setActiveSession("yunding-s18");
+    await loadDemoData();
+
+    const all = await matchRepository.all();
+    expect(all).toHaveLength(16);
+    for (const m of all) expect(m.sessionId).toBe(DAILY_SESSION_ID);
+    // competition stays empty → session filtering is proven by the numbers
+    const comp = await allOverall("yunding-s18");
+    expect(comp.games).toBe(0);
+    const daily = await allOverall(DAILY_SESSION_ID);
+    expect(daily.games).toBe(16);
+    const everything = await allOverall();
+    expect(everything.games).toBe(16);
+  });
+
+  it("demo data can be removed, sessions stay untouched", async () => {
+    await ensureDefaultSessions();
+    await loadDemoData();
+    const removed = await removeDemoData();
+    expect(removed).toBeGreaterThan(0);
+    const sessions = await getSessions();
+    expect(sessions.map((s) => s.id)).toEqual([DAILY_SESSION_ID, "yunding-s18"]);
   });
 });

@@ -5,6 +5,7 @@ import {
   importSnapshot,
   matchesToCsv,
   parseSnapshot,
+  wipeAll,
 } from "./export-service";
 import { addMatch } from "./match-service";
 import { addDecision } from "./decision-service";
@@ -12,7 +13,7 @@ import { addGoal } from "./training-service";
 import { saveReview } from "./review-service";
 import { matchRepository } from "../data/repository/match-repository";
 import { resetDatabase } from "../test/db-helper";
-import { SNAPSHOT_SCHEMA_VERSION, type Match } from "../domain/types";
+import { SNAPSHOT_SCHEMA_VERSION, type Match, type TrainingSession } from "../domain/types";
 
 beforeEach(resetDatabase);
 
@@ -56,7 +57,7 @@ describe("export", () => {
     const { a } = await seedTwo();
     const csv = matchesToCsv(await matchRepository.all());
     const lines = csv.split("\n");
-    expect(lines[0]).toBe("id,played_at,placement,composition,final_level,final_health,duration_seconds,primary_mistake,reviewed,notes");
+    expect(lines[0]).toBe("id,played_at,placement,composition,final_level,final_health,duration_seconds,primary_mistake,reviewed,notes,session_id");
     const rowA = lines.find((l) => l.includes(a.id))!;
     // commas inside composition and quotes inside notes must be escaped
     expect(rowA).toContain(`"Arcader, gold-rush"`);
@@ -147,5 +148,89 @@ describe("import + Set 18 static ids", () => {
     const report = await importSnapshot(snap);
     expect(report.skipped).toBe(2);
     expect(await matchRepository.get("linked-bad")).toBeUndefined();
+  });
+});
+
+
+describe("import + sessions", () => {
+  it("round-trips sessions and keeps sessionId on matches", async () => {
+    const { ensureDefaultSessions, setActiveSession } = await import("./session-service");
+    await ensureDefaultSessions();
+    await setActiveSession("yunding-s18");
+    await addMatch({ playedAt: "2026-10-14T13:00", placement: "3" });
+
+    const snap = await buildSnapshot();
+    expect(snap.trainingSessions.map((s) => s.id)).toEqual(["daily", "yunding-s18"]);
+    expect(snap.matches[0].sessionId).toBe("yunding-s18");
+
+    // wipe the local db, import the snapshot back: context restored
+    await wipeAll();
+    await importSnapshot(snap);
+    const all = await matchRepository.all();
+    expect(all[0].sessionId).toBe("yunding-s18");
+    const sessions = await import("../data/repository/training-session-repository").then(
+      ({ trainingSessionRepository }) => trainingSessionRepository.all(),
+    );
+    expect(sessions).toHaveLength(2);
+  });
+
+  it("defaults a missing sessionId to daily", async () => {
+    const { ensureDefaultSessions } = await import("./session-service");
+    await ensureDefaultSessions();
+    const snap = await buildSnapshot();
+    snap.matches.push({
+      id: "legacy-m",
+      playedAt: "2026-02-01T13:00",
+      placement: 5,
+    } as unknown as Match);
+    await importSnapshot(snap);
+    expect((await matchRepository.get("legacy-m"))?.sessionId).toBe("daily");
+  });
+
+  it("normalizes an unknown sessionId to daily instead of skipping the match", async () => {
+    const { ensureDefaultSessions } = await import("./session-service");
+    await ensureDefaultSessions();
+    const snap = await buildSnapshot();
+    snap.matches.push({
+      id: "ghost-session-m",
+      playedAt: "2026-02-01T13:00",
+      placement: 5,
+      sessionId: "no-such-session",
+    } as unknown as Match);
+    const report = await importSnapshot(snap);
+    expect(report.skipped).toBe(0);
+    expect((await matchRepository.get("ghost-session-m"))?.sessionId).toBe("daily");
+  });
+
+  it("imports sessions traveling inside the same snapshot", async () => {
+    const snap = await buildSnapshot();
+    snap.trainingSessions.push({
+      id: "cup-prep",
+      type: "competition",
+      name: "杯赛准备",
+      startDate: "2026-11-01",
+      endDate: "2026-11-02",
+      active: true,
+      createdAt: "2026-01-01T00:00:00.000Z",
+      updatedAt: "2026-01-01T00:00:00.000Z",
+    });
+    snap.matches.push({
+      id: "cup-m",
+      playedAt: "2026-11-01T13:00",
+      placement: 2,
+      sessionId: "cup-prep",
+    } as unknown as Match);
+    const report = await importSnapshot(snap);
+    expect(report.sessions).toBe(1);
+    expect(report.skipped).toBe(0);
+    expect((await matchRepository.get("cup-m"))?.sessionId).toBe("cup-prep");
+  });
+
+  it("skips malformed session rows", async () => {
+    const snap = await buildSnapshot();
+    snap.trainingSessions.push({ id: "bad", type: "yunding" } as unknown as TrainingSession);
+    const report = await importSnapshot(snap);
+    expect(report.sessions).toBe(0);
+    expect(report.skipped).toBe(1);
   });
 });

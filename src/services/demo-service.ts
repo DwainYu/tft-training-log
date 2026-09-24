@@ -3,7 +3,7 @@ import { decisionRepository } from "../data/repository/decision-repository";
 import { matchRepository } from "../data/repository/match-repository";
 import { reviewRepository } from "../data/repository/review-repository";
 import { trainingGoalRepository } from "../data/repository/training-goal-repository";
-import type { DatabaseSnapshot } from "../domain/types";
+import { DAILY_SESSION_ID, type DatabaseSnapshot } from "../domain/types";
 import { addDays, dateKey, toDate, toWallClock, wallClockNow } from "../lib/wallclock";
 import { importSnapshot, type ImportReport } from "./export-service";
 
@@ -57,9 +57,19 @@ export function demoSnapshot(): DatabaseSnapshot {
   return raw;
 }
 
-/** Merge the demo set into the local database (idempotent: ids are stable). */
+/**
+ * Merge the demo set into the local database (idempotent: ids are stable).
+ *
+ * Demo data *always* belongs to the built-in daily session, no matter which
+ * session the player has selected — it is fictional training context, not
+ * competition data.
+ */
 export function loadDemoData(): Promise<ImportReport> {
-  return importSnapshot(demoSnapshot());
+  const snapshot = demoSnapshot();
+  for (const m of snapshot.matches) {
+    m.sessionId = DAILY_SESSION_ID;
+  }
+  return importSnapshot(snapshot);
 }
 
 /** Delete every `demo-` record, leaving real training data untouched. */
