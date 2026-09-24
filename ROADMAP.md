@@ -42,6 +42,21 @@ prerequisite for the tool being worth using today.
 - [ ] Replace the remaining free-text trait / item / augment fields with
       pickers / autocomplete backed by that data
 
+## Phase 2.5 — Session Context
+
+- [x] `TrainingSession` domain + `trainingSessions` / `settings` IndexedDB stores (v2)
+- [x] Built-in sessions: 日常训练 (`daily`) + 云顶之巅冲榜 S18 (`yunding-s18`,
+      2026-10-13 ~ 2026-10-18 — personal competition config, editable)
+- [x] Persisted active session (survives refresh / browser restart), global
+      switcher in the app shell
+- [x] `Match.sessionId`; new matches inherit the active session, existing matches
+      can be moved between sessions from the edit form
+- [x] Dashboard / Matches / Statistics / Review flows scoped by the active session,
+      with an "all sessions" scope on Matches + Statistics
+- [x] Demo data pinned to `daily`; import normalizes missing / unknown
+      `sessionId` to `daily`; export round-trips sessions
+- [x] Session manager on the Data page (create / edit / set active / guarded delete)
+
 ## Phase 3 — China Client (LCU) Adapter
 
 - [ ] Read the player's own client through the LCU API

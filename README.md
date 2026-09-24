@@ -101,6 +101,30 @@ A fresh install is empty. To see every screen with data in it:
 match history. Ids are prefixed `demo-`, and the whole set is re-based onto the current
 date when loaded, so streaks and the weekly view stay meaningful whenever you clone this repo.
 
+## Training Sessions
+
+TFT Training Log supports multiple training contexts, such as:
+
+- Daily Training
+- Competition Training
+
+The active session controls which matches are shown in the default dashboard and
+analytics views. Matches, statistics and the unreviewed list all re-scope when you
+switch sessions in the header; "All sessions" on the Matches / Statistics pages keeps
+the full history one click away. All data remains local in the browser.
+
+A session is a named period with its own goal and statistics (`TrainingSession` in
+`src/domain/session/`). Two sessions are created on first run:
+
+- `daily` — 日常训练, ongoing
+- `yunding-s18` — 云顶之巅冲榜 S18, `2026-10-13` ~ `2026-10-18`
+
+The second one is the current player's personal competition configuration, not a
+built-in system rule: it can be renamed, re-dated, deleted or replaced (e.g. 杯赛准备,
+S19 冲榜) from the Data page without touching the domain types. New matches inherit
+the active session; importing or loading demo data without a session normalizes to
+`daily`, so no match is ever a session-less orphan.
+
 ## Tech Stack
 
 - **TypeScript** (strict) + **React 19** + **Vite 6**
