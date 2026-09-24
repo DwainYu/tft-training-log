@@ -12,6 +12,7 @@ import {
   stampForFilename,
   wipeAll,
 } from "../services/export-service";
+import { getActiveSetData } from "../data/tft/registry";
 import { loadDemoData, removeDemoData } from "../services/demo-service";
 import { decisionRepository } from "../data/repository/decision-repository";
 import { matchRepository } from "../data/repository/match-repository";
@@ -26,6 +27,7 @@ import { useToast } from "../components/ui/Toast";
 export function DataPage() {
   const counts = useLiveQuery(storageCounts, []);
   const [confirmWipe, setConfirmWipe] = useState(false);
+  const tft = getActiveSetData();
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
@@ -160,6 +162,25 @@ export function DataPage() {
             </div>
           </Panel>
         </div>
+
+        <Panel>
+          <PanelHeader
+            title="Set 18 静态数据"
+            subtitle="棋子 / 羁绊 / 装备 / 强化符文 —— 随应用内置，离线可用"
+            action={<Badge tone="muted">本地快照 · {tft.manifest.dataVersion}</Badge>}
+          />
+          <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-4">
+            <CountTile label="棋子" value={tft.champions.length} />
+            <CountTile label="羁绊" value={tft.traits.length} />
+            <CountTile label="装备" value={tft.items.length} />
+            <CountTile label="强化符文" value={tft.augments.length} />
+          </div>
+          <p className="border-t border-line px-4 py-3 text-[11px] leading-relaxed text-ink-600">
+            {tft.manifest.name} · 补丁 {tft.manifest.version} · 来源 {tft.manifest.source.name} ·
+            抓取于 {tft.manifest.source.retrievedAt}。对局里的规范 id 以这份数据为准，
+            来源与分类规则见 <code className="mx-1">data/tft/set18/README.md</code>。
+          </p>
+        </Panel>
 
         <Panel>
           <PanelHeader

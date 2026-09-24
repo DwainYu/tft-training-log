@@ -11,6 +11,7 @@ import {
   type TrainingGoal,
 } from "../domain/types";
 import { nowIso } from "../lib/utils";
+import { validateMatchStaticData } from "../data/tft/match-links";
 
 /* ------------------------------------------------------------------ */
 /* Build                                                               */
@@ -128,7 +129,12 @@ export function parseSnapshot(text: string): DatabaseSnapshot {
 export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<ImportReport> {
   let skipped = 0;
 
-  const matches = snapshot.matches.filter((m) => isRecord(m) && hasId(m) && typeof m.placement === "number");
+  // Matches carrying canonical S18 ids are additionally gated: an id that the
+  // static snapshot does not know about is skipped, not silently imported.
+  const matches = snapshot.matches.filter(
+    (m) =>
+      isRecord(m) && hasId(m) && typeof m.placement === "number" && validateMatchStaticData(m).length === 0,
+  );
   const validMatchIds = new Set(matches.map((m) => m.id));
   const decisions = snapshot.decisions.filter(
     (d) => isRecord(d) && hasId(d) && typeof d.matchId === "string" && validMatchIds.has(d.matchId),

@@ -108,3 +108,44 @@ describe("import", () => {
     );
   });
 });
+
+describe("import + Set 18 static ids", () => {
+  it("imports a match carrying valid S18 ids and keeps them", async () => {
+    const snap = await buildSnapshot();
+    snap.matches.push({
+      id: "linked-m1",
+      playedAt: "2026-02-09T21:00",
+      placement: 5,
+      set: 18,
+      traitIds: ["DA_18_Spellweaver"],
+      coreUnitIds: ["DA_18_Azir"],
+      coreItemIds: ["TFT_Item_ArchangelsStaff"],
+      augmentIds: ["DA_18_BigGrabBag"],
+    } as unknown as Match);
+    const report = await importSnapshot(snap);
+    expect(report.matches).toBe(1);
+    expect(report.skipped).toBe(0);
+    const m = await matchRepository.get("linked-m1");
+    expect(m?.coreUnitIds).toEqual(["DA_18_Azir"]);
+    expect(m?.traitIds).toEqual(["DA_18_Spellweaver"]);
+  });
+
+  it("skips matches whose ids cannot be resolved in the Set 18 snapshot", async () => {
+    const snap = await buildSnapshot();
+    snap.matches.push({
+      id: "linked-bad",
+      playedAt: "2026-02-09T21:00",
+      placement: 5,
+      coreUnitIds: ["DA_18_NotACampion"],
+    } as unknown as Match);
+    snap.matches.push({
+      id: "linked-wrong-set",
+      playedAt: "2026-02-09T21:00",
+      placement: 5,
+      set: 19,
+    } as unknown as Match);
+    const report = await importSnapshot(snap);
+    expect(report.skipped).toBe(2);
+    expect(await matchRepository.get("linked-bad")).toBeUndefined();
+  });
+});

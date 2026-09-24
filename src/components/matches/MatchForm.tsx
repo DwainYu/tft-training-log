@@ -21,6 +21,7 @@ import { Badge } from "../ui/Badge";
 import { useToast } from "../ui/Toast";
 import { MistakeSelect } from "./MistakeSelect";
 import { PlacementPicker } from "./PlacementPicker";
+import { championRepository } from "../../data/tft/repositories";
 import {
   draftFromMatch,
   draftToPayload,
@@ -28,6 +29,9 @@ import {
   emptyDraft,
   type MatchFormDraft,
 } from "./match-form-model";
+
+/** Set 18 champion names, for the 核心棋子 autocomplete (static snapshot). */
+const S18_CHAMPION_NAMES: string[] = [...new Set(championRepository.getChampions().map((c) => c.name))];
 
 export function MatchForm({
   mode,
@@ -245,10 +249,16 @@ export function MatchForm({
             <Field label="核心棋子" htmlFor="f-units">
               <Input
                 id="f-units"
+                list="f-units-options"
                 value={draft.coreUnits}
                 placeholder="Galio / Katarina / Tahm"
                 onChange={(e) => set("coreUnits", e.target.value)}
               />
+              <datalist id="f-units-options">
+                {S18_CHAMPION_NAMES.map((name) => (
+                  <option key={name} value={name} />
+                ))}
+              </datalist>
             </Field>
             <Field label="核心装备" htmlFor="f-items">
               <Textarea

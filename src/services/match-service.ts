@@ -13,12 +13,19 @@ import { seedReview } from "./review-service";
 import { ValidationError } from "../lib/errors";
 import { dateKey, toDate } from "../lib/wallclock";
 import { nowIso } from "../lib/utils";
+import { validateMatchStaticData } from "../data/tft/match-links";
 import type { Decision, Match, MistakeType, Review } from "../domain/types";
 
 export interface MatchBundle {
   match: Match;
   review?: Review;
   decisions: Decision[];
+}
+
+/** Static-data gate: reject canonical ids that do not exist in the active set. */
+function assertStaticLinks(input: MatchInput): void {
+  const errors = validateMatchStaticData(input);
+  if (errors.length > 0) throw new ValidationError(errors);
 }
 
 /**
@@ -28,6 +35,7 @@ export interface MatchBundle {
 export async function addMatch(payload: ManualMatchPayload): Promise<Match> {
   const result = ManualAdapter.toMatchInput(payload);
   if (!result.ok) throw new ValidationError(result.errors);
+  assertStaticLinks(result.value);
   return matchRepository.add(createMatch(result.value));
 }
 
@@ -36,6 +44,7 @@ export async function updateMatch(id: string, payload: ManualMatchPayload): Prom
   if (!existing) throw new ValidationError([`对局不存在：${id}`]);
   const result = ManualAdapter.toMatchInput(payload);
   if (!result.ok) throw new ValidationError(result.errors);
+  assertStaticLinks(result.value);
   const next = applyMatchInput(existing, result.value);
   await matchRepository.put(next);
   return next;
@@ -45,6 +54,7 @@ export async function updateMatch(id: string, payload: ManualMatchPayload): Prom
 export async function saveMatchInput(input: MatchInput, id?: string): Promise<Match> {
   const errors = validateMatchInput(input);
   if (errors.length) throw new ValidationError(errors);
+  assertStaticLinks(input);
   if (id) {
     const existing = await matchRepository.get(id);
     if (existing) {

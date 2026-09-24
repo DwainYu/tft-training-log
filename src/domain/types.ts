@@ -69,6 +69,17 @@ export interface Match {
   coreItems?: string[];
   augments?: string[];
 
+  /**
+   * Canonical static-data identifiers (Set 18 snapshot, `data/tft/set18`).
+   * Optional and purely additive: the free-text fields above stay the
+   * source of record, old records simply have none of these.
+   */
+  set?: number;
+  traitIds?: string[];
+  coreUnitIds?: string[];
+  coreItemIds?: string[];
+  augmentIds?: string[];
+
   reviewed: boolean;
   primaryMistake?: MistakeType;
   notes?: string;

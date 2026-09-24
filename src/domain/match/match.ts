@@ -22,6 +22,12 @@ export interface MatchInput {
   coreUnits?: string[];
   coreItems?: string[];
   augments?: string[];
+  /** Canonical S18 static-data ids (optional; see `Match` docs). */
+  set?: number;
+  traitIds?: string[];
+  coreUnitIds?: string[];
+  coreItemIds?: string[];
+  augmentIds?: string[];
   primaryMistake?: MistakeType;
   notes?: string;
 }
@@ -85,6 +91,11 @@ function normalize(input: MatchInput): MatchInput {
     coreUnits: listOrUndefined(input.coreUnits),
     coreItems: listOrUndefined(input.coreItems),
     augments: listOrUndefined(input.augments),
+    set: positiveOrUndefined(input.set),
+    traitIds: idsOrUndefined(input.traitIds),
+    coreUnitIds: idsOrUndefined(input.coreUnitIds),
+    coreItemIds: idsOrUndefined(input.coreItemIds),
+    augmentIds: idsOrUndefined(input.augmentIds),
     primaryMistake: input.primaryMistake || undefined,
     notes: input.notes?.trim() || undefined,
   }) as MatchInput;
@@ -162,6 +173,13 @@ function listOrUndefined(value: string[] | string | undefined): string[] | undef
   // Arrays go through the same splitter as text inputs, so "A / B" and
   // ["A / B"] normalise identically.
   const cleaned = parseList(Array.isArray(value) ? value.join(" / ") : (value ?? ""));
+  return cleaned.length ? cleaned : undefined;
+}
+
+/** Canonical ids are kept verbatim (no free-text splitting), just tidied. */
+function idsOrUndefined(value: string[] | undefined): string[] | undefined {
+  if (!value) return undefined;
+  const cleaned = [...new Set(value.map((v) => v.trim()).filter((v) => v !== ""))];
   return cleaned.length ? cleaned : undefined;
 }
 

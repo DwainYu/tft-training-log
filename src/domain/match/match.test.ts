@@ -5,6 +5,7 @@ import {
   isBottom4,
   isTop4,
   isWin,
+  matchToInput,
   validateMatchInput,
   type MatchInput,
 } from "./match";
@@ -104,5 +105,37 @@ describe("validateMatchInput", () => {
   it("rejects out-of-range level / health", () => {
     expect(validateMatchInput({ ...base, finalLevel: 30 })).toContain("最终等级应在 1 – 12 之间");
     expect(validateMatchInput({ ...base, finalHealth: 120 })).toContain("最终血量应在 0 – 100 之间");
+  });
+});
+
+describe("canonical static-data ids (Phase 2)", () => {
+  it("normalises id lists: trim, drop empties, dedupe", () => {
+    const m = createMatch({
+      ...base,
+      set: 18,
+      traitIds: ["DA_18_Spellweaver", "DA_18_Spellweaver", " ", "DA_18_Rapidfire"],
+      coreUnitIds: ["DA_18_Azir"],
+      coreItemIds: ["TFT_Item_ArchangelsStaff"],
+      augmentIds: ["DA_18_BigGrabBag"],
+    });
+    expect(m.set).toBe(18);
+    expect(m.traitIds).toEqual(["DA_18_Spellweaver", "DA_18_Rapidfire"]);
+    expect(m.coreUnitIds).toEqual(["DA_18_Azir"]);
+    expect(m.coreItemIds).toEqual(["TFT_Item_ArchangelsStaff"]);
+    expect(m.augmentIds).toEqual(["DA_18_BigGrabBag"]);
+  });
+
+  it("keeps legacy records without ids intact (backward compatibility)", () => {
+    const m = createMatch({ ...base, composition: "法师爆发", traits: ["法师"] });
+    expect("traitIds" in m).toBe(false);
+    expect("coreUnitIds" in m).toBe(false);
+    expect("set" in m).toBe(false);
+    expect(m.composition).toBe("法师爆发");
+    expect(validateMatchInput(matchToInput(m))).toEqual([]);
+  });
+
+  it("drops empty id arrays instead of storing them", () => {
+    const m = createMatch({ ...base, traitIds: ["", "  "] });
+    expect("traitIds" in m).toBe(false);
   });
 });

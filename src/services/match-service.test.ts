@@ -8,6 +8,7 @@ import {
   knownCompositions,
   listMatches,
   recentMatches,
+  saveMatchInput,
   trainedDateKeys,
   updateMatch,
 } from "./match-service";
@@ -113,5 +114,30 @@ describe("match service CRUD", () => {
 
     expect(await knownCompositions()).toEqual(["Arcader", "Rebel"]);
     expect(await trainedDateKeys()).toEqual(["2026-02-05", "2026-02-04", "2026-02-03"]);
+  });
+});
+
+describe("match service + Set 18 static ids", () => {
+  it("stores canonical ids that resolve in the snapshot", async () => {
+    const m = await saveMatchInput({
+      playedAt: "2026-02-08T20:00",
+      placement: 3,
+      set: 18,
+      coreUnitIds: ["DA_18_Azir"],
+      traitIds: ["DA_18_Executioner"],
+    });
+    expect(m.coreUnitIds).toEqual(["DA_18_Azir"]);
+    expect(m.traitIds).toEqual(["DA_18_Executioner"]);
+  });
+
+  it("rejects a write whose ids the snapshot does not know", async () => {
+    await expect(
+      saveMatchInput({
+        playedAt: "2026-02-08T20:00",
+        placement: 3,
+        coreUnitIds: ["DA_18_NotACampion"],
+      }),
+    ).rejects.toThrow(ValidationError);
+    expect(await allMatches()).toHaveLength(0);
   });
 });
