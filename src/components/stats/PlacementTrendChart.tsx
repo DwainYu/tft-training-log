@@ -48,7 +48,8 @@ export function PlacementTrendChart({
         <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 4 }}>
           <CartesianGrid stroke={GRID} vertical={false} />
           <XAxis
-            dataKey="label"
+            dataKey="index"
+            tickFormatter={(v: number) => data[v - 1]?.label ?? ""}
             tick={{ fill: TICK, fontSize: 11 }}
             axisLine={{ stroke: GRID }}
             tickLine={false}
@@ -65,6 +66,10 @@ export function PlacementTrendChart({
           />
           <Tooltip
             contentStyle={tooltipStyle}
+            labelFormatter={(label, payload) => {
+              const point = payload?.[0]?.payload as TrendPoint | undefined;
+              return point?.label ?? String(label);
+            }}
             formatter={(value) => [`第 ${String(value)} 名`, "名次"]}
           />
           {avg !== null && (
