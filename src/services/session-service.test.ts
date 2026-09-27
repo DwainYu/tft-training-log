@@ -60,6 +60,45 @@ describe("ensureDefaultSessions", () => {
     await ensureDefaultSessions();
     expect((await settingsRepository.get())?.activeSessionId).toBe("daily");
   });
+
+  it("re-creates a deleted default session even when other records exist (self-heal)", async () => {
+    await ensureDefaultSessions();
+    await deleteSession("yunding-s18");
+    expect(await getSessionById("yunding-s18")).toBeUndefined();
+
+    await ensureDefaultSessions();
+    const sessions = await getSessions();
+    expect(sessions.map((s) => s.id)).toEqual(["daily", "yunding-s18"]);
+    expect(sessions[1].name).toBe("云顶之巅冲榜 S18");
+  });
+
+  it("heals a DB that only has the daily session (stale snapshot scenario)", async () => {
+    // simulate the broken state: the sessions table exists but only holds daily
+    await ensureDefaultSessions();
+    await deleteSession("yunding-s18");
+    await setActiveSession("daily");
+
+    await ensureDefaultSessions();
+    expect((await getSessions()).map((s) => s.id)).toEqual(["daily", "yunding-s18"]);
+    // the active pointer is untouched — it already points at a live session
+    expect(await getActiveSessionId()).toBe("daily");
+  });
+
+  it("never overwrites an edited default session (rename survives re-bootstrap)", async () => {
+    await ensureDefaultSessions();
+    await updateSession("yunding-s18", {
+      type: "competition",
+      name: "云顶之巅冲榜 S18（改期）",
+      startDate: "2026-10-14",
+      endDate: "2026-10-19",
+      active: true,
+    });
+
+    await ensureDefaultSessions();
+    const comp = await getSessionById("yunding-s18");
+    expect(comp?.name).toBe("云顶之巅冲榜 S18（改期）");
+    expect(comp?.endDate).toBe("2026-10-19");
+  });
 });
 
 describe("getActiveSessionId / getActiveSession", () => {

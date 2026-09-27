@@ -46,14 +46,18 @@ export function defaultSessions(): SessionInput[] {
   ];
 }
 
-/** Idempotent bootstrap: seed the two default sessions + settings record. */
+/**
+ * Idempotent bootstrap: the two default sessions always exist (upsert by id,
+ * missing ones are re-created on every boot — a deleted or stale-DB default
+ * session heals itself) + the settings record.
+ */
 export async function ensureDefaultSessions(): Promise<void> {
-  if ((await trainingSessionRepository.all()).length === 0) {
-    await trainingSessionRepository.bulkPut(
-      defaultSessions().map((input) =>
-        createSessionDomain({ ...input, active: input.active ?? true }),
-      ),
-    );
+  const existingIds = new Set((await trainingSessionRepository.all()).map((s) => s.id));
+  const missing = defaultSessions()
+    .filter((input) => !existingIds.has(input.id ?? ""))
+    .map((input) => createSessionDomain({ ...input, active: input.active ?? true }));
+  if (missing.length > 0) {
+    await trainingSessionRepository.bulkPut(missing);
   }
   const activeId = (await settingsRepository.get())?.activeSessionId;
   const known = activeId ? await trainingSessionRepository.get(activeId) : undefined;
