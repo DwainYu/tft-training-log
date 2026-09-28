@@ -12,6 +12,7 @@ import {
 const GRID = "#1e2635";
 const TICK = "#8b97ab";
 const GOLD = "#e8b64a";
+const BLUE = "#38bdf8";
 
 const tooltipStyle = {
   backgroundColor: "#10151f",
@@ -87,8 +88,20 @@ export function PlacementTrendChart({
             name="rank"
             stroke={GOLD}
             strokeWidth={2}
-            dot={{ r: 3, fill: GOLD, strokeWidth: 0 }}
-            activeDot={{ r: 5, fill: "#38bdf8", stroke: "#10151f", strokeWidth: 2 }}
+            dot={(props) => {
+              const { cx, cy, payload } = props;
+              if (cx == null || cy == null) return null;
+              return (
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={3}
+                  fill={payload?.top4 === 1 ? BLUE : GOLD}
+                  strokeWidth={0}
+                />
+              );
+            }}
+            activeDot={{ r: 5, fill: BLUE, stroke: "#10151f", strokeWidth: 2 }}
             isAnimationActive={false}
           />
         </LineChart>
