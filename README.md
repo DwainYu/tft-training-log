@@ -83,7 +83,7 @@ npm run dev          # http://localhost:5183/tft-training-log/
 
 ```bash
 npm run build        # tsc --noEmit && vite build  -> dist/ (base: /tft-training-log/)
-npm run test         # vitest run (18 files / 139 tests)
+npm run test         # vitest run (21 files / 186 tests)
 npm run typecheck    # tsc --noEmit
 npm run preview      # serve the production build
 ```
@@ -134,7 +134,7 @@ the active session; importing or loading demo data without a session normalizes 
   served from any sub-path (GitHub Pages project site) without server-side rewrites
 - **Recharts** — trend lines and mistake bars
 - **lucide-react** — icons
-- **Vitest** + **Testing Library** + **fake-indexeddb** (jsdom) — 139 tests
+- **Vitest** + **Testing Library** + **fake-indexeddb** (jsdom) — 186 tests
 
 ## Architecture
 
