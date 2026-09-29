@@ -6,7 +6,7 @@
 ![Pages](https://github.com/DwainYu/tft-training-log/actions/workflows/deploy-pages.yml/badge.svg)
 ![Release](https://img.shields.io/github/v/release/DwainYu/tft-training-log)
 
-**[Live Demo →](https://playmaker.bbroot.com/)**
+**[Live Demo →](https://dwainyu.github.io/tft-training-log/)**
 
 A local-first personal training system for recording TFT (Teamfight Tactics) matches,
 tracking in-game decisions, reviewing mistakes, and measuring improvement over time.
@@ -68,7 +68,7 @@ All four were taken against the bundled **fictional** demo dataset — see [Demo
 
 ## Live Demo
 
-**[playmaker.bbroot.com](https://playmaker.bbroot.com/)**
+**[dwainyu.github.io/tft-training-log](https://dwainyu.github.io/tft-training-log/)**
 
 The demo runs entirely in your browser and keeps every record in local IndexedDB — pushing
 `main` publishes the same static bundle through GitHub Actions. Load the
@@ -78,11 +78,11 @@ The demo runs entirely in your browser and keeps every record in local IndexedDB
 
 ```bash
 npm install
-npm run dev          # http://localhost:5183/
+npm run dev          # http://localhost:5183/tft-training-log/
 ```
 
 ```bash
-npm run build        # tsc --noEmit && vite build  -> dist/ (base: /)
+npm run build        # tsc --noEmit && vite build  -> dist/ (base: /tft-training-log/)
 npm run test         # vitest run (18 files / 139 tests)
 npm run typecheck    # tsc --noEmit
 npm run preview      # serve the production build
