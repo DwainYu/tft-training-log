@@ -8,6 +8,9 @@
 
 **[Live Demo →](https://dwainyu.github.io/tft-training-log/)**
 
+> Mainland China users: if the demo loads slowly or not at all, see
+> [🇨🇳 中国大陆访问说明](#-中国大陆访问说明) below.
+
 A local-first personal training system for recording TFT (Teamfight Tactics) matches,
 tracking in-game decisions, reviewing mistakes, and measuring improvement over time.
 
@@ -73,6 +76,31 @@ All four were taken against the bundled **fictional** demo dataset — see [Demo
 The demo runs entirely in your browser and keeps every record in local IndexedDB — pushing
 `main` publishes the same static bundle through GitHub Actions. Load the
 [demo data](#demo-data) to see all screens filled; nothing is uploaded anywhere.
+
+### 🇨🇳 中国大陆访问说明
+
+本项目使用 GitHub Pages 提供在线 Demo：
+
+https://dwainyu.github.io/tft-training-log/
+
+由于网络环境差异，中国大陆部分用户访问 GitHub Pages 可能较慢，或无法正常加载。
+
+可以尝试使用 **Watt Toolkit（原 Steam++）** 的 GitHub 加速功能改善访问。
+
+Watt Toolkit 是一个开源的跨平台工具，官方项目提供 GitHub Releases、Gitee Releases 和官网等下载渠道，并包含网络加速功能。
+
+使用步骤：
+
+1. 安装 Watt Toolkit
+2. 打开 Watt Toolkit
+3. 找到 **网络加速**
+4. 开启 **GitHub** 相关加速
+5. 再打开上面的 TFT Training Log 地址
+
+> Watt Toolkit 属于第三方工具，并非本项目的运行依赖。不同网络环境下的加速效果可能有所不同。
+
+官方项目：
+https://github.com/BeyondDimension/SteamTools
 
 ## Getting Started
 
