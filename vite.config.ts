@@ -3,9 +3,13 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 
+// Node global available while Vite evaluates this config file (@types/node is not installed).
+declare const process: { env: Record<string, string | undefined> };
+
 export default defineConfig({
-  // Published as a project page: https://dwainyu.github.io/tft-training-log/
-  base: "/tft-training-log/",
+  // GitHub Pages project page: https://dwainyu.github.io/tft-training-log/
+  // EdgeOne serves the site from the domain root, so build with EDGEONE=1 -> base "/".
+  base: process.env.EDGEONE === "1" ? "/" : "/tft-training-log/",
   plugins: [react(), tailwindcss()],
   server: { port: 5183, host: true },
   preview: { port: 5184, host: true },
