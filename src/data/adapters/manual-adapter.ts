@@ -18,9 +18,15 @@ export interface ManualMatchPayload {
   totalGold?: string;
   composition?: string;
   traits?: string;
+  /** Canonical Set 18 trait ids — the synergies the final board had. */
+  traitIds?: string[];
   coreUnits?: string;
   coreItems?: string;
+  /** Canonical Set 18 item ids — the items that mattered this game. */
+  coreItemIds?: string[];
   augments?: string;
+  /** Canonical Set 18 augment ids, in pick order (第一 / 第二 / 第三). */
+  augmentIds?: string[];
   /** Training session the match belongs to; empty → active session. */
   sessionId?: string;
   primaryMistake?: string;
@@ -67,9 +73,12 @@ export const ManualAdapter: DataSourceAdapter<ManualMatchPayload> = {
       totalGold: toNumber(payload.totalGold),
       composition: payload.composition?.trim() || undefined,
       traits: parseList(payload.traits),
+      traitIds: payload.traitIds,
       coreUnits: parseList(payload.coreUnits),
       coreItems: parseList(payload.coreItems),
+      coreItemIds: payload.coreItemIds,
       augments: parseList(payload.augments),
+      augmentIds: payload.augmentIds,
       sessionId: payload.sessionId?.trim() || undefined,
       primaryMistake,
       notes: payload.notes?.trim() || undefined,

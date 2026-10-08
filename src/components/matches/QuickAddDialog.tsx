@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Clock, Save, Sparkles } from "lucide-react";
-import { knownCompositions, quickAdd, recentMatches } from "../../services/match-service";
+import { quickAdd, recentMatches } from "../../services/match-service";
 import { getActiveSession } from "../../services/session-service";
+import { augmentOptions } from "../../services/augment-service";
+import { itemOptions } from "../../services/item-service";
 import { errorMessage } from "../../lib/errors";
-import {
-  TRAINING_WINDOW_LABEL,
-  TRAINING_WINDOW_WARNING,
-  isWithinTrainingWindow,
-  wallClockNow,
-} from "../../lib/wallclock";
+import { wallClockNow } from "../../lib/wallclock";
 import type { MistakeType } from "../../domain/types";
-import { Field, Input, Label } from "../ui/Field";
+import { Field, Input } from "../ui/Field";
+import { AugmentSelector } from "./AugmentSelector";
+import { CompositionSelector } from "./CompositionSelector";
+import { ItemSelector } from "./ItemSelector";
 import { MistakePicker } from "./MistakeSelect";
 import { PlacementPicker } from "./PlacementPicker";
 import { Modal } from "../ui/Modal";
@@ -22,8 +22,10 @@ import { useToast } from "../ui/Toast";
 interface QuickAddDraft {
   placement: number | undefined;
   composition: string;
-  augments: string;
-  coreItems: string;
+  /** Canonical augment ids in pick order; names are derived on save. */
+  augmentIds: string[];
+  /** Canonical item ids; names are derived on save. */
+  coreItemIds: string[];
   primaryMistake: MistakeType | "";
   nextGameFocus: string;
   playedAt: string;
@@ -32,8 +34,8 @@ interface QuickAddDraft {
 const emptyDraft = (): QuickAddDraft => ({
   placement: undefined,
   composition: "",
-  augments: "",
-  coreItems: "",
+  augmentIds: [],
+  coreItemIds: [],
   primaryMistake: "",
   nextGameFocus: "",
   playedAt: wallClockNow(),
@@ -52,7 +54,6 @@ export function QuickAddDialog({
   const toast = useToast();
   const navigate = useNavigate();
 
-  const compositions = useLiveQuery(() => knownCompositions(), [], []);
   const activeSession = useLiveQuery(getActiveSession, []);
   const last = useLiveQuery(() => recentMatches(1), [], [])[0];
 
@@ -73,11 +74,6 @@ export function QuickAddDialog({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, set]);
 
-  const outsideWindow = useMemo(
-    () => draft.playedAt !== "" && !isWithinTrainingWindow(draft.playedAt),
-    [draft.playedAt],
-  );
-
   async function submit(mode: "close" | "again" | "review") {
     if (!draft.placement) {
       setErrors(["请先选择名次"]);
@@ -91,8 +87,14 @@ export function QuickAddDialog({
           playedAt: draft.playedAt || wallClockNow(),
           placement: String(draft.placement),
           composition: draft.composition,
-          augments: draft.augments,
-          coreItems: draft.coreItems,
+          augments: augmentOptions(draft.augmentIds)
+            .map((a) => a.name)
+            .join(" / "),
+          augmentIds: draft.augmentIds,
+          coreItems: itemOptions(draft.coreItemIds)
+            .map((i) => i.name)
+            .join(" / "),
+          coreItemIds: draft.coreItemIds,
           primaryMistake: draft.primaryMistake,
         },
         draft.nextGameFocus,
@@ -108,6 +110,8 @@ export function QuickAddDialog({
         setDraft({
           ...emptyDraft(),
           composition: draft.composition,
+          augmentIds: draft.augmentIds,
+          coreItemIds: draft.coreItemIds,
           primaryMistake: draft.primaryMistake,
           nextGameFocus: draft.nextGameFocus,
         });
@@ -129,8 +133,8 @@ export function QuickAddDialog({
     setDraft((d) => ({
       ...d,
       composition: last.composition ?? d.composition,
-      augments: (last.augments ?? []).join(" / "),
-      coreItems: (last.coreItems ?? []).join(" / "),
+      augmentIds: last.augmentIds ?? d.augmentIds,
+      coreItemIds: last.coreItemIds ?? d.coreItemIds,
     }));
   };
 
@@ -175,60 +179,37 @@ export function QuickAddDialog({
           label="阵容"
           htmlFor="qa-composition"
           hint={
-            compositions.length > 0 ? (
-              <span className="flex flex-wrap items-center gap-1">
-                {compositions.slice(0, 6).map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => set("composition", c)}
-                    className="rounded border border-line bg-base-800 px-1.5 py-0.5 text-[11px] text-ink-400 hover:text-gold-300"
-                  >
-                    {c}
-                  </button>
-                ))}
-                {last && (
-                  <button
-                    type="button"
-                    onClick={reuseLast}
-                    className="ml-1 rounded border border-gold-500/30 bg-gold-500/10 px-1.5 py-0.5 text-[11px] text-gold-300"
-                  >
-                    复制上一局
-                  </button>
-                )}
-              </span>
-            ) : undefined
+            last && (
+              <button
+                type="button"
+                onClick={reuseLast}
+                className="rounded border border-gold-500/30 bg-gold-500/10 px-1.5 py-0.5 text-[11px] text-gold-300"
+              >
+                复制上一局
+              </button>
+            )
           }
         >
-          <Input
+          <CompositionSelector
             id="qa-composition"
-            list="qa-composition-options"
             value={draft.composition}
-            placeholder="例如：福牛 / 枪手"
-            onChange={(e) => set("composition", e.target.value)}
+            onChange={(v) => set("composition", v)}
           />
-          <datalist id="qa-composition-options">
-            {compositions.map((c) => (
-              <option key={c} value={c} />
-            ))}
-          </datalist>
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="强化符文" htmlFor="qa-augments">
-            <Input
+            <AugmentSelector
               id="qa-augments"
-              value={draft.augments}
-              placeholder="A / B / C"
-              onChange={(e) => set("augments", e.target.value)}
+              value={draft.augmentIds}
+              onChange={(ids) => set("augmentIds", ids)}
             />
           </Field>
           <Field label="核心装备" htmlFor="qa-items">
-            <Input
+            <ItemSelector
               id="qa-items"
-              value={draft.coreItems}
-              placeholder="主C：无尽 / 巨人"
-              onChange={(e) => set("coreItems", e.target.value)}
+              value={draft.coreItemIds}
+              onChange={(ids) => set("coreItemIds", ids)}
             />
           </Field>
         </div>
@@ -257,15 +238,6 @@ export function QuickAddDialog({
               className="max-w-56"
             />
           </div>
-          <Label className="mt-1 block text-[11px] text-ink-600">
-            {outsideWindow ? (
-              <span className="text-amber-300">
-                {TRAINING_WINDOW_WARNING}（训练时段 {TRAINING_WINDOW_LABEL}）
-              </span>
-            ) : (
-              `训练时段 ${TRAINING_WINDOW_LABEL}`
-            )}
-          </Label>
         </Field>
       </div>
     </Modal>
