@@ -7,17 +7,31 @@ import { getMatchBundle } from "../services/match-service";
 import type { ReviewInput } from "../domain/review/review";
 import type { OpeningPlan } from "../domain/types";
 import { mistakeLabel } from "../domain/labels";
-import { durationOf } from "../domain/match/match";
+import {
+  durationOf,
+  isBottom4,
+  isTop4,
+  isWin,
+  placementTone,
+} from "../domain/match/match";
+import { buildTimeline } from "../domain/decision/timeline";
 import { errorMessage, ValidationError } from "../lib/errors";
 import { formatDuration } from "../lib/utils";
 import { formatDateWeekday, formatTime } from "../lib/wallclock";
+import { DecisionTimeline } from "../components/decisions/DecisionTimeline";
 import { ReviewForm } from "../components/reviews/ReviewForm";
 import { Badge } from "../components/ui/Badge";
 import { Button, LinkButton } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
-import { PageHeader, Panel } from "../components/ui/Panel";
+import { PageHeader, Panel, PanelHeader } from "../components/ui/Panel";
 import { Spinner } from "../components/ui/Spinner";
 import { useToast } from "../components/ui/Toast";
+
+const PLACEMENT_TONE_CLASS = {
+  gold: "text-gold-300",
+  good: "text-good",
+  bad: "text-bad",
+} as const;
 
 export function ReviewPage() {
   const { id = "" } = useParams<{ id: string }>();
@@ -46,6 +60,13 @@ export function ReviewPage() {
 
   const { match, review, decisions } = bundle;
   const duration = durationOf(match);
+  const tone = placementTone(match.placement);
+  // Same three states Match Detail uses — UI-02 semantics, no fourth one.
+  const status = match.reviewed
+    ? { label: "已复盘", tone: "good" as const }
+    : review
+      ? { label: "复盘中", tone: "info" as const }
+      : { label: "未复盘", tone: "muted" as const };
 
   async function onSubmit(input: ReviewInput, openingPlan: OpeningPlan | null) {
     setBusy(true);
@@ -74,12 +95,9 @@ export function ReviewPage() {
 
       <PageHeader
         title="赛后复盘"
-        subtitle={`${match.playedAt.slice(0, 10)} ${formatDateWeekday(match.playedAt)} ${formatTime(match.playedAt)}`}
         action={
           <>
-            <Badge tone={match.reviewed ? "good" : "muted"}>
-              {match.reviewed ? "已复盘" : review ? "复盘中" : "未复盘"}
-            </Badge>
+            <Badge tone={status.tone}>{status.label}</Badge>
             {match.primaryMistake && (
               <Badge tone="bad">{mistakeLabel(match.primaryMistake)}</Badge>
             )}
@@ -87,28 +105,59 @@ export function ReviewPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
+      {/* ① 对局上下文 — the page has to answer "which game am I reviewing"
+          before asking anything else, on every viewport. */}
+      <section aria-label="对局上下文" className="panel mb-4 p-4">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="flex items-center gap-3">
+            <div
+              className={`num text-4xl font-semibold leading-none ${PLACEMENT_TONE_CLASS[tone]}`}
+            >
+              {match.placement}
+              <span className="ml-1 text-sm font-normal text-ink-400">名</span>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                {isWin(match) && <Badge tone="gold">吃鸡</Badge>}
+                {isTop4(match) && <Badge tone="good">Top4</Badge>}
+                {isBottom4(match) && <Badge tone="bad">Bottom4</Badge>}
+              </div>
+              <p className="num text-xs text-ink-400">
+                {match.playedAt.slice(0, 10)} {formatDateWeekday(match.playedAt)}{" "}
+                {formatTime(match.playedAt)}
+                {duration !== undefined && ` · ${formatDuration(duration)}`}
+              </p>
+            </div>
+          </div>
+          <div className="min-w-0 sm:ml-auto sm:text-right">
+            <div className="text-[11px] uppercase tracking-wide text-ink-600">阵容</div>
+            <div className="truncate text-sm text-ink-50">{match.composition ?? "未填阵容"}</div>
+            {match.coreUnits?.length ? (
+              <div className="truncate text-xs text-ink-600">
+                核心棋子 {match.coreUnits.join(" / ")}
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <div className="grid gap-4 [&>*]:min-w-0 lg:grid-cols-[minmax(0,1fr)_300px]">
         <ReviewForm
+          // Remount per match: the form seeds its state once, so without this
+          // a direct jump to another game's review would keep the old answers.
+          key={match.id}
           initial={review}
           initialOpeningPlan={match.openingPlan}
           errors={errors}
           busy={busy}
           onSave={onSubmit}
-          onDelete={review ? () => setConfirmDelete(true) : undefined}
           onDiscard={() => navigate(`/matches/${match.id}`)}
         />
 
         <aside className="flex flex-col gap-4">
-          <Panel className="p-4">
-            <div className="flex items-center gap-2">
-              <Badge tone={match.placement === 1 ? "gold" : match.placement <= 4 ? "good" : "bad"}>
-                第 {match.placement} 名
-              </Badge>
-              <span className="num text-xs text-ink-400">
-                {duration !== undefined ? formatDuration(duration) : "时长未填"}
-              </span>
-            </div>
-            <dl className="mt-3 flex flex-col gap-2 text-sm">
+          <Panel>
+            <PanelHeader title="对局资料" subtitle="只读" />
+            <dl className="flex flex-col gap-2 p-4">
               <SideFact label="阵容" value={match.composition} />
               <SideFact label="等级" value={match.finalLevel?.toString()} />
               <SideFact label="血量" value={match.finalHealth?.toString()} />
@@ -118,21 +167,39 @@ export function ReviewPage() {
             </dl>
           </Panel>
 
-          <Panel className="p-4">
-            <div className="flex items-center gap-2 text-sm text-ink-50">
-              <ListChecks size={15} className="text-gold-300" />
-              关键决策
-              <Badge tone="muted" className="ml-auto">
-                {decisions.length} 条
-              </Badge>
-            </div>
-            <p className="mt-2 text-xs leading-relaxed text-ink-600">
-              决策记录写在复盘旁边：回合、当时的状态、你的决定和原因。它比这段文字更能说明问题出在哪。
+          <Panel>
+            <PanelHeader
+              title="决策回放"
+              subtitle="这局是怎么一步步走到这个结果的"
+              action={
+                <Badge tone="muted" className="ml-auto">
+                  {decisions.length} 条
+                </Badge>
+              }
+            />
+            <DecisionTimeline events={buildTimeline(match, decisions)} />
+            <p className="flex flex-wrap items-center gap-2 border-t border-line px-4 py-3 text-xs text-ink-600">
+              <ListChecks size={14} className="shrink-0 text-ink-600" />
+              决策不在复盘表单里 —— 去对局详情添加或后视评价。
+              <LinkButton to={`/matches/${match.id}`} size="sm" className="ml-auto">
+                去对局详情
+              </LinkButton>
             </p>
-            <LinkButton to={`/matches/${match.id}`} size="sm" className="mt-3">
-              去对局详情添加决策
-            </LinkButton>
           </Panel>
+
+          {review && (
+            <Panel>
+              <PanelHeader title="复盘操作" />
+              <div className="flex flex-col gap-2 p-4">
+                <p className="text-xs leading-relaxed text-ink-600">
+                  删除后这局回到「未复盘」状态，已写的内容不会保留。
+                </p>
+                <Button variant="danger" size="sm" onClick={() => setConfirmDelete(true)}>
+                  删除复盘
+                </Button>
+              </div>
+            </Panel>
+          )}
         </aside>
       </div>
 
