@@ -4,6 +4,12 @@ Direction of travel: **manual training log → structured game data → automati
 analytics → agent coach → MCP**. Each phase must stay useful on its own; nothing here is a
 prerequisite for the tool being worth using today.
 
+> **Next-phase design docs** live in [`docs/`](./docs):
+> [PRODUCT_ROADMAP](./docs/PRODUCT_ROADMAP.md) · [UI_IMPROVEMENT_PLAN](./docs/UI_IMPROVEMENT_PLAN.md) ·
+> [QUICK_RECORD_UX](./docs/QUICK_RECORD_UX.md) · [REVIEW_SYSTEM](./docs/REVIEW_SYSTEM.md) ·
+> [DATA_CENTER](./docs/DATA_CENTER.md) · [SCREENSHOT_IMPORT](./docs/SCREENSHOT_IMPORT.md).
+> This file records what shipped and roughly when; those files record how it should evolve.
+
 ## Phase 1 — Manual Training Log (MVP) ✅
 
 - [x] Bootstrap: Vite 6 + React 19 + TypeScript + Tailwind v4 + Dexie + Recharts + Vitest
