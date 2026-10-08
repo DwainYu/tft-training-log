@@ -16,9 +16,22 @@ const TONE: Record<string, "gold" | "good" | "bad"> = {
 
 const linkClass = "text-xs text-gold-300 underline-offset-4 hover:underline";
 
-/** One row per match — table on desktop, card list below the md breakpoint. */
-export function MatchList({ matches }: { matches: Match[] }) {
+/**
+ * One row per match — table on desktop, card list below the md breakpoint.
+ *
+ * `variant="compact"` trims the columns that only matter on the full 对局
+ * page (Level, Duration, Primary Mistake): the Dashboard list answers
+ * "what did I play and how did it go", not "what is in each game".
+ */
+export function MatchList({
+  matches,
+  variant = "full",
+}: {
+  matches: Match[];
+  variant?: "full" | "compact";
+}) {
   const desktop = useMediaQuery(DESKTOP_QUERY);
+  const compact = variant === "compact";
   if (!desktop) return <MatchCards matches={matches} />;
 
   return (
@@ -28,10 +41,10 @@ export function MatchList({ matches }: { matches: Match[] }) {
           <th className="px-3 py-2 font-medium">Date</th>
           <th className="px-3 py-2 font-medium">Placement</th>
           <th className="px-3 py-2 font-medium">Comp</th>
-          <th className="px-3 py-2 font-medium">Level</th>
-          <th className="px-3 py-2 font-medium">Duration</th>
+          {!compact && <th className="px-3 py-2 font-medium">Level</th>}
+          {!compact && <th className="px-3 py-2 font-medium">Duration</th>}
           <th className="px-3 py-2 font-medium">Reviewed</th>
-          <th className="px-3 py-2 font-medium">Primary Mistake</th>
+          {!compact && <th className="px-3 py-2 font-medium">Primary Mistake</th>}
           <th className="px-3 py-2" aria-label="操作" />
         </tr>
       </thead>
@@ -50,20 +63,24 @@ export function MatchList({ matches }: { matches: Match[] }) {
             <td className="max-w-[22ch] truncate px-3 py-2.5 text-ink-200">
               {m.composition ?? <span className="text-ink-600">未填</span>}
             </td>
-            <td className="num px-3 py-2.5 text-ink-200">{m.finalLevel ?? "—"}</td>
-            <td className="num px-3 py-2.5 text-ink-400">
-              {m.durationSeconds !== undefined ? formatDuration(m.durationSeconds) : "—"}
-            </td>
+            {!compact && <td className="num px-3 py-2.5 text-ink-200">{m.finalLevel ?? "—"}</td>}
+            {!compact && (
+              <td className="num px-3 py-2.5 text-ink-400">
+                {m.durationSeconds !== undefined ? formatDuration(m.durationSeconds) : "—"}
+              </td>
+            )}
             <td className="px-3 py-2.5">
               <ReviewedFlag reviewed={m.reviewed} />
             </td>
-            <td className="px-3 py-2.5">
-              {m.primaryMistake ? (
-                <Badge tone="neutral">{mistakeLabel(m.primaryMistake)}</Badge>
-              ) : (
-                <span className="text-xs text-ink-600">—</span>
-              )}
-            </td>
+            {!compact && (
+              <td className="px-3 py-2.5">
+                {m.primaryMistake ? (
+                  <Badge tone="neutral">{mistakeLabel(m.primaryMistake)}</Badge>
+                ) : (
+                  <span className="text-xs text-ink-600">—</span>
+                )}
+              </td>
+            )}
             <td className="px-3 py-2.5 text-right">
               <Link to={`/matches/${m.id}`} className={linkClass}>
                 详情

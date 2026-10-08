@@ -27,7 +27,8 @@ export interface TrendPoint {
  * Rank trend, 1st place on top; the dashed reference line is the window average.
  *
  * Answers: "am I playing better lately?" — a direction, which no single KPI
- * tile can express. Every dot is one game and opens that game.
+ * tile can express. Every dot is one game and opens that game. Dates on the
+ * x axis are labelled once per day, on that day's first game.
  */
 export function PlacementTrendChart({
   data,
@@ -61,10 +62,21 @@ export function PlacementTrendChart({
           <CartesianGrid stroke={CHART.grid} vertical={false} />
           <XAxis
             dataKey="index"
-            tickFormatter={(v: number) => data[v - 1]?.label ?? ""}
+            // Several games land on the same day. A date is only labelled on
+            // its first game, so the axis reads "10-04 10-05 10-06" instead of
+            // repeating "10-05" for every point on that day.
+            tickFormatter={(v: number) => {
+              const point = data[v - 1];
+              if (!point) return "";
+              const prev = data[v - 2];
+              return prev && prev.label === point.label ? "" : point.label;
+            }}
             tick={AXIS_TICK}
             axisLine={AXIS_LINE}
             tickLine={false}
+            // Keep the window's first and last tick visible even when the
+            // dedupe above blanks a middle label.
+            interval="preserveStartEnd"
             minTickGap={24}
           />
           <YAxis
