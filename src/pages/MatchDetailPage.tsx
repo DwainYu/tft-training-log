@@ -12,6 +12,7 @@ import {
 import { deleteMatch, getMatchBundle } from "../services/match-service";
 import { getSessions } from "../services/session-service";
 import { DAILY_SESSION_ID } from "../domain/types";
+import type { Match } from "../domain/types";
 import { addDecision, removeDecision, updateDecision } from "../services/decision-service";
 import { currentGoals } from "../services/training-service";
 import { mistakeLabel } from "../domain/labels";
@@ -94,57 +95,51 @@ export function MatchDetailPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 [&>*]:min-w-0 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
           <Panel>
             <PanelHeader
-              title="基础信息"
+              title="对局结果"
               action={
                 <>
-                  <Badge tone={tone === "gold" ? "gold" : tone === "good" ? "good" : "bad"}>
-                    第 {match.placement} 名
-                  </Badge>
                   {isWin(match) && <Badge tone="gold">吃鸡</Badge>}
                   {isTop4(match) && <Badge tone="good">Top4</Badge>}
                   {isBottom4(match) && <Badge tone="bad">Bottom4</Badge>}
                 </>
               }
             />
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-3 p-4 sm:grid-cols-4">
-              <Fact label="日期" value={match.playedAt.slice(0, 10)} />
-              <Fact label="开始" value={formatTime(match.startedAt ?? "") || "—"} />
-              <Fact label="结束" value={formatTime(match.endedAt ?? match.playedAt) || "—"} />
-              <Fact
-                label="时长"
-                value={
-                  durationOf(match) !== undefined ? formatDuration(durationOf(match)) : "—"
-                }
-              />
-              <Fact label="最终等级" value={match.finalLevel ?? "—"} />
-              <Fact label="最终血量" value={match.finalHealth ?? "—"} />
-              <Fact label="剩余金币" value={match.totalGold ?? "—"} />
-              <Fact
-                label="训练 Session"
-                value={
-                  sessions?.find((x) => x.id === (match.sessionId ?? DAILY_SESSION_ID))?.name ??
-                  "日常训练"
-                }
-              />
-              <Fact
-                label="复盘状态"
-                value={match.reviewed ? "已复盘" : review ? "复盘中" : "未复盘"}
-              />
-            </dl>
+            {/* The placement is the first thing to read on this page — bigger
+                than any other number here. Facts below appear only when the
+                record actually carries them; a wall of em-dashes helps nobody. */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 p-4">
+              <div
+                className={`num text-5xl font-semibold leading-none ${
+                  tone === "gold" ? "text-gold-300" : tone === "good" ? "text-emerald-300" : "text-red-300"
+                }`}
+              >
+                {match.placement}
+                <span className="ml-1 text-base font-normal text-ink-400">名</span>
+              </div>
+              <dl className="grid min-w-0 flex-1 grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
+                <Fact label="日期" value={match.playedAt.slice(0, 10)} />
+                {formatTime(match.startedAt ?? "") && (
+                  <Fact label="开始" value={formatTime(match.startedAt ?? "")} />
+                )}
+                {durationOf(match) !== undefined && (
+                  <Fact label="时长" value={formatDuration(durationOf(match))} />
+                )}
+                {match.finalLevel !== undefined && <Fact label="最终等级" value={match.finalLevel} />}
+                {match.finalHealth !== undefined && <Fact label="最终血量" value={match.finalHealth} />}
+                {match.totalGold !== undefined && <Fact label="剩余金币" value={match.totalGold} />}
+              </dl>
+            </div>
             {match.notes && (
               <p className="border-t border-line px-4 py-3 text-sm text-ink-200">{match.notes}</p>
             )}
           </Panel>
 
           <Panel>
-            <PanelHeader
-              title="决策时间线"
-              subtitle="按回合排序 · 自由文本排在最后 · 结果只出现在结尾"
-            />
+            <PanelHeader title="决策时间线" subtitle="按回合排序" />
             <DecisionTimeline events={buildTimeline(match, decisions)} />
           </Panel>
 
@@ -156,6 +151,11 @@ export function MatchDetailPage() {
               <ChipRow label="核心棋子" values={match.coreUnits} />
               <ChipRow label="核心装备" values={match.coreItems} />
               <ChipRow label="强化符文" values={match.augments} />
+              {detailChipsEmpty(match) && (
+                <p className="text-xs leading-relaxed text-ink-600">
+                  还没有记录羁绊 / 棋子 / 装备细节。编辑这局对局可以补上。
+                </p>
+              )}
             </div>
           </Panel>
 
@@ -190,12 +190,19 @@ export function MatchDetailPage() {
 
         <div className="flex flex-col gap-4">
           <Panel>
-            <PanelHeader title="复盘结论" />
+            <PanelHeader
+              title="复盘结论"
+              action={
+                <Badge tone={match.reviewed ? "good" : review ? "info" : "muted"}>
+                  {match.reviewed ? "已复盘" : review ? "复盘中" : "未复盘"}
+                </Badge>
+              }
+            />
             {review ? (
               <div className="flex flex-col gap-3 p-4 text-sm">
                 <div>
                   <div className="text-[11px] uppercase tracking-wide text-ink-600">
-                    Primary Mistake
+                    主要问题
                   </div>
                   <div className="mt-1">
                     <Badge tone="bad">{mistakeLabel(review.primaryMistake ?? match.primaryMistake)}</Badge>
@@ -248,6 +255,13 @@ export function MatchDetailPage() {
           <Panel>
             <PanelHeader title="这局的元数据" />
             <dl className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
+              <Fact
+                label="训练 Session"
+                value={
+                  sessions?.find((x) => x.id === (match.sessionId ?? DAILY_SESSION_ID))?.name ??
+                  "日常训练"
+                }
+              />
               <Fact label="记录于" value={new Date(match.createdAt).toLocaleString("zh-CN")} />
               <Fact label="修改于" value={new Date(match.updatedAt).toLocaleString("zh-CN")} />
               <Fact label="决策记录" value={decisions.length} />
@@ -308,6 +322,16 @@ function Fact({
   );
 }
 
+/** True when none of the structured composition details were recorded. */
+function detailChipsEmpty(match: Match): boolean {
+  return (
+    !match.traits?.length &&
+    !match.coreUnits?.length &&
+    !match.coreItems?.length &&
+    !match.augments?.length
+  );
+}
+
 function TextRow({ label, value }: { label: string; value?: string }) {
   return (
     <div>
@@ -320,23 +344,22 @@ function TextRow({ label, value }: { label: string; value?: string }) {
 }
 
 function ChipRow({ label, values }: { label: string; values?: string[] }) {
+  // Empty slots render nothing: the panel shows one collective hint instead
+  // of a column of 未填写.
+  if (!values || values.length === 0) return null;
   return (
     <div>
       <div className="text-[11px] uppercase tracking-wide text-ink-600">{label}</div>
-      {values && values.length > 0 ? (
-        <div className="mt-1 flex flex-wrap gap-1.5">
-          {values.map((v) => (
-            <span
-              key={v}
-              className="rounded-md border border-line bg-base-900/70 px-2 py-0.5 text-xs text-ink-200"
-            >
-              {v}
-            </span>
-          ))}
-        </div>
-      ) : (
-        <p className="mt-0.5 text-sm text-ink-600">未填写</p>
-      )}
+      <div className="mt-1 flex flex-wrap gap-1.5">
+        {values.map((v) => (
+          <span
+            key={v}
+            className="rounded-md border border-line bg-base-900/70 px-2 py-0.5 text-xs text-ink-200"
+          >
+            {v}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

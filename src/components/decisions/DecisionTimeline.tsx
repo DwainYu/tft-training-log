@@ -60,8 +60,8 @@ export function DecisionTimeline({ events }: { events: TimelineEvent[] }) {
       })}
 
       {outcome && (
-        <li className="mt-1 flex flex-wrap items-center gap-2 border-t border-line px-4 py-3">
-          <span className="text-[11px] uppercase tracking-wide text-ink-600">结果</span>
+        <li className="mt-1 flex flex-wrap items-center gap-2 border-t border-line bg-base-900/40 px-4 py-3">
+          <span className="text-[11px] uppercase tracking-wide text-ink-600">最终结果</span>
           <Badge tone={outcome.placement === 1 ? "gold" : outcome.placement <= 4 ? "good" : "bad"}>
             第 {outcome.placement} 名
           </Badge>
