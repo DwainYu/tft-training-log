@@ -12,6 +12,7 @@ import { StatisticsPage } from "./pages/StatisticsPage";
 import { TrainingGoalsPage } from "./pages/TrainingGoalsPage";
 import { WeeklyReviewPage } from "./pages/WeeklyReviewPage";
 import { DataPage } from "./pages/DataPage";
+import { DataCenterPage } from "./pages/DataCenterPage";
 
 export function App() {
   return (
@@ -28,6 +29,7 @@ export function App() {
                 <Route path="/matches/:id/edit" element={<MatchFormPage mode="edit" />} />
                 <Route path="/matches/:id/review" element={<ReviewPage />} />
                 <Route path="/statistics" element={<StatisticsPage />} />
+                <Route path="/data-center" element={<DataCenterPage />} />
                 <Route path="/goals" element={<TrainingGoalsPage />} />
                 <Route path="/weekly" element={<WeeklyReviewPage />} />
                 <Route path="/data" element={<DataPage />} />
