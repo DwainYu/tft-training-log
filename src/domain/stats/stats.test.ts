@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  compareRecentWindows,
   compositionStats,
   formatRate,
   lastWindow,
   mistakeCounts,
   mostCommonMistakes,
+  openingPlanStats,
   overallStats,
   placementTrendSeries,
   recentWindowStats,
@@ -78,6 +80,52 @@ describe("placementTrendSeries", () => {
   });
 });
 
+describe("compareRecentWindows", () => {
+  /** Newest → oldest: 20 games so both halves of a 10-window are full. */
+  const build = (placements: number[]) =>
+    placements.map((placement, i) =>
+      m({ id: `m${i}`, playedAt: `2026-02-${String(20 - i).padStart(2, "0")}T13:00`, placement }),
+    );
+
+  it("reports no change until both windows are full", () => {
+    const half = build([1, 2, 3, 4, 5, 6, 7, 8, 1, 2]);
+    const c = compareRecentWindows(half, 5);
+    expect(c.recent.games).toBe(5);
+    expect(c.previous.games).toBe(5);
+    // 10 games fill 2 × 5 — but `deltaAvg` also needs the *second* window full
+    expect(c.deltaAvg).not.toBeNull();
+
+    const three = build([1, 2, 3]);
+    expect(compareRecentWindows(three, 5).deltaAvg).toBeNull();
+  });
+
+  it("is negative when the placement number drops (the player improved)", () => {
+    // newest 10 average 3, the 10 before them average 5
+    const matches = build([...Array(10).fill(3), ...Array(10).fill(5)]);
+    const c = compareRecentWindows(matches, 10);
+    expect(c.recent.avgPlacement).toBe(3);
+    expect(c.previous.avgPlacement).toBe(5);
+    expect(c.deltaAvg).toBe(-2);
+  });
+
+  it("is positive when the placement number climbs", () => {
+    const matches = build([...Array(10).fill(6), ...Array(10).fill(2)]);
+    expect(compareRecentWindows(matches, 10).deltaAvg).toBe(4);
+  });
+
+  it("reports zero for an unchanged window instead of null", () => {
+    const matches = build(Array(20).fill(4));
+    expect(compareRecentWindows(matches, 10).deltaAvg).toBe(0);
+  });
+
+  it("carries the Top4 numerator with the rate", () => {
+    const matches = build([...Array(10).fill(2), ...Array(10).fill(8)]);
+    const c = compareRecentWindows(matches, 10);
+    expect(c.recent.top4Rate).toBe(1);
+    expect(c.recent.top4).toBe(10);
+  });
+});
+
 describe("mistakeCounts", () => {
   it("counts each type and treats missing mistakes as UNCLASSIFIED", () => {
     const matches = [
@@ -113,22 +161,47 @@ describe("compositionStats", () => {
   });
 });
 
-describe("timeSlotStats", () => {
-  it("buckets games into the two-hour server windows", () => {
+describe("openingPlanStats", () => {
+  it("groups by the marked route and leaves unmarked games out", () => {
     const matches = [
-      m({ id: "1", playedAt: "2026-02-01T12:30", placement: 4 }),
-      m({ id: "2", playedAt: "2026-02-01T15:10", placement: 2 }),
-      m({ id: "3", playedAt: "2026-02-01T20:55", placement: 5 }),
-      m({ id: "4", playedAt: "2026-02-02T23:30", placement: 3 }),
-      m({ id: "5", playedAt: "2026-02-02", placement: 3 }), // date only → outside bucket
+      m({ id: "1", playedAt: "2026-02-01T13:00", placement: 1, openingPlan: "WIN_STREAK" }),
+      m({ id: "2", playedAt: "2026-02-02T13:00", placement: 5, openingPlan: "WIN_STREAK" }),
+      m({ id: "3", playedAt: "2026-02-03T13:00", placement: 8, openingPlan: "FORCE" }),
+      m({ id: "4", playedAt: "2026-02-04T13:00", placement: 2 }), // no plan marked
+    ];
+    const stats = openingPlanStats(matches);
+    expect(stats).toHaveLength(2);
+    expect(stats[0]).toMatchObject({ plan: "WIN_STREAK", games: 2, avgPlacement: 3, top4Rate: 0.5 });
+    expect(stats[1]).toMatchObject({ plan: "FORCE", games: 1 });
+    // coverage is the caller's job: unmarked games are not a row of their own
+    expect(stats.find((s) => s.plan === "STANDARD")).toBeUndefined();
+  });
+
+  it("returns nothing when no route has ever been marked", () => {
+    expect(openingPlanStats([m({ id: "1", playedAt: "2026-02-01T13:00", placement: 4 })])).toEqual([]);
+  });
+});
+
+describe("timeSlotStats", () => {
+  it("buckets games into two-hour slots across the whole day", () => {
+    const matches = [
+      m({ id: "1", playedAt: "2026-02-01T00:30", placement: 4 }),
+      m({ id: "2", playedAt: "2026-02-01T12:30", placement: 4 }),
+      m({ id: "3", playedAt: "2026-02-01T15:10", placement: 2 }),
+      m({ id: "4", playedAt: "2026-02-01T20:55", placement: 5 }),
+      m({ id: "5", playedAt: "2026-02-02T23:30", placement: 3 }),
+      m({ id: "6", playedAt: "2026-02-02", placement: 3 }), // date only → "off"
     ];
     const stats = timeSlotStats(matches);
     const byKey = Object.fromEntries(stats.map((s) => [s.key, s]));
+    expect(byKey["00-02"].games).toBe(1);
     expect(byKey["12-14"].games).toBe(1);
     expect(byKey["14-16"].games).toBe(1);
     expect(byKey["20-22"].games).toBe(1);
-    expect(byKey["off"].games).toBe(2);
-    expect(byKey["off"].label).toBe("训练时段外");
+    expect(byKey["22-24"].games).toBe(1);
+    // a game at 23:30 is a normal late-night game, not "outside" anything
+    expect(byKey["off"].games).toBe(1);
+    expect(byKey["off"].label).toBe("未填时间");
     // top4 rate inside a bucket
     expect(byKey["14-16"].top4Rate).toBe(1);
   });

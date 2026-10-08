@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MatchesPage } from "./MatchesPage";
 import { MatchDetailPage } from "./MatchDetailPage";
@@ -17,6 +17,12 @@ function renderApp(route: string) {
     </Routes>,
     route,
   );
+}
+
+/** Reads the query string back out, to prove filters live in the URL. */
+function LocationProbe() {
+  const { search } = useLocation();
+  return <div data-testid="query">{search}</div>;
 }
 
 const table = () => within(screen.getByRole("table"));
@@ -98,6 +104,48 @@ describe("Matches page", () => {
     await screen.findByRole("table");
     await table().findByText("Rebel");
     expect(table().queryByText("Arcader")).not.toBeInTheDocument();
+  });
+
+  it("starts from the mistake filter a mistake chart drills down with", async () => {
+    await seed();
+    renderApp("/matches?mistake=POSITIONING");
+    await screen.findByRole("table");
+    expect(screen.getByLabelText("错误类型")).toHaveValue("POSITIONING");
+    await table().findByText("Arcader");
+    expect(table().queryByText("Rebel")).not.toBeInTheDocument();
+  });
+
+  it("starts from the composition filter a composition row drills down with", async () => {
+    await seed();
+    renderApp("/matches?composition=Rebel");
+    await screen.findByRole("table");
+    expect(screen.getByLabelText("阵容")).toHaveValue("Rebel");
+    await table().findByText("Rebel");
+    expect(table().queryByText("Arcader")).not.toBeInTheDocument();
+  });
+
+  it("writes filters into the URL so a filtered list can be shared", async () => {
+    await seed();
+    renderWithProviders(
+      <Routes>
+        <Route
+          path="/matches"
+          element={
+            <>
+              <MatchesPage />
+              <LocationProbe />
+            </>
+          }
+        />
+      </Routes>,
+      "/matches",
+    );
+    await screen.findByRole("table");
+    await table().findByText("Arcader");
+    expect(screen.getByTestId("query")).toHaveTextContent("");
+
+    fireEvent.change(screen.getByLabelText("复盘"), { target: { value: "unreviewed" } });
+    await waitFor(() => expect(screen.getByTestId("query")).toHaveTextContent("reviewed=unreviewed"));
   });
 
   it("shows an empty state when nothing is logged", async () => {

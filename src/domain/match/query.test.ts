@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { queryMatches } from "./query";
+import { paramsToQuery, queryMatches, queryToParams } from "./query";
+import { EMPTY_MATCH_QUERY } from "./query";
 import type { MatchForQuery } from "./match";
 
 const m = (over: Partial<MatchForQuery> & { id: string }): MatchForQuery => ({
@@ -67,5 +68,45 @@ describe("queryMatches", () => {
     expect(
       ids(queryMatches(matches, { composition: "Arcader", placement: "top4", sortDir: "asc" })),
     ).toEqual(["a"]);
+  });
+});
+
+const params = (qs: string) => new URLSearchParams(qs);
+
+describe("query <-> URL", () => {
+  it("round-trips a drill-down filter", () => {
+    const query = { ...EMPTY_MATCH_QUERY, mistake: "ECONOMY" };
+    const qs = queryToParams(query).toString();
+    expect(qs).toBe("mistake=ECONOMY");
+    expect(paramsToQuery(params(qs))).toEqual({ mistake: "ECONOMY" });
+  });
+
+  it("carries composition, reviewed and search", () => {
+    const qs = queryToParams({
+      ...EMPTY_MATCH_QUERY,
+      composition: "福牛 战神",
+      reviewed: "unreviewed",
+      search: "决赛圈",
+    }).toString();
+    expect(paramsToQuery(params(qs))).toMatchObject({
+      composition: "福牛 战神",
+      reviewed: "unreviewed",
+      search: "决赛圈",
+    });
+  });
+
+  it("leaves defaults and empty values out of the URL", () => {
+    expect(queryToParams(EMPTY_MATCH_QUERY).toString()).toBe("");
+    expect(queryToParams({ ...EMPTY_MATCH_QUERY, sortField: "placement" }).toString()).toBe(
+      "sortField=placement",
+    );
+  });
+
+  it("reads nothing from an empty URL", () => {
+    expect(paramsToQuery(params(""))).toEqual({});
+  });
+
+  it("never writes sessionId — scope stays a page control", () => {
+    expect(queryToParams({ ...EMPTY_MATCH_QUERY, sessionId: "daily" }).toString()).toBe("");
   });
 });
