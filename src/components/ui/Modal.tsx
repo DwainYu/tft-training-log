@@ -1,6 +1,14 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+
+/**
+ * Open modals, oldest first. Every instance listens on `document`, so a
+ * stacked pair would see the same Escape twice and both would close — or, once
+ * the lower one has a selector panel open, neither would (the panel swallows
+ * the key). Only the most recently registered modal is allowed to react.
+ */
+const modalStack: object[] = [];
 
 export function Modal({
   open,
@@ -19,19 +27,46 @@ export function Modal({
   footer?: ReactNode;
   size?: "md" | "lg";
 }): ReactNode {
+  // Identity for this instance's stack slot, stable across open/close cycles.
+  const tokenRef = useRef<object | null>(null);
+  tokenRef.current ??= {};
+  const token = tokenRef.current;
+  // Read the latest onClose without re-registering: an inline arrow would
+  // otherwise re-run the effect and push this modal back to the top of the
+  // stack on every parent render, handing Escape to a buried dialog.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
   useEffect(() => {
     if (!open) return;
+    modalStack.push(token);
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key !== "Escape") return;
+      // Escape inside a selector panel (QuickAdd) is consumed by the panel's
+      // own React handler, which calls stopPropagation on the synthetic event
+      // — React's delegated listener sits below `document`, so the native
+      // event never reaches this handler and the draft survives. That
+      // propagation stop, not `defaultPrevented`, is what saves the draft.
+      // `defaultPrevented` is kept as an independent fallback.
+      if (e.defaultPrevented) return;
+      // Only the topmost dialog acts; anything below it stays put.
+      if (modalStack[modalStack.length - 1] !== token) return;
+      onCloseRef.current();
     };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
+      // Splice by identity rather than pop: a middle modal can unmount out of
+      // order, and pop() would drop somebody else's slot and leak this one.
+      const at = modalStack.indexOf(token);
+      if (at !== -1) modalStack.splice(at, 1);
       document.body.style.overflow = prev;
     };
-  }, [open, onClose]);
+  }, [open, token]);
 
   if (!open) return null;
 
