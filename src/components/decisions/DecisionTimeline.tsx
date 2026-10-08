@@ -7,8 +7,8 @@ const HINDSIGHT_MARK: Record<
   "correct" | "wrong" | "mixed",
   { icon: typeof Check; cls: string }
 > = {
-  correct: { icon: Check, cls: "text-emerald-300 border-emerald-400/40 bg-emerald-400/10" },
-  wrong: { icon: X, cls: "text-red-300 border-red-400/40 bg-red-400/10" },
+  correct: { icon: Check, cls: "text-good border-good/40 bg-good/10" },
+  wrong: { icon: X, cls: "text-bad border-bad/40 bg-bad/10" },
   mixed: { icon: Circle, cls: "text-ink-400 border-line bg-base-900" },
 };
 

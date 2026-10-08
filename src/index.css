@@ -1,6 +1,48 @@
 @import "tailwindcss";
 
+/*
+ * Theme tokens — the single source of colour truth.
+ *
+ * `:root` carries the LIGHT values (the product default); `html.dark`
+ * overrides them with the night palette. Components never branch on the
+ * theme: they reference tokens (bg-base-850, text-ink-600, …) and Tailwind
+ * resolves those to these custom properties, so one class flip re-themes
+ * every surface. Chart literals live in `components/stats/chart-theme.ts`
+ * and follow the same names (Recharts needs literal values, not vars).
+ */
 @theme {
+  --color-base-950: #f2f4f8;
+  --color-base-900: #fbfcfe;
+  --color-base-850: #ffffff;
+  --color-base-800: #edf0f5;
+  --color-base-700: #e1e5ec;
+  --color-base-600: #c2c9d6;
+  --color-line: #dfe3ea;
+
+  --color-ink-50: #1b2233;
+  --color-ink-200: #414b60;
+  --color-ink-400: #5f6a80;
+  --color-ink-600: #8c96a8;
+
+  --color-gold-300: #9a6c0e;
+  --color-gold-400: #a87c14;
+  --color-gold-500: #bd8e1e;
+
+  --color-teal-400: #0284c7;
+
+  /* Semantic state colours — same meaning in both themes, only the
+     lightness adapts (dark theme lifts them for contrast on dark surfaces). */
+  --color-good: #15803d;
+  --color-bad: #dc2626;
+  --color-info: #0369a1;
+  --color-warn: #b45309;
+
+  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html.dark {
   --color-base-950: #070a11;
   --color-base-900: #0b0f18;
   --color-base-850: #10151f;
@@ -20,13 +62,18 @@
 
   --color-teal-400: #38bdf8;
 
-  --font-sans: "Inter", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system,
-    "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --color-good: #6ee7b7;
+  --color-bad: #fca5a5;
+  --color-info: #7dd3fc;
+  --color-warn: #fcd34d;
 }
 
 @layer base {
-  html {
+  :root {
+    color-scheme: light;
+  }
+
+  html.dark {
     color-scheme: dark;
   }
 
@@ -34,12 +81,18 @@
     margin: 0;
     background-color: var(--color-base-950);
     background-image:
-      radial-gradient(900px 500px at 15% -10%, rgba(209, 154, 43, 0.09), transparent 60%),
-      radial-gradient(700px 400px at 100% 0%, rgba(56, 189, 248, 0.07), transparent 55%);
+      radial-gradient(900px 500px at 15% -10%, rgba(189, 142, 30, 0.06), transparent 60%),
+      radial-gradient(700px 400px at 100% 0%, rgba(2, 132, 199, 0.05), transparent 55%);
     background-attachment: fixed;
     color: var(--color-ink-50);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+
+  html.dark body {
+    background-image:
+      radial-gradient(900px 500px at 15% -10%, rgba(209, 154, 43, 0.09), transparent 60%),
+      radial-gradient(700px 400px at 100% 0%, rgba(56, 189, 248, 0.07), transparent 55%);
   }
 
   * {
@@ -48,13 +101,6 @@
 
   ::selection {
     background: rgba(232, 182, 74, 0.3);
-  }
-
-  /* Keep dark form controls readable */
-  input,
-  select,
-  textarea {
-    color-scheme: dark;
   }
 
   ::-webkit-scrollbar {

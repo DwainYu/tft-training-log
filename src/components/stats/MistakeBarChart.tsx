@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { AXIS_LINE, AXIS_TICK, CHART, CHART_SEMANTIC, MIN_SAMPLES, TOOLTIP_STYLE } from "./chart-theme";
+import { chartTheme, MIN_SAMPLES } from "./chart-theme";
 import { ChartEmpty } from "./ChartEmpty";
+import { useTheme } from "../../lib/theme";
 import { DESKTOP_QUERY, useMediaQuery } from "../../lib/use-media-query";
 
 export interface MistakeDatum {
@@ -27,6 +29,9 @@ export function MistakeBarChart({
   loading?: boolean;
 }) {
   const wide = useMediaQuery(DESKTOP_QUERY);
+  const { dark } = useTheme();
+  // Literal SVG colours for the active theme; re-computed on toggle.
+  const t = useMemo(() => chartTheme(dark), [dark]);
   const sampleCount = data.reduce((sum, d) => sum + d.count, 0);
 
   if (loading || sampleCount < MIN_SAMPLES.mistake) {
@@ -48,8 +53,8 @@ export function MistakeBarChart({
 
   const tooltip = (
     <Tooltip
-      contentStyle={TOOLTIP_STYLE}
-      cursor={{ fill: "rgba(209,154,43,0.08)" }}
+      contentStyle={t.TOOLTIP_STYLE}
+      cursor={{ fill: t.BAR_CURSOR }}
       formatter={(value) => {
         const total = sampleCount || 1;
         const share = Math.round((Number(value) / total) * 100);
@@ -61,7 +66,7 @@ export function MistakeBarChart({
   const bar = (
     <Bar
       dataKey="count"
-      fill={CHART_SEMANTIC.series}
+      fill={t.CHART_SEMANTIC.series}
       radius={wide ? [6, 6, 0, 0] : [0, 6, 6, 0]}
       maxBarSize={wide ? 28 : 20}
       onClick={onSelect ? (data: unknown) => select(data) : undefined}
@@ -77,18 +82,18 @@ export function MistakeBarChart({
       <ResponsiveContainer width="100%" height="100%">
         {wide ? (
           <BarChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 4 }} barSize={26}>
-            <CartesianGrid stroke={CHART.grid} vertical={false} />
+            <CartesianGrid stroke={t.CHART.grid} vertical={false} />
             <XAxis
               dataKey="label"
-              tick={AXIS_TICK}
-              axisLine={AXIS_LINE}
+              tick={t.AXIS_TICK}
+              axisLine={t.AXIS_LINE}
               tickLine={false}
               interval="preserveStartEnd"
               minTickGap={8}
             />
             <YAxis
               allowDecimals={false}
-              tick={AXIS_TICK}
+              tick={t.AXIS_TICK}
               axisLine={false}
               tickLine={false}
             />
@@ -102,19 +107,19 @@ export function MistakeBarChart({
             margin={{ top: 8, right: 16, left: 8, bottom: 4 }}
             barSize={18}
           >
-            <CartesianGrid stroke={CHART.grid} horizontal={false} />
+            <CartesianGrid stroke={t.CHART.grid} horizontal={false} />
             <XAxis
               type="number"
               allowDecimals={false}
-              tick={AXIS_TICK}
-              axisLine={AXIS_LINE}
+              tick={t.AXIS_TICK}
+              axisLine={t.AXIS_LINE}
               tickLine={false}
             />
             <YAxis
               type="category"
               dataKey="label"
               width={76}
-              tick={AXIS_TICK}
+              tick={t.AXIS_TICK}
               axisLine={false}
               tickLine={false}
               interval={0}

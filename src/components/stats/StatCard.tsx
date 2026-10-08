@@ -26,21 +26,21 @@ export function StatCard({
     tone === "gold"
       ? "text-gold-300"
       : tone === "good"
-        ? "text-emerald-300"
+        ? "text-good"
         : tone === "bad"
-          ? "text-red-300"
+          ? "text-bad"
           : "text-ink-50";
 
   const TrendArrow = trend ? (
     trend.direction === "down" ? (
       <ArrowDownRight
         size={12}
-        className={trend.tone === "good" ? "text-emerald-300" : "text-red-300"}
+        className={trend.tone === "good" ? "text-good" : "text-bad"}
       />
     ) : (
       <ArrowUpRight
         size={12}
-        className={trend.tone === "good" ? "text-emerald-300" : "text-red-300"}
+        className={trend.tone === "good" ? "text-good" : "text-bad"}
       />
     )
   ) : null;

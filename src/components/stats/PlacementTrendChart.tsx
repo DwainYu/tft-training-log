@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   CartesianGrid,
   Line,
@@ -8,8 +9,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AXIS_LINE, AXIS_TICK, CHART, CHART_SEMANTIC, MIN_SAMPLES, TOOLTIP_STYLE } from "./chart-theme";
+import { chartTheme, MIN_SAMPLES } from "./chart-theme";
 import { ChartEmpty } from "./ChartEmpty";
+import { useTheme } from "../../lib/theme";
 
 export interface TrendPoint {
   index: number;
@@ -43,6 +45,11 @@ export function PlacementTrendChart({
   onSelectMatch?: (matchId: string) => void;
   loading?: boolean;
 }) {
+  // Literal SVG colours for the active theme; the useTheme() dependency makes
+  // a toggle re-render the chart. Hooks stay above the early return.
+  const { dark } = useTheme();
+  const t = useMemo(() => chartTheme(dark), [dark]);
+
   if (loading || data.length < MIN_SAMPLES.trend) {
     return (
       <ChartEmpty
@@ -59,7 +66,7 @@ export function PlacementTrendChart({
     <div className="h-48 w-full sm:h-56 lg:h-64">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 4 }}>
-          <CartesianGrid stroke={CHART.grid} vertical={false} />
+          <CartesianGrid stroke={t.CHART.grid} vertical={false} />
           <XAxis
             dataKey="index"
             // Several games land on the same day. A date is only labelled on
@@ -71,8 +78,8 @@ export function PlacementTrendChart({
               const prev = data[v - 2];
               return prev && prev.label === point.label ? "" : point.label;
             }}
-            tick={AXIS_TICK}
-            axisLine={AXIS_LINE}
+            tick={t.AXIS_TICK}
+            axisLine={t.AXIS_LINE}
             tickLine={false}
             // Keep the window's first and last tick visible even when the
             // dedupe above blanks a middle label.
@@ -86,13 +93,13 @@ export function PlacementTrendChart({
             // best rank on the scale ends up unlabelled.
             interval={0}
             reversed
-            tick={AXIS_TICK}
+            tick={t.AXIS_TICK}
             axisLine={false}
             tickLine={false}
             width={28}
           />
           <Tooltip
-            contentStyle={TOOLTIP_STYLE}
+            contentStyle={t.TOOLTIP_STYLE}
             labelFormatter={(_label, payload) => {
               const point = payload?.[0]?.payload as TrendPoint | undefined;
               if (!point) return "";
@@ -104,12 +111,12 @@ export function PlacementTrendChart({
           {avg !== null && (
             <ReferenceLine
               y={avg}
-              stroke={CHART_SEMANTIC.reference}
+              stroke={t.CHART_SEMANTIC.reference}
               strokeDasharray="4 4"
               strokeOpacity={0.6}
               label={{
                 value: `平均 ${avg}`,
-                fill: CHART_SEMANTIC.reference,
+                fill: t.CHART_SEMANTIC.reference,
                 fontSize: 11,
                 position: "insideTopLeft",
               }}
@@ -119,7 +126,7 @@ export function PlacementTrendChart({
             type="monotone"
             dataKey="placement"
             name="rank"
-            stroke={CHART_SEMANTIC.series}
+            stroke={t.CHART_SEMANTIC.series}
             strokeWidth={2}
             dot={(props: { cx?: number; cy?: number; payload?: TrendPoint }) => {
               const { cx, cy, payload } = props;
@@ -130,7 +137,7 @@ export function PlacementTrendChart({
                 cx,
                 cy,
                 r: onSelectMatch ? 4 : 3,
-                fill: top4 ? CHART_SEMANTIC.highlight : CHART_SEMANTIC.series,
+                fill: top4 ? t.CHART_SEMANTIC.highlight : t.CHART_SEMANTIC.series,
                 strokeWidth: 0,
               };
               if (!onSelectMatch) return <circle {...shared} />;
@@ -153,7 +160,7 @@ export function PlacementTrendChart({
                 </circle>
               );
             }}
-            activeDot={{ r: 5, fill: CHART_SEMANTIC.highlight, stroke: CHART.surface, strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: t.CHART_SEMANTIC.highlight, stroke: t.CHART.surface, strokeWidth: 2 }}
             isAnimationActive={false}
           />
         </LineChart>

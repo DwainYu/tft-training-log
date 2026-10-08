@@ -147,10 +147,10 @@ export function DecisionForm({
                   "rounded-md border px-2 py-1 text-xs transition-colors",
                   draft.hindsight === h
                     ? h === "correct"
-                      ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300"
+                      ? "border-good/50 bg-good/15 text-good"
                       : h === "wrong"
-                        ? "border-red-500/50 bg-red-500/15 text-red-300"
-                        : "border-amber-500/50 bg-amber-500/15 text-amber-300"
+                        ? "border-bad/50 bg-bad/15 text-bad"
+                        : "border-warn/50 bg-warn/15 text-warn"
                     : "border-line bg-base-900/60 text-ink-400 hover:bg-base-800",
                 ].join(" ")}
               >

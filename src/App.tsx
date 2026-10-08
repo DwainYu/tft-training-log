@@ -2,6 +2,7 @@ import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/layout/AppShell";
 import { QuickAddProvider } from "./components/matches/QuickAddProvider";
 import { ToastProvider } from "./components/ui/Toast";
+import { ThemeProvider } from "./lib/theme";
 import { SessionProvider } from "./services/session-context";
 import { DashboardPage } from "./pages/DashboardPage";
 import { MatchesPage } from "./pages/MatchesPage";
@@ -17,11 +18,12 @@ import { DataCenterPage } from "./pages/DataCenterPage";
 export function App() {
   return (
     <HashRouter>
-      <ToastProvider>
-        <SessionProvider>
-          <QuickAddProvider>
-            <AppShell>
-              <Routes>
+      <ThemeProvider>
+        <ToastProvider>
+          <SessionProvider>
+            <QuickAddProvider>
+              <AppShell>
+                <Routes>
                 <Route path="/" element={<DashboardPage />} />
                 <Route path="/matches" element={<MatchesPage />} />
                 <Route path="/matches/new" element={<MatchFormPage mode="create" />} />
@@ -39,6 +41,7 @@ export function App() {
           </QuickAddProvider>
         </SessionProvider>
       </ToastProvider>
+    </ThemeProvider>
     </HashRouter>
   );
 }

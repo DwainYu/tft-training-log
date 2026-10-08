@@ -12,9 +12,9 @@ export function Badge({
   const tones: Record<string, string> = {
     neutral: "border-line bg-base-800 text-ink-200",
     gold: "border-gold-500/35 bg-gold-500/10 text-gold-300",
-    good: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
-    bad: "border-red-500/30 bg-red-500/10 text-red-300",
-    info: "border-sky-500/30 bg-sky-500/10 text-sky-300",
+    good: "border-good/30 bg-good/10 text-good",
+    bad: "border-bad/30 bg-bad/10 text-bad",
+    info: "border-info/30 bg-info/10 text-info",
     muted: "border-transparent bg-base-800/70 text-ink-600",
   };
   return (

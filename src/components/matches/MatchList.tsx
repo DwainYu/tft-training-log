@@ -134,7 +134,7 @@ function MatchRow({
 
 function ReviewedFlag({ reviewed }: { reviewed: boolean }) {
   return reviewed ? (
-    <span className="inline-flex items-center gap-1 text-xs text-emerald-300">
+    <span className="inline-flex items-center gap-1 text-xs text-good">
       <CheckCircle2 size={13} /> 已复盘
     </span>
   ) : (

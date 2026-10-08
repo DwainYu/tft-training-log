@@ -114,7 +114,7 @@ export function MatchDetailPage() {
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3 p-4">
               <div
                 className={`num text-5xl font-semibold leading-none ${
-                  tone === "gold" ? "text-gold-300" : tone === "good" ? "text-emerald-300" : "text-red-300"
+                  tone === "gold" ? "text-gold-300" : tone === "good" ? "text-good" : "text-bad"
                 }`}
               >
                 {match.placement}

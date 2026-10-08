@@ -303,7 +303,7 @@ export function StatisticsPage() {
               </span>
               <span>
                 近 20 场 Top4{" "}
-                <span className="num text-sm font-semibold text-emerald-300">
+                <span className="num text-sm font-semibold text-good">
                   {formatRateValue(last20?.top4Rate ?? null)}
                 </span>
               </span>
@@ -456,7 +456,7 @@ export function StatisticsPage() {
                   render: (r) => {
                     const d = r.recent - r.previous;
                     return (
-                      <span className={d > 0 ? "text-red-300" : d < 0 ? "text-emerald-300" : "text-ink-600"}>
+                      <span className={d > 0 ? "text-bad" : d < 0 ? "text-good" : "text-ink-600"}>
                         {d > 0 ? `+${d}` : String(d)}
                       </span>
                     );
