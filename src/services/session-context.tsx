@@ -30,7 +30,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [booted, setBooted] = useState(false);
 
   useEffect(() => {
-    void ensureDefaultSessions().then(() => setBooted(true));
+    // `alive` guard: the bootstrap promise can settle after the tree is gone
+    // (React would then schedule an update into a torn-down environment).
+    let alive = true;
+    void ensureDefaultSessions().then(() => {
+      if (alive) setBooted(true);
+    });
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const sessions = useLiveQuery(() => getSessions(), [booted], []);
