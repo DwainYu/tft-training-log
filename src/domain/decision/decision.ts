@@ -1,4 +1,5 @@
 import { createId, nowIso } from "../../lib/utils";
+import { parseRound } from "./round";
 import { DECISION_TYPES, type Decision, type DecisionHindsight, type DecisionType } from "../types";
 
 export interface DecisionInput {
@@ -47,7 +48,6 @@ export function isDecisionType(value: unknown): value is DecisionType {
 
 /** Rough chronological key for sorting rounds like "2-1", "3-2", "4-5", "最终". */
 export function decisionRoundOrder(decision: Decision): number {
-  const m = /^(\d+)-(\d+)$/.exec(decision.round.trim());
-  if (!m) return Number.MAX_SAFE_INTEGER;
-  return Number(m[1]) * 100 + Number(m[2]);
+  const key = parseRound(decision.round);
+  return key ? key.stage * 100 + key.index : Number.MAX_SAFE_INTEGER;
 }
