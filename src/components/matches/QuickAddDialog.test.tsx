@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { QuickAddDialog } from "./QuickAddDialog";
 import { allMatches, getMatchBundle } from "../../services/match-service";
+import { compositionUsageRepository } from "../../data/repository/composition-usage-repository";
 import { resetDatabase } from "../../test/db-helper";
 import { ToastProvider } from "../ui/Toast";
 
@@ -12,10 +13,10 @@ vi.mock("react-router-dom", async () => {
   return { ...actual, useNavigate: () => navigate };
 });
 
-function renderDialog() {
+function renderDialog(onClose = () => undefined) {
   return render(
     <ToastProvider>
-      <QuickAddDialog open onClose={() => undefined} />
+      <QuickAddDialog open onClose={onClose} />
     </ToastProvider>,
   );
 }
@@ -38,8 +39,14 @@ describe("Quick Add", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: "第 3 名" }));
     fireEvent.change(screen.getByLabelText("阵容"), { target: { value: "Arcader" } });
-    fireEvent.change(screen.getByLabelText("强化符文"), { target: { value: "升级 / 经济" } });
-    fireEvent.change(screen.getByLabelText("核心装备"), { target: { value: "主C：无尽" } });
+    // 海克斯 now comes from the Set 18 picker: search + click, ids only
+    fireEvent.focus(screen.getByLabelText("强化符文"));
+    fireEvent.change(screen.getByLabelText("强化符文"), { target: { value: "百宝袋" } });
+    fireEvent.click((await screen.findAllByRole("button", { name: /大百宝袋/ }))[0]);
+    // 核心装备 now comes from the Set 18 item picker as well
+    fireEvent.focus(screen.getByLabelText("核心装备"));
+    fireEvent.change(screen.getByLabelText("核心装备"), { target: { value: "金铲铲冠冕" } });
+    fireEvent.click(await screen.findByRole("button", { name: /金铲铲冠冕/ }));
     fireEvent.click(screen.getByRole("button", { name: "D牌" }));
     fireEvent.change(screen.getByLabelText("下一局训练重点"), {
       target: { value: "4-1 前不 D 超过 30 金" },
@@ -50,19 +57,23 @@ describe("Quick Add", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /^保存$/ }));
 
-    await waitFor(async () => expect(await allMatches()).toHaveLength(1));
+    // Quick Add also seeds the review, one write behind the match itself
+    await waitFor(async () => {
+      const [saved] = await allMatches();
+      expect(saved).toBeTruthy();
+      expect((await getMatchBundle(saved.id))?.review?.nextGameFocus).toBe("4-1 前不 D 超过 30 金");
+    });
     const [match] = await allMatches();
     expect(match.placement).toBe(3);
     expect(match.composition).toBe("Arcader");
-    expect(match.augments).toEqual(["升级", "经济"]);
-    expect(match.coreItems).toEqual(["主C：无尽"]);
+    expect(match.augmentIds).toEqual(["DA_18_BigGrabBag"]);
+    // the free-text field is still filled in, because detail pages read it
+    expect(match.augments).toEqual(["大百宝袋"]);
+    expect(match.coreItemIds).toEqual(["TFT_Item_ForceOfNature"]);
+    expect(match.coreItems).toEqual(["金铲铲冠冕"]);
     expect(match.primaryMistake).toBe("ROLLING");
     expect(match.playedAt).toBe("2026-02-05T13:20");
     expect(match.reviewed).toBe(false);
-
-    // the focus lands on the seeded review, not on the match record
-    const bundle = await getMatchBundle(match.id);
-    expect(bundle?.review?.nextGameFocus).toBe("4-1 前不 D 超过 30 金");
   });
 
   it("sets the placement with the 1–8 keyboard shortcuts", async () => {
@@ -74,16 +85,56 @@ describe("Quick Add", () => {
     expect(match.placement).toBe(7);
   });
 
-  it("warns when the time is outside the 12:00–22:00 window but still saves", async () => {
+  it("keeps the date/time field and shows no training-window warning", () => {
     renderDialog();
-    fireEvent.click(screen.getByRole("radio", { name: "第 1 名" }));
-    fireEvent.change(screen.getByLabelText("对局时间"), {
-      target: { value: "2026-02-05T23:40" },
-    });
-    expect(screen.getByText(/当前时间不在云顶之巅训练时段/)).toBeInTheDocument();
+    expect(screen.getByLabelText("对局时间")).toBeInTheDocument();
+    expect(screen.queryByText(/训练时段/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/12:00/)).not.toBeInTheDocument();
+  });
+
+  it("saves at any time of day: 00:00 / 08:00 / 12:00 / 18:00 / 22:00 / 23:59", async () => {
+    // The product has no fixed training window, so the hour must never change
+    // whether a record is accepted. Every value is typed in, never `new Date()`.
+    for (const playedAt of [
+      "2026-02-05T00:00",
+      "2026-02-05T08:00",
+      "2026-02-05T12:00",
+      "2026-02-05T18:00",
+      "2026-02-05T22:00",
+      "2026-02-05T23:59",
+    ]) {
+      const view = renderDialog();
+      fireEvent.click(screen.getByRole("radio", { name: "第 1 名" }));
+      fireEvent.change(screen.getByLabelText("对局时间"), { target: { value: playedAt } });
+
+      expect(screen.queryByText(/训练时段/)).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole("button", { name: /^保存$/ }));
+      await waitFor(async () => expect(await allMatches()).toHaveLength(1));
+      expect((await allMatches())[0].playedAt).toBe(playedAt);
+
+      view.unmount();
+      await resetDatabase();
+    }
+  });
+
+  it("picks a composition from the selector and only counts it once the game is saved", async () => {
+    renderDialog();
+    fireEvent.click(screen.getByRole("radio", { name: "第 2 名" }));
+    fireEvent.focus(screen.getByLabelText("阵容"));
+    fireEvent.click(await screen.findByRole("button", { name: "法师" }));
+
+    expect(screen.getByLabelText("阵容")).toHaveValue("法师");
+    // choosing is a form edit: opening the selector and clicking must not
+    // inflate usage on its own
+    expect(await compositionUsageRepository.get("法师")).toBeUndefined();
 
     fireEvent.click(screen.getByRole("button", { name: /^保存$/ }));
     await waitFor(async () => expect(await allMatches()).toHaveLength(1));
+
+    const [match] = await allMatches();
+    expect(match.composition).toBe("法师");
+    expect((await compositionUsageRepository.get("法师"))?.usageCount).toBe(1);
   });
 
   it("stays open for the next game when saving with 保存并再记一局", async () => {
@@ -92,8 +143,47 @@ describe("Quick Add", () => {
     fireEvent.change(screen.getByLabelText("阵容"), { target: { value: "Rebel" } });
     fireEvent.click(screen.getByRole("button", { name: "保存并再记一局" }));
 
-    await waitFor(async () => expect(await allMatches()).toHaveLength(1));
+    // the draft reset happens after every write of the record is through
+    await waitFor(async () => {
+      expect(await allMatches()).toHaveLength(1);
+      expect(screen.getByRole("radio", { name: "第 4 名" })).toHaveAttribute("aria-checked", "false");
+    });
     expect(screen.getByLabelText("阵容")).toHaveValue("Rebel");
-    expect(screen.getByRole("radio", { name: "第 4 名" })).toHaveAttribute("aria-checked", "false");
+  });
+
+  it("closes only the selector panel on Escape and keeps the draft", async () => {
+    // a real spy, not a no-op: a dismissal must be observable
+    const onClose = vi.fn();
+    renderDialog(onClose);
+    fireEvent.click(screen.getByRole("radio", { name: "第 5 名" }));
+    fireEvent.change(screen.getByLabelText("阵容"), { target: { value: "Arcader" } });
+
+    // open a selector panel, then press Escape inside its input
+    fireEvent.focus(screen.getByLabelText("强化符文"));
+    await screen.findByText(/全部海克斯/);
+    fireEvent.keyDown(screen.getByLabelText("强化符文"), { key: "Escape" });
+
+    // the panel is gone...
+    await waitFor(() => expect(screen.queryByText(/全部海克斯/)).not.toBeInTheDocument());
+    // ...but the dialog survived, draft intact. One Esc used to dismiss both
+    // and silently throw the whole record away.
+    expect(onClose).not.toHaveBeenCalled();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByLabelText("阵容")).toHaveValue("Arcader");
+    expect(screen.getByRole("radio", { name: "第 5 名" })).toHaveAttribute("aria-checked", "true");
+
+    // and the draft is still savable
+    fireEvent.click(screen.getByRole("button", { name: /^保存$/ }));
+    await waitFor(async () => expect(await allMatches()).toHaveLength(1));
+    expect((await allMatches())[0].composition).toBe("Arcader");
+  });
+
+  it("still closes the dialog on Escape when no selector panel is open", () => {
+    const onClose = vi.fn();
+    renderDialog(onClose);
+
+    // focus a plain text field: no panel, so Esc belongs to the dialog
+    fireEvent.keyDown(screen.getByLabelText("下一局训练重点"), { key: "Escape" });
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,4 +1,5 @@
 import { formatDateTime, toDate } from "../../lib/wallclock";
+import { normalizeCompositionKey } from "../composition/composition";
 import { isBottom4, isTop4, isWin, type MatchForQuery } from "./match";
 
 export type PlacementFilter = "all" | "top4" | "bottom4" | "win";
@@ -43,7 +44,12 @@ export function queryMatches<T extends MatchForQuery>(matches: readonly T[], q: 
     }
     if (q.reviewed === "reviewed" && !m.reviewed) return false;
     if (q.reviewed === "unreviewed" && m.reviewed) return false;
-    if (q.composition && q.composition !== "all" && m.composition !== q.composition) return false;
+    if (
+      q.composition &&
+      q.composition !== "all" &&
+      normalizeCompositionKey(m.composition) !== normalizeCompositionKey(q.composition)
+    )
+      return false;
 
     if (q.mistake && q.mistake !== "all") {
       if (q.mistake === "none") {
@@ -110,3 +116,60 @@ export const EMPTY_MATCH_QUERY: MatchQuery = {
   sortField: "playedAt",
   sortDir: "desc",
 };
+
+/* ------------------------------------------------------------------ */
+/* URL <-> query                                                       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Every filter the Matches page owns, expressible as a query string.
+ *
+ * Charts drill down by linking here (`/matches?mistake=ECONOMY`), so the
+ * mapping has to be complete in both directions: a filter the URL cannot
+ * carry is a filter no chart can link to.
+ */
+const QUERY_PARAM_KEYS = [
+  "search",
+  "placement",
+  "reviewed",
+  "composition",
+  "mistake",
+  "from",
+  "to",
+  "sortField",
+  "sortDir",
+] as const;
+
+/** Values equal to the default are left out, so URLs stay readable. */
+function isDefault(key: string, value: string): boolean {
+  if (value === "" || value === "all") return true;
+  if (key === "sortField") return value === DEFAULT_MATCH_QUERY.sortField;
+  if (key === "sortDir") return value === DEFAULT_MATCH_QUERY.sortDir;
+  return false;
+}
+
+/** `MatchQuery` -> query string. Only non-default filters are written. */
+export function queryToParams(query: MatchQuery): URLSearchParams {
+  const params = new URLSearchParams();
+  for (const key of QUERY_PARAM_KEYS) {
+    const value = query[key];
+    if (typeof value !== "string") continue;
+    if (isDefault(key, value)) continue;
+    params.set(key, value);
+  }
+  return params;
+}
+
+/**
+ * Query string -> the filters it carries, ready to spread over
+ * `EMPTY_MATCH_QUERY`. Anything absent keeps its default.
+ */
+export function paramsToQuery(params: URLSearchParams): Partial<MatchQuery> {
+  const query: Partial<Record<(typeof QUERY_PARAM_KEYS)[number], string>> = {};
+  for (const key of QUERY_PARAM_KEYS) {
+    const value = params.get(key);
+    if (value === null || value === "") continue;
+    query[key] = value;
+  }
+  return query as Partial<MatchQuery>;
+}

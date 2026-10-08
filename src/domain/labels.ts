@@ -2,10 +2,12 @@ import {
   DECISION_HINDSIGHTS,
   DECISION_TYPES,
   MISTAKE_TYPES,
+  OPENING_PLANS,
   type DecisionHindsight,
   type DecisionType,
   type GoalStatus,
   type MistakeType,
+  type OpeningPlan,
 } from "./types";
 
 export const MISTAKE_LABELS: Record<MistakeType, string> = {
@@ -49,6 +51,14 @@ export const GOAL_STATUS_LABELS: Record<GoalStatus, string> = {
   archived: "已归档",
 };
 
+export const OPENING_PLAN_LABELS: Record<OpeningPlan, string> = {
+  WIN_STREAK: "连胜",
+  LOSE_STREAK: "连败",
+  STANDARD: "正常运营",
+  ECONOMY: "走经济",
+  FORCE: "硬玩",
+};
+
 export const PLACEMENT_LABELS: Record<number, string> = {
   1: "第 1 名 · 吃鸡",
   2: "第 2 名",
@@ -63,6 +73,10 @@ export const PLACEMENT_LABELS: Record<number, string> = {
 export const mistakeLabel = (t?: MistakeType | string | null): string =>
   t ? (MISTAKE_LABELS[t as MistakeType] ?? t) : "未分类";
 
+/** Falls back to the raw value so an unknown enum is visible, not silent. */
+export const openingPlanLabel = (t?: OpeningPlan | string | null): string =>
+  t ? (OPENING_PLAN_LABELS[t as OpeningPlan] ?? t) : "未填";
+
 export const decisionLabel = (t: DecisionType): string => DECISION_LABELS[t] ?? t;
 export const hindsightLabel = (t?: DecisionHindsight): string =>
   t ? HINDSIGHT_LABELS[t] : "未评价";
@@ -71,3 +85,4 @@ export const goalStatusLabel = (t: GoalStatus): string => GOAL_STATUS_LABELS[t] 
 export const MISTAKE_TYPE_LIST: MistakeType[] = [...MISTAKE_TYPES];
 export const DECISION_TYPE_LIST: DecisionType[] = [...DECISION_TYPES];
 export const HINDSIGHT_LIST: DecisionHindsight[] = [...DECISION_HINDSIGHTS];
+export const OPENING_PLAN_LIST: OpeningPlan[] = [...OPENING_PLANS];

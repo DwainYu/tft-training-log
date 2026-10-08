@@ -20,6 +20,8 @@ import { durationOf, isBottom4, isTop4, isWin, placementTone } from "../domain/m
 import { formatDateWeekday, formatTime } from "../lib/wallclock";
 import { formatDuration } from "../lib/utils";
 import { DecisionPanel } from "../components/decisions/DecisionPanel";
+import { DecisionTimeline } from "../components/decisions/DecisionTimeline";
+import { buildTimeline } from "../domain/decision/timeline";
 import { Badge, EmptyState } from "../components/ui/Badge";
 import { Button, LinkButton } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
@@ -136,6 +138,14 @@ export function MatchDetailPage() {
             {match.notes && (
               <p className="border-t border-line px-4 py-3 text-sm text-ink-200">{match.notes}</p>
             )}
+          </Panel>
+
+          <Panel>
+            <PanelHeader
+              title="决策时间线"
+              subtitle="按回合排序 · 自由文本排在最后 · 结果只出现在结尾"
+            />
+            <DecisionTimeline events={buildTimeline(match, decisions)} />
           </Panel>
 
           <Panel>

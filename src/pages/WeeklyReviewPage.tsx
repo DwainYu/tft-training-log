@@ -50,7 +50,7 @@ export function WeeklyReviewPage() {
         <Panel>
           <EmptyState
             title={`${weekRangeLabel(report, offset)} 没有记录对局`}
-            description="云顶之巅 12:00–22:00 开放，打完一局用「快速记录」记一下，这里就会自动汇总。"
+            description="打完一局用「快速记录」记一下，这里就会自动汇总。"
             action={
               <div className="flex flex-wrap justify-center gap-2">
                 <LinkButton to="/matches/new" variant="primary">

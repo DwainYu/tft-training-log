@@ -1,24 +1,22 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLiveQuery } from "dexie-react-hooks";
-import { AlertTriangle, ChevronLeft, Save, Trash2, Zap } from "lucide-react";
-import { addMatch, knownCompositions, updateMatch } from "../../services/match-service";
+import { ChevronLeft, Save, Trash2, Zap } from "lucide-react";
+import { addMatch, updateMatch } from "../../services/match-service";
 import { mistakeLabel } from "../../domain/labels";
 import { isTop4, isWin } from "../../domain/match/match";
 import { MAX_PLACEMENT } from "../../domain/types";
 import type { Match } from "../../domain/types";
 import { errorMessage } from "../../lib/errors";
 import { formatDuration } from "../../lib/utils";
-import {
-  TRAINING_WINDOW_LABEL,
-  TRAINING_WINDOW_WARNING,
-  isWithinTrainingWindow,
-} from "../../lib/wallclock";
 import { Button } from "../ui/Button";
-import { Field, Input, Select, Textarea } from "../ui/Field";
+import { Field, Input, Select } from "../ui/Field";
 import { Panel, PanelHeader } from "../ui/Panel";
 import { Badge } from "../ui/Badge";
 import { useToast } from "../ui/Toast";
+import { AugmentSelector } from "./AugmentSelector";
+import { CompositionSelector } from "./CompositionSelector";
+import { ItemSelector } from "./ItemSelector";
+import { TraitSelector } from "./TraitSelector";
 import { MistakeSelect } from "./MistakeSelect";
 import { PlacementPicker } from "./PlacementPicker";
 import { championRepository } from "../../data/tft/repositories";
@@ -51,16 +49,11 @@ export function MatchForm({
   const [busy, setBusy] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
-  const compositions = useLiveQuery(() => knownCompositions(), [], []);
 
   const set = <K extends keyof MatchFormDraft>(key: K, value: MatchFormDraft[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
 
   const payload = useMemo(() => draftToPayload(draft), [draft]);
-  const outsideWindow = useMemo(
-    () => !isWithinTrainingWindow(payload.playedAt),
-    [payload.playedAt],
-  );
   const durationMinutes = effectiveDurationMinutes(draft);
 
   async function submit() {
@@ -91,7 +84,7 @@ export function MatchForm({
       )}
 
       <Panel>
-        <PanelHeader title="A · 基础信息" subtitle="时间不限制，只在校验区提示训练时段" />
+        <PanelHeader title="A · 基础信息" subtitle="日期必填，开始/结束时间选填" />
         <div className="flex flex-col gap-4 p-4">
           <Field label="最终名次" required>
             <PlacementPicker
@@ -148,16 +141,6 @@ export function MatchForm({
                 onChange={(e) => set("durationMinutes", e.target.value)}
               />
             </Field>
-            <div className="sm:col-span-2">
-              {outsideWindow && (
-                <p className="mt-6 flex items-start gap-2 rounded-lg border border-amber-500/35 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
-                  <AlertTriangle size={14} className="mt-0.5 shrink-0" />
-                  <span>
-                    {TRAINING_WINDOW_WARNING}（云顶之巅训练时段 {TRAINING_WINDOW_LABEL}）—— 仍然可以保存
-                  </span>
-                </p>
-              )}
-            </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
@@ -248,27 +231,25 @@ export function MatchForm({
         />
         <div className="flex flex-col gap-4 p-4">
           <Field label="最终阵容名称" htmlFor="f-comp">
-            <Input
+            <CompositionSelector
               id="f-comp"
-              list="f-comp-options"
               value={draft.composition}
-              placeholder="例如：Fortune Reaver"
-              onChange={(e) => set("composition", e.target.value)}
+              onChange={(v) => set("composition", v)}
             />
-            <datalist id="f-comp-options">
-              {compositions.map((c) => (
-                <option key={c} value={c} />
-              ))}
-            </datalist>
           </Field>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="主要羁绊" htmlFor="f-traits">
-              <Input
+            <Field
+              label="主要羁绊"
+              htmlFor="f-traits"
+              hint="本局最终阵容实际拥有的羁绊；阵容名是另外一回事"
+            >
+              <TraitSelector
                 id="f-traits"
-                value={draft.traits}
-                placeholder="Fortune / Reaver / Vanguard"
-                onChange={(e) => set("traits", e.target.value)}
+                value={draft.traitIds}
+                onChange={(ids) => set("traitIds", ids)}
+                legacy={draft.traitsLegacy}
+                onLegacyChange={(values) => set("traitsLegacy", values)}
               />
             </Field>
             <Field label="核心棋子" htmlFor="f-units">
@@ -286,21 +267,21 @@ export function MatchForm({
               </datalist>
             </Field>
             <Field label="核心装备" htmlFor="f-items">
-              <Textarea
+              <ItemSelector
                 id="f-items"
-                rows={3}
-                value={draft.coreItems}
-                placeholder={"主C：无尽 / 蓝 buff\n主坦：狂徒 / 反甲"}
-                onChange={(e) => set("coreItems", e.target.value)}
+                value={draft.coreItemIds}
+                onChange={(ids) => set("coreItemIds", ids)}
+                legacy={draft.coreItemsLegacy}
+                onLegacyChange={(values) => set("coreItemsLegacy", values)}
               />
             </Field>
             <Field label="强化符文" htmlFor="f-augments">
-              <Textarea
+              <AugmentSelector
                 id="f-augments"
-                rows={3}
-                value={draft.augments}
-                placeholder="升级 / 经济类 / 战斗类"
-                onChange={(e) => set("augments", e.target.value)}
+                value={draft.augmentIds}
+                onChange={(ids) => set("augmentIds", ids)}
+                legacy={draft.augmentsLegacy}
+                onLegacyChange={(values) => set("augmentsLegacy", values)}
               />
             </Field>
           </div>

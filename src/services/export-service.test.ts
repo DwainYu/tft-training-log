@@ -57,7 +57,7 @@ describe("export", () => {
     const { a } = await seedTwo();
     const csv = matchesToCsv(await matchRepository.all());
     const lines = csv.split("\n");
-    expect(lines[0]).toBe("id,played_at,placement,composition,final_level,final_health,duration_seconds,primary_mistake,reviewed,notes,session_id");
+    expect(lines[0]).toBe("id,played_at,placement,composition,final_level,final_health,duration_seconds,primary_mistake,reviewed,opening_plan,notes,session_id");
     const rowA = lines.find((l) => l.includes(a.id))!;
     // commas inside composition and quotes inside notes must be escaped
     expect(rowA).toContain(`"Arcader, gold-rush"`);
@@ -107,6 +107,62 @@ describe("import", () => {
     expect(() => parseSnapshot(JSON.stringify({ app: "tft-training-log", matches: [] }))).toThrow(
       "缺少 decisions 数组",
     );
+  });
+});
+
+describe("import + structured opening plan", () => {
+  const full = {
+    primaryMistake: "ECONOMY" as const,
+    biggestMistake: "利息没吃满",
+    bestDecision: "2-5 存钱",
+    nextGameFocus: "吃满利息",
+  };
+
+  it("round-trips the opening route through a snapshot", async () => {
+    const a = await addMatch({ playedAt: "2026-02-05T13:20", placement: "1", composition: "Arcader" });
+    await saveReview(a.id, full, "WIN_STREAK");
+
+    const snap = await buildSnapshot();
+    await wipeAll();
+    await importSnapshot(JSON.parse(JSON.stringify(snap)));
+
+    expect((await matchRepository.get(a.id))?.openingPlan).toBe("WIN_STREAK");
+  });
+
+  it("exports the opening route as one CSV column", async () => {
+    const a = await addMatch({ playedAt: "2026-02-05T13:20", placement: "1", composition: "Arcader" });
+    await saveReview(a.id, full, "FORCE");
+    const row = matchesToCsv(await matchRepository.all())
+      .split("\n")
+      .find((l) => l.includes(a.id))!;
+    expect(row.split(",")).toContain("FORCE");
+  });
+
+  it("drops an opening route the vocabulary does not know", async () => {
+    const snap = await buildSnapshot();
+    snap.matches.push({
+      id: "future-m1",
+      playedAt: "2026-02-09T21:00",
+      placement: 5,
+      openingPlan: "SOMETHING_FROM_A_LATER_VERSION",
+    } as unknown as Match);
+
+    await importSnapshot(snap);
+    const m = await matchRepository.get("future-m1");
+    expect(m).toBeDefined();
+    expect(m?.openingPlan).toBeUndefined();
+  });
+
+  it("imports a legacy snapshot that has no opening route at all", async () => {
+    const a = await addMatch({ playedAt: "2026-02-05T13:20", placement: "3", composition: "Rebel" });
+    const snap = await buildSnapshot();
+    const legacy = JSON.parse(JSON.stringify(snap));
+    for (const m of legacy.matches) delete m.openingPlan;
+
+    await wipeAll();
+    const report = await importSnapshot(legacy);
+    expect(report.matches).toBe(1);
+    expect((await matchRepository.get(a.id))?.openingPlan).toBeUndefined();
   });
 });
 

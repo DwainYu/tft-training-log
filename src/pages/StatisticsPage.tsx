@@ -1,18 +1,35 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
+import { useNavigate } from "react-router-dom";
 import {
   allOverall,
   allStreak,
+  augmentChart,
   compositionChart,
+  compositionDrillQuery,
+  decisionHindsightChart,
+  decisionTypeChart,
   mistakeChart,
+  mistakeDrillQuery,
+  mistakeTrendChart,
+  numericBreakdownChart,
+  openingCoverageChart,
+  openingPlanChart,
   recentWindow,
+  reviewCoverageChart,
   timeSlotChart,
   trend,
 } from "../services/stats-service";
 import { useSession } from "../services/session-context";
+import { decisionLabel, hindsightLabel, mistakeLabel, openingPlanLabel } from "../domain/labels";
+import { UNCLASSIFIED } from "../domain/stats/stats";
+import type { DecisionHindsight, DecisionType } from "../domain/types";
 import { formatRateValue, StatCard } from "../components/stats/StatCard";
+import { MIN_SAMPLES } from "../components/stats/chart-theme";
 import { MistakeBarChart } from "../components/stats/MistakeBarChart";
 import { PlacementTrendChart, type TrendPoint } from "../components/stats/PlacementTrendChart";
+import { GroupStatTable } from "../components/stats/GroupStatTable";
+import { ChartEmpty } from "../components/stats/ChartEmpty";
 import { StatTable, type StatTableColumn } from "../components/stats/StatTable";
 import { EmptyState } from "../components/ui/Badge";
 import { Select } from "../components/ui/Field";
@@ -24,6 +41,7 @@ import { formatNumber } from "../lib/utils";
 type Scope = "current" | "all";
 
 export function StatisticsPage() {
+  const navigate = useNavigate();
   const { activeSession, activeSessionId, ready } = useSession();
   const [scope, setScope] = useState<Scope>("current");
   // `undefined` = 全部训练; a session id = that training context only.
@@ -38,9 +56,33 @@ export function StatisticsPage() {
   const last20 = useLiveQuery(() => recentWindow(20, sessionId), [sessionId]);
   const mistakes = useLiveQuery(() => mistakeChart(sessionId), [sessionId]);
   const compositions = useLiveQuery(() => compositionChart(sessionId), [sessionId]);
+  const openings = useLiveQuery(() => openingPlanChart(sessionId), [sessionId]);
   const slots = useLiveQuery(() => timeSlotChart(sessionId), [sessionId]);
+  const openingCoverage = useLiveQuery(() => openingCoverageChart(sessionId), [sessionId]);
+  const reviewCov = useLiveQuery(() => reviewCoverageChart(sessionId), [sessionId]);
+  const decisionTypes = useLiveQuery(() => decisionTypeChart(sessionId), [sessionId]);
+  const decisionHindsight = useLiveQuery(() => decisionHindsightChart(sessionId), [sessionId]);
+  const augments = useLiveQuery(() => augmentChart(sessionId), [sessionId]);
+  const mistakeWindows = useLiveQuery(() => mistakeTrendChart(10, sessionId), [sessionId]);
+  const numeric = useLiveQuery(() => numericBreakdownChart(sessionId), [sessionId]);
 
-  if (overall === undefined) return <Spinner label="计算统计" />;
+  // Wait for every query before rendering: a chart fed `[]` while its data is
+  // still in flight would flash "no data" and then fill in.
+  const loading =
+    overall === undefined ||
+    trendSeries === undefined ||
+    mistakes === undefined ||
+    compositions === undefined ||
+    openings === undefined ||
+    slots === undefined ||
+    openingCoverage === undefined ||
+    reviewCov === undefined ||
+    decisionTypes === undefined ||
+    decisionHindsight === undefined ||
+    augments === undefined ||
+    mistakeWindows === undefined ||
+    numeric === undefined;
+  if (loading) return <Spinner label="计算统计" />;
 
   const scopeControl = (
     <label className="flex items-center gap-2 text-xs text-ink-400">
@@ -99,6 +141,34 @@ export function StatisticsPage() {
     },
   ];
 
+  const openingColumns: StatTableColumn<NonNullable<typeof openings>[number]>[] = [
+    { key: "plan", label: "开局路线", render: (r) => <span className="text-ink-50">{openingPlanLabel(r.plan)}</span> },
+    { key: "games", label: "场次", align: "right", render: (r) => r.games },
+    {
+      key: "avg",
+      label: "平均名次",
+      align: "right",
+      render: (r) =>
+        r.games >= MIN_SAMPLES.openingRow ? (
+          formatNumber(r.avgPlacement, 1)
+        ) : (
+          <span className="text-ink-600">样本不足</span>
+        ),
+    },
+    {
+      key: "top4",
+      label: "Top4 率",
+      align: "right",
+      render: (r) =>
+        r.games >= MIN_SAMPLES.openingRow ? (
+          formatRateValue(r.top4Rate)
+        ) : (
+          <span className="text-ink-600">样本不足</span>
+        ),
+    },
+  ];
+  const pct = (v: number | null) => (v === null ? "—" : formatRateValue(v));
+
   const slotColumns: StatTableColumn<NonNullable<typeof slots>[number]>[] = [
     { key: "slot", label: "时间段", render: (r) => <span className="text-ink-50">{r.label}</span> },
     { key: "games", label: "场次", align: "right", render: (r) => r.games },
@@ -147,6 +217,13 @@ export function StatisticsPage() {
               sub="有对局的连续天数"
             />
           </div>
+          <p className="border-t border-line px-4 py-2.5 text-[11px] text-ink-600">
+            复盘覆盖率 <span className="num text-ink-400">{pct(reviewCov.rate)}</span>
+            （{reviewCov.marked} / {reviewCov.total} 局）· 按四项必填规则判定完整{" "}
+            <span className="num text-ink-400">{reviewCov.complete}</span> 局
+            {reviewCov.reviewedCompleteGap > 0 &&
+              " · 两个数字不一致，说明存在导入或手改过的历史数据"}
+          </p>
         </Panel>
 
         <Panel>
@@ -172,35 +249,183 @@ export function StatisticsPage() {
                 tone="good"
               />
             </div>
-            <PlacementTrendChart data={trendSeries ?? []} avg={trendAvg} />
+            <PlacementTrendChart
+              data={trendSeries}
+              avg={trendAvg}
+              onSelectMatch={(id) => navigate(`/matches/${id}`)}
+            />
           </div>
         </Panel>
 
         <Panel>
           <PanelHeader
             title="错误统计"
-            subtitle="来自每局复盘的 Primary Mistake（未选中的局不计入）"
+            subtitle="来自每局复盘的 Primary Mistake · 点击柱子查看这几局"
           />
           <div className="p-4">
-            <MistakeBarChart data={mistakes ?? []} />
+            <MistakeBarChart
+              data={mistakes}
+              onSelect={(key) => navigate(`/matches?${mistakeDrillQuery(key)}`)}
+            />
           </div>
         </Panel>
 
         <div className="grid gap-4 xl:grid-cols-2">
-          <Panel className="min-w-0">
-            <PanelHeader title="阵容统计" />
+          <Panel className="min-w-0 xl:col-span-2">
+            <PanelHeader title="阵容统计" subtitle="按你记录的阵容名统计（羁绊单独记录）" />
             <StatTable
               columns={compositionColumns}
-              rows={compositions ?? []}
+              rows={compositions}
+              rowHref={(row) => compositionDrillQuery(row.composition)}
               empty="还没有填过阵容"
             />
           </Panel>
           <Panel className="min-w-0">
-            <PanelHeader title="时间段统计" subtitle="云顶之巅 12:00 – 22:00" />
-            <StatTable columns={slotColumns} rows={slots ?? []} empty="暂无数据" />
+            <PanelHeader
+              title="开局路线"
+              subtitle={`已标记 ${openingCoverage.marked} / ${openingCoverage.total} 局 · 覆盖率 ${pct(openingCoverage.rate)} · 少于 3 局的路线不给结论`}
+            />
+            <StatTable
+              columns={openingColumns}
+              rows={openings}
+              empty="还没有标记过开局路线。复盘时点一下「开局路线」就会出现在这里。"
+            />
+          </Panel>
+          <Panel className="min-w-0">
+            <PanelHeader title="时间段统计" subtitle="2 小时一档 · 全天" />
+            <StatTable columns={slotColumns} rows={slots} empty="暂无数据" />
           </Panel>
         </div>
+
+        <div className="grid gap-4 xl:grid-cols-2">
+          <Panel className="min-w-0">
+            <PanelHeader
+              title="决策类型"
+              subtitle="按局去重 · 一局可以属于多类 · 少于 3 局不给结论"
+            />
+            <GroupStatTable
+              rows={decisionTypes.map((r) => ({ ...r, label: decisionLabel(r.key as DecisionType) }))}
+              labelHeader="决策类型"
+              min={MIN_SAMPLES.decisionRow}
+              empty="还没有记录过决策。对局详情页可以按回合记录当时的决定。"
+            />
+          </Panel>
+          <Panel className="min-w-0">
+            <PanelHeader
+              title="决策后视"
+              subtitle="「现在回看是否正确」× 该局名次 · 同一局可计入多行"
+            />
+            <GroupStatTable
+              rows={decisionHindsight.map((r) => ({
+                ...r,
+                label: hindsightLabel(r.key as DecisionHindsight),
+              }))}
+              labelHeader="后视判断"
+              min={MIN_SAMPLES.decisionRow}
+              empty="给决策标记「正确 / 错误 / 一般」后，这里会显示对应局的名次。"
+            />
+          </Panel>
+        </div>
+
+        <Panel className="min-w-0">
+          <PanelHeader
+            title="强化符文表现"
+            subtitle="一局带同一个符文只计一次 · 快照里没有的 id 原样显示 · 少于 3 局不给结论"
+          />
+          <GroupStatTable
+            rows={augments.map((r) => ({ ...r, label: r.name }))}
+            labelHeader="强化符文"
+            min={MIN_SAMPLES.augmentRow}
+            empty="还没有在对局里记录强化符文。新增对局时可以选三个。"
+          />
+        </Panel>
+
+        <Panel className="min-w-0">
+          <PanelHeader
+            title="错误结构 · 近 10 场 vs 前 10 场"
+            subtitle="只数次数，不下「在改善」的结论"
+          />
+          {overall.games < MIN_SAMPLES.mistakeComparison ? (
+            <ChartEmpty
+              count={overall.games}
+              min={MIN_SAMPLES.mistakeComparison}
+              what="两期错误结构的对比"
+              how="两个窗口都装满才比得出方向。"
+            />
+          ) : (
+            <StatTable
+              columns={[
+                { key: "label", label: "错误类型", render: (r) => <span className="text-ink-50">{r.label}</span> },
+                { key: "recent", label: "近 10 场", align: "right", render: (r) => r.recent },
+                { key: "previous", label: "前 10 场", align: "right", render: (r) => r.previous },
+                {
+                  key: "delta",
+                  label: "差值（近 − 前）",
+                  align: "right",
+                  render: (r) => {
+                    const d = r.recent - r.previous;
+                    return (
+                      <span className={d > 0 ? "text-red-300" : d < 0 ? "text-emerald-300" : "text-ink-600"}>
+                        {d > 0 ? `+${d}` : String(d)}
+                      </span>
+                    );
+                  },
+                },
+              ]}
+              rows={mistakeWindows.map((r) => ({
+                ...r,
+                label: r.key === UNCLASSIFIED ? "未分类" : mistakeLabel(r.key),
+              }))}
+              empty="还没有可对比的数据"
+            />
+          )}
+        </Panel>
+
+        <Panel className="min-w-0">
+          <PanelHeader
+            title="数值与名次"
+            subtitle="可选字段的分桶参考 · 标题里是每项的填写量"
+          />
+          <div className="grid gap-6 p-4 lg:grid-cols-3">
+            <NumericBlock title="最终血量" data={numeric.health} min={MIN_SAMPLES.numericRow} />
+            <NumericBlock title="对局时长" data={numeric.duration} min={MIN_SAMPLES.numericRow} />
+            <NumericBlock title="剩余金币" data={numeric.gold} min={MIN_SAMPLES.numericRow} />
+          </div>
+        </Panel>
       </div>
     </>
+  );
+}
+
+function NumericBlock({
+  title,
+  data,
+  min,
+}: {
+  title: string;
+  data: {
+    filled: number;
+    total: number;
+    rows: { key: string; label: string; matches: number; avgPlacement: number | null; top4Rate: number | null }[];
+  };
+  min: number;
+}) {
+  const empty = `还没有填过${title}。它是对局表单里的可选字段。`;
+  return (
+    <div className="min-w-0">
+      <h3 className="text-xs font-semibold text-ink-200">
+        {title}{" "}
+        <span className="num text-ink-600">
+          已填 {data.filled} / {data.total} 局
+        </span>
+      </h3>
+      <div className="mt-2">
+        {data.filled === 0 ? (
+          <p className="px-1 py-6 text-center text-xs text-ink-600">{empty}</p>
+        ) : (
+          <GroupStatTable rows={data.rows} labelHeader="区间" min={min} empty={empty} />
+        )}
+      </div>
+    </div>
   );
 }

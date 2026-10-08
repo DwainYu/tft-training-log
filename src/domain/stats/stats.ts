@@ -1,7 +1,8 @@
 import { avgPlacement } from "../match/match";
+import { normalizeCompositionKey } from "../composition/composition";
 import { round } from "../../lib/utils";
 import { dateKey, TIME_SLOTS, OUTSIDE_SLOT_KEY, slotKeyOf, wallClockNow } from "../../lib/wallclock";
-import type { MistakeType } from "../types";
+import type { MistakeType, OpeningPlan } from "../types";
 
 /** What the statistics engine needs — anything with these fields works, including test fixtures. */
 export interface MatchForStats {
@@ -11,6 +12,11 @@ export interface MatchForStats {
   composition?: string;
   primaryMistake?: MistakeType;
   reviewed?: boolean;
+  openingPlan?: OpeningPlan;
+  augmentIds?: string[];
+  durationSeconds?: number;
+  totalGold?: number;
+  finalHealth?: number;
 }
 
 /* ------------------------------------------------------------------ */
@@ -55,15 +61,25 @@ export function lastWindow(matches: MatchForStats[], window: number): MatchForSt
     .slice(0, window);
 }
 
+export interface WindowStats {
+  games: number;
+  avgPlacement: number | null;
+  top4Rate: number | null;
+  /** Top4 games — the numerator the UI shows next to the rate. */
+  top4: number;
+}
+
 export function recentWindowStats(
   matches: MatchForStats[],
   window: number,
-): { games: number; avgPlacement: number | null; top4Rate: number | null } {
+): WindowStats {
   const slice = lastWindow(matches, window);
+  const top4 = slice.filter((m) => m.placement <= 4).length;
   return {
     games: slice.length,
     avgPlacement: avgPlacement(slice.map((m) => m.placement)),
-    top4Rate: slice.length ? slice.filter((m) => m.placement <= 4).length / slice.length : null,
+    top4Rate: slice.length ? top4 / slice.length : null,
+    top4,
   };
 }
 
@@ -73,10 +89,62 @@ export function placementTrendSeries(matches: MatchForStats[], limit = 20) {
   return slice.map((m, i) => ({
     index: i + 1,
     label: m.playedAt.slice(5, 10),
+    /** Full wall-clock stamp, so a tooltip can name one exact game. */
+    playedAt: m.playedAt,
     placement: m.placement,
-    top4: m.placement <= 4 ? 1 : 0,
+    top4: (m.placement <= 4 ? 1 : 0) as 0 | 1,
+    /** Drill-down target: clicking a point opens this match. */
     id: m.id,
   }));
+}
+
+/* ------------------------------------------------------------------ */
+/* Window comparison                                                   */
+/* ------------------------------------------------------------------ */
+
+export interface WindowStats {
+  games: number;
+  avgPlacement: number | null;
+  top4Rate: number | null;
+}
+
+export interface WindowComparison {
+  window: number;
+  /** The newest `window` games. */
+  recent: WindowStats;
+  /** The `window` games before those. */
+  previous: WindowStats;
+  /**
+   * `recent.avgPlacement - previous.avgPlacement`. Negative means the average
+   * placement number went *down*, i.e. the player improved.
+   *
+   * `null` until both windows are full — a half-empty comparison window would
+   * otherwise read as "no change", which is a different statement.
+   */
+  deltaAvg: number | null;
+}
+
+/** The `window` games sitting directly in front of the newest `window`. */
+function previousWindow(matches: MatchForStats[], window: number): MatchForStats[] {
+  return lastWindow(matches, window * 2).slice(window);
+}
+
+/**
+ * "Am I getting better?" — the one question a single window can never answer.
+ * Needs 2 × `window` games; with fewer, `deltaAvg` stays `null`.
+ */
+export function compareRecentWindows(
+  matches: MatchForStats[],
+  window = 10,
+): WindowComparison {
+  const recent = recentWindowStats(matches, window);
+  const previous = recentWindowStats(previousWindow(matches, window), window);
+  const full = recent.games === window && previous.games === window;
+  const deltaAvg =
+    full && recent.avgPlacement !== null && previous.avgPlacement !== null
+      ? round(recent.avgPlacement - previous.avgPlacement, 1)
+      : null;
+  return { window, recent, previous, deltaAvg };
 }
 
 /* ------------------------------------------------------------------ */
@@ -122,11 +190,11 @@ export interface CompositionStat {
 export function compositionStats(matches: MatchForStats[]): CompositionStat[] {
   const groups = new Map<string, MatchForStats[]>();
   for (const m of matches) {
-    const c = m.composition?.trim();
-    if (!c) continue;
-    const list = groups.get(c) ?? [];
+    const key = normalizeCompositionKey(m.composition);
+    if (!key) continue;
+    const list = groups.get(key) ?? [];
     list.push(m);
-    groups.set(c, list);
+    groups.set(key, list);
   }
   const out: CompositionStat[] = [...groups.entries()].map(([composition, ms]) => ({
     composition,
@@ -140,7 +208,45 @@ export function compositionStats(matches: MatchForStats[]): CompositionStat[] {
 }
 
 /* ------------------------------------------------------------------ */
-/* Time slots (server window 12:00–22:00, 2h buckets)                  */
+/* Opening plans                                                       */
+/* ------------------------------------------------------------------ */
+
+export interface OpeningPlanStat {
+  plan: OpeningPlan;
+  games: number;
+  avgPlacement: number | null;
+  top4Rate: number | null;
+}
+
+/**
+ * "Should I open with a win streak?" — grouping by a closed vocabulary is the
+ * only way to answer it, which is exactly why the opening route is captured as
+ * an enum instead of prose.
+ *
+ * Games without a plan are left out rather than shown as an "未填" row: an
+ * unlabelled bucket says nothing about the labelled ones. Coverage is the
+ * caller's job to display.
+ */
+export function openingPlanStats(matches: MatchForStats[]): OpeningPlanStat[] {
+  const groups = new Map<OpeningPlan, MatchForStats[]>();
+  for (const m of matches) {
+    if (!m.openingPlan) continue;
+    const list = groups.get(m.openingPlan) ?? [];
+    list.push(m);
+    groups.set(m.openingPlan, list);
+  }
+  return [...groups.entries()]
+    .map(([plan, ms]) => ({
+      plan,
+      games: ms.length,
+      avgPlacement: avgPlacement(ms.map((m) => m.placement)),
+      top4Rate: ms.filter((m) => m.placement <= 4).length / ms.length,
+    }))
+    .sort((a, b) => b.games - a.games || a.plan.localeCompare(b.plan));
+}
+
+/* ------------------------------------------------------------------ */
+/* Time slots (2h buckets across the whole day)                        */
 /* ------------------------------------------------------------------ */
 
 export interface TimeSlotStat {
@@ -166,7 +272,7 @@ export function timeSlotStats(matches: MatchForStats[]): TimeSlotStat[] {
       const ms = groups.get(key)!;
       const label =
         key === OUTSIDE_SLOT_KEY
-          ? "训练时段外"
+          ? "未填时间"
           : TIME_SLOTS.find((s) => s.key === key)?.label ?? key;
       return {
         key,

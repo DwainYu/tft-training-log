@@ -68,3 +68,51 @@ describe("review service", () => {
     expect(after?.primaryMistake).toBe("POSITIONING");
   });
 });
+
+describe("review service · structured opening plan", () => {
+  const full = {
+    primaryMistake: "ECONOMY" as const,
+    biggestMistake: "利息没吃满",
+    bestDecision: "3-1 直接 D",
+    nextGameFocus: "2-5 存 50 再 D",
+  };
+
+  it("writes the opening route onto the match the statistics read", async () => {
+    const m = await addMatch({ playedAt: "2026-02-05T13:20", placement: "5" });
+    await saveReview(m.id, full, "WIN_STREAK");
+
+    expect((await getMatch(m.id))?.openingPlan).toBe("WIN_STREAK");
+  });
+
+  it("rejects an unknown enum before anything is written", async () => {
+    const m = await addMatch({ playedAt: "2026-02-05T13:20", placement: "5" });
+    await expect(saveReview(m.id, full, "SOMETHING" as never)).rejects.toBeInstanceOf(
+      ValidationError,
+    );
+    expect(await getReview(m.id)).toBeUndefined();
+    expect((await getMatch(m.id))?.openingPlan).toBeUndefined();
+  });
+
+  it("clears the route when the player deselects it", async () => {
+    const m = await addMatch({ playedAt: "2026-02-05T13:20", placement: "5" });
+    await saveReview(m.id, full, "FORCE");
+    await saveReview(m.id, full, null);
+    expect((await getMatch(m.id))?.openingPlan).toBeUndefined();
+  });
+
+  it("leaves the route untouched on the Quick Add seeding path", async () => {
+    const m = await addMatch({ playedAt: "2026-02-05T13:20", placement: "5" });
+    await saveReview(m.id, full, "ECONOMY");
+    await seedReview(m.id, { nextGameFocus: "再看一次" });
+    expect((await getMatch(m.id))?.openingPlan).toBe("ECONOMY");
+  });
+
+  it("keeps a legacy review readable and still unmarks nothing", async () => {
+    // A record written before the field existed: no openingPlan anywhere.
+    const m = await addMatch({ playedAt: "2026-02-05T13:20", placement: "5" });
+    await saveReview(m.id, full);
+    const after = await getMatch(m.id);
+    expect(after?.openingPlan).toBeUndefined();
+    expect(after?.reviewed).toBe(true);
+  });
+});

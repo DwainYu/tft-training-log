@@ -6,8 +6,7 @@
  * `playedAt` / `startedAt` / `endedAt` are *local wall-clock* strings in the
  * shape `YYYY-MM-DDTHH:mm` (no timezone suffix). The tool targets the Chinese
  * TFT server, which lives in a single timezone, so wall-clock keeps sorting,
- * date filtering and the 12:00–22:00 training-window check free of timezone
- * arithmetic. `createdAt` / `updatedAt` are full ISO-8601 instants.
+ * date filtering and time-of-day bucketing free of timezone arithmetic. `createdAt` / `updatedAt` are full ISO-8601 instants.
  */
 
 export const MISTAKE_TYPES = [
@@ -45,6 +44,28 @@ export type DecisionType = (typeof DECISION_TYPES)[number];
 
 export const MAX_PLACEMENT = 8;
 export const TOP4_PLACEMENT = 4;
+
+/**
+ * How the game was opened — the first structured 复盘 fact.
+ *
+ * It lives on `Match`, not on `Review`: the opening route is decided while
+ * picking the composition, so it is a property of the game rather than of the
+ * write-up. `Match` is also the only table the statistics read
+ * (`stats-service.ts` → `scopedMatches`), so putting it here keeps one entry
+ * point instead of two.
+ *
+ * Optional on purpose: `reviewed` is the availability gate for every
+ * statistic, and adding a required field would silently shrink the dataset.
+ */
+export const OPENING_PLANS = [
+  "WIN_STREAK",
+  "LOSE_STREAK",
+  "STANDARD",
+  "ECONOMY",
+  "FORCE",
+] as const;
+
+export type OpeningPlan = (typeof OPENING_PLANS)[number];
 
 export interface Match {
   id: string;
@@ -90,6 +111,9 @@ export interface Match {
   reviewed: boolean;
   primaryMistake?: MistakeType;
   notes?: string;
+
+  /** Opening route; see `OPENING_PLANS`. Absent on every record logged before this field existed. */
+  openingPlan?: OpeningPlan;
 
   createdAt: string;
   updatedAt: string;
@@ -161,6 +185,23 @@ export interface TrainingGoal {
 export const SESSION_TYPES = ["daily", "competition"] as const;
 export type SessionType = (typeof SESSION_TYPES)[number];
 
+/**
+ * How often a composition has been played, keyed by `normalizeCompositionKey()`.
+ *
+ * This is *derived* data — it can always be recomputed from `Match.composition`,
+ * which is why it stays out of `DatabaseSnapshot` and is rebuilt after an
+ * import instead of travelling inside the backup.
+ *
+ * Counts how many times the player logged the composition; `firstUsedAt` /
+ * `lastUsedAt` are ISO instants derived from `Match.playedAt`.
+ */
+export interface CompositionUsage {
+  compositionKey: string;
+  usageCount: number;
+  firstUsedAt: string;
+  lastUsedAt: string;
+}
+
 /** Stable id of the built-in daily training session. */
 export const DAILY_SESSION_ID = "daily";
 
@@ -186,7 +227,11 @@ export interface TrainingSession {
   updatedAt: string;
 }
 
-/** Everything the app persists, in one envelope — used by JSON export/import. */
+/**
+ * Everything the app persists as *recorded training data*, in one envelope —
+ * used by JSON export/import. `compositionUsage` deliberately stays out: it is
+ * derived from `matches` and rebuilt after an import.
+ */
 export interface DatabaseSnapshot {
   schemaVersion: number;
   exportedAt: string;
@@ -198,4 +243,10 @@ export interface DatabaseSnapshot {
   trainingSessions: TrainingSession[];
 }
 
+/**
+ * Bumped only when the *shape* of a snapshot changes in a way an older build
+ * cannot read. Phase 3A adds the derived `compositionUsage` table, which never
+ * enters a snapshot, so the version stays at 2: old backups import unchanged
+ * and rebuild their usage rows afterwards.
+ */
 export const SNAPSHOT_SCHEMA_VERSION = 2;

@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { Eraser, Save, Trash2 } from "lucide-react";
-import { REVIEW_SECTIONS, isReviewComplete, reviewInputOf, type ReviewInput } from "../../domain/review/review";
-
-import type { Review } from "../../domain/types";
+import {
+  REVIEW_SECTIONS,
+  isReviewComplete,
+  reviewInputOf,
+  reviewProgress,
+  type ReviewInput,
+} from "../../domain/review/review";
+import { OPENING_PLAN_LIST, openingPlanLabel } from "../../domain/labels";
+import type { OpeningPlan, Review } from "../../domain/types";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { Field, Textarea } from "../ui/Field";
@@ -17,6 +23,7 @@ const BLOCKS: { key: keyof typeof REVIEW_SECTIONS; field: keyof ReviewInput; row
 
 export function ReviewForm({
   initial,
+  initialOpeningPlan,
   errors,
   onSave,
   onDelete,
@@ -24,52 +31,110 @@ export function ReviewForm({
   busy,
 }: {
   initial?: Review;
+  /** Structured fact that lives on the match; prefilled so editing is idempotent. */
+  initialOpeningPlan?: OpeningPlan;
   /** Validation messages from the service layer. */
   errors?: string[];
 
-  onSave: (input: ReviewInput) => void;
+  onSave: (input: ReviewInput, openingPlan: OpeningPlan | null) => void;
   onDelete?: () => void;
   onDiscard?: () => void;
   busy?: boolean;
 }) {
   const [input, setInput] = useState<ReviewInput>(() => reviewInputOf(initial));
+  const [openingPlan, setOpeningPlan] = useState<OpeningPlan | undefined>(initialOpeningPlan);
 
   const set = <K extends keyof ReviewInput>(key: K, value: ReviewInput[K]) =>
     setInput((prev) => ({ ...prev, [key]: value }));
 
   const complete = isReviewComplete(input);
+  const progress = reviewProgress({ ...input, openingPlan });
+  // Open the free-text block when it already holds something, so an existing
+  // write-up is never hidden behind a collapsed section.
+  const hasFreeText = BLOCKS.some(({ field }) => Boolean((input[field] as string | undefined)?.trim()));
 
   return (
     <form
       className="flex flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
-        onSave(input);
+        onSave(input, openingPlan ?? null);
       }}
     >
-      {BLOCKS.map(({ key, field, rows }) => (
-        <Panel key={key}>
-          <PanelHeader
-            title={REVIEW_SECTIONS[key].title}
-            subtitle={REVIEW_SECTIONS[key].prompts.join(" · ")}
-          />
-          <div className="p-4">
-            <Field htmlFor={`rv-${key}`} hint="按提示逐条写，一两句话就够">
-              <Textarea
-                id={`rv-${key}`}
-                rows={rows}
-                value={(input[field] as string | undefined) ?? ""}
-                placeholder={REVIEW_SECTIONS[key].prompts.map((p) => `· ${p}`).join("\n")}
-                onChange={(e) => set(field, e.target.value)}
-              />
-            </Field>
+      <Panel>
+        <PanelHeader
+          title="开局路线"
+          subtitle="点一下即可 · 会进入统计"
+          action={
+            <Badge tone={openingPlan ? "gold" : "muted"}>
+              {openingPlan ? openingPlanLabel(openingPlan) : "未填"}
+            </Badge>
+          }
+        />
+        <div className="p-4">
+          <Field
+            label="这局是怎么开的"
+            hint="选最接近的一个。它和「主要问题」是两件事：这里记录过程，结论那边记录归因。"
+          >
+            <div role="group" aria-label="开局路线" className="flex flex-wrap gap-1.5">
+              {OPENING_PLAN_LIST.map((plan) => {
+                const selected = openingPlan === plan;
+                return (
+                  <button
+                    key={plan}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setOpeningPlan(selected ? undefined : plan)}
+                    className={[
+                      "rounded-md border px-2.5 py-1.5 text-xs transition-colors",
+                      selected
+                        ? "border-gold-500/50 bg-gold-500/15 text-gold-300"
+                        : "border-line bg-base-900/60 text-ink-400 hover:bg-base-800 hover:text-ink-200",
+                    ].join(" ")}
+                  >
+                    {openingPlanLabel(plan)}
+                  </button>
+                );
+              })}
+            </div>
+          </Field>
+        </div>
+      </Panel>
+
+      <details open={hasFreeText}>
+        <summary className="panel cursor-pointer list-none px-4 py-3">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h2 className="text-sm font-semibold text-ink-50">过程补充 · 开局 / 中期 / 后期</h2>
+            <span className="text-xs text-ink-600">自由文本，不进入任何统计</span>
+            <span className="ml-auto text-[11px] text-ink-600">{hasFreeText ? "收起" : "展开"}</span>
           </div>
-        </Panel>
-      ))}
+        </summary>
+        <div className="mt-2 flex flex-col gap-4">
+          {BLOCKS.map(({ key, field, rows }) => (
+            <Panel key={key}>
+              <PanelHeader
+                title={REVIEW_SECTIONS[key].title}
+                subtitle={REVIEW_SECTIONS[key].prompts.join(" · ")}
+              />
+              <div className="p-4">
+                <Field htmlFor={`rv-${key}`} hint="按提示逐条写，一两句话就够">
+                  <Textarea
+                    id={`rv-${key}`}
+                    rows={rows}
+                    value={(input[field] as string | undefined) ?? ""}
+                    placeholder={REVIEW_SECTIONS[key].prompts.map((p) => `· ${p}`).join("\n")}
+                    onChange={(e) => set(field, e.target.value)}
+                  />
+                </Field>
+              </div>
+            </Panel>
+          ))}
+        </div>
+      </details>
 
       <Panel>
         <PanelHeader
-          title="4 · 复盘结论"
+          title="复盘结论"
           subtitle="四项必填 —— 这是整个训练闭环的出口"
           action={
             <Badge tone={complete ? "good" : "muted"}>{complete ? "已满足必填" : "必填未完成"}</Badge>
@@ -171,6 +236,24 @@ export function ReviewForm({
             删除复盘
           </Button>
         )}
+
+        <div className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-600 sm:w-auto sm:flex-1 sm:justify-end">
+          <span className="num text-ink-400">复盘完整度 {progress.percent}%</span>
+          <span
+            className="h-1 w-24 overflow-hidden rounded bg-base-800"
+            role="progressbar"
+            aria-valuenow={progress.percent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="复盘完整度"
+          >
+            <span
+              className="block h-1 rounded bg-gold-400"
+              style={{ width: `${progress.percent}%` }}
+            />
+          </span>
+          {progress.missing.length > 0 && <span>缺：{progress.missing.join(" / ")}</span>}
+        </div>
       </div>
     </form>
   );

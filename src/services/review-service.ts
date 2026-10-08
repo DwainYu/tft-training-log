@@ -1,5 +1,6 @@
 import { matchRepository } from "../data/repository/match-repository";
 import { reviewRepository } from "../data/repository/review-repository";
+import { validateOpeningPlan } from "../domain/match/opening";
 import {
   applyReviewInput,
   createReview,
@@ -10,7 +11,7 @@ import {
 } from "../domain/review/review";
 import { ValidationError } from "../lib/errors";
 import { nowIso } from "../lib/utils";
-import type { Review } from "../domain/types";
+import type { OpeningPlan, Review } from "../domain/types";
 
 export async function getReview(matchId: string): Promise<Review | undefined> {
   return reviewRepository.byMatch(matchId);
@@ -20,11 +21,22 @@ export async function allReviews(): Promise<Review[]> {
   return reviewRepository.all();
 }
 
-/** Full 复盘 submit — must pass the 复盘结论 requirements. */
-export async function saveReview(matchId: string, input: ReviewInput): Promise<Review> {
-  const errors = validateReviewInput(input);
+/**
+ * Full 复盘 submit — must pass the 复盘结论 requirements.
+ *
+ * `openingPlan` rides along because the review page is where the structured
+ * fact is captured, while the value itself belongs to the match (the table
+ * every statistic reads). `undefined` = leave it alone (Quick Add path),
+ * `null` = the player cleared it.
+ */
+export async function saveReview(
+  matchId: string,
+  input: ReviewInput,
+  openingPlan?: OpeningPlan | null,
+): Promise<Review> {
+  const errors = [...validateReviewInput(input), ...validateOpeningPlan(openingPlan)];
   if (errors.length) throw new ValidationError(errors);
-  return writeReview(matchId, input);
+  return writeReview(matchId, input, openingPlan);
 }
 
 /**
@@ -37,10 +49,14 @@ export async function seedReview(matchId: string, patch: ReviewInput): Promise<R
   return writeReviewRecord(review);
 }
 
-async function writeReview(matchId: string, input: ReviewInput): Promise<Review> {
+async function writeReview(
+  matchId: string,
+  input: ReviewInput,
+  openingPlan?: OpeningPlan | null,
+): Promise<Review> {
   const existing = await reviewRepository.byMatch(matchId);
   const review = existing ? applyReviewInput(existing, input) : createReview(matchId, input);
-  return writeReviewRecord(review);
+  return writeReviewRecord(review, openingPlan);
 }
 
 /**
@@ -48,7 +64,10 @@ async function writeReview(matchId: string, input: ReviewInput): Promise<Review>
  * mirrors the conclusion block and `primaryMistake` stays on the match so
  * statistics only ever read one field.
  */
-async function writeReviewRecord(review: Review): Promise<Review> {
+async function writeReviewRecord(
+  review: Review,
+  openingPlan?: OpeningPlan | null,
+): Promise<Review> {
   const match = await matchRepository.get(review.matchId);
   if (!match) throw new ValidationError([`对局不存在：${review.matchId}`]);
 
@@ -56,8 +75,21 @@ async function writeReviewRecord(review: Review): Promise<Review> {
 
   const reviewed = isReviewComplete(review);
   const primaryMistake = review.primaryMistake ?? match.primaryMistake;
-  if (match.reviewed !== reviewed || match.primaryMistake !== primaryMistake) {
-    await matchRepository.put({ ...match, reviewed, primaryMistake, updatedAt: nowIso() });
+  // `null` clears it, `undefined` keeps whatever is already on the match.
+  const nextOpeningPlan =
+    openingPlan === null ? undefined : (openingPlan ?? match.openingPlan);
+  if (
+    match.reviewed !== reviewed ||
+    match.primaryMistake !== primaryMistake ||
+    match.openingPlan !== nextOpeningPlan
+  ) {
+    await matchRepository.put({
+      ...match,
+      reviewed,
+      primaryMistake,
+      openingPlan: nextOpeningPlan,
+      updatedAt: nowIso(),
+    });
   }
   return review;
 }

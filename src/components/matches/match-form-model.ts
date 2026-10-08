@@ -3,6 +3,9 @@ import type { Match } from "../../domain/types";
 import { DAILY_SESSION_ID } from "../../domain/types";
 import { formatList } from "../../lib/utils";
 import { hourOf, minuteOf } from "../../lib/wallclock";
+import { augmentIdByName, augmentOptions } from "../../services/augment-service";
+import { itemIdByName, itemOptions } from "../../services/item-service";
+import { traitIdByName, traitOptions } from "../../services/trait-service";
 
 /**
  * The form is deliberately date + two clock fields (not one datetime each):
@@ -18,14 +21,92 @@ export interface MatchFormDraft {
   finalHealth: string;
   totalGold: string;
   composition: string;
-  traits: string;
+  /** Canonical trait ids — the synergies the final board had, unordered. */
+  traitIds: string[];
+  /** Typed trait entries from older records that the snapshot cannot resolve. */
+  traitsLegacy: string[];
   coreUnits: string;
-  coreItems: string;
-  augments: string;
+  /** Canonical item ids — "what mattered this game", unordered, no unit link. */
+  coreItemIds: string[];
+  /**
+   * Free-text item entries from older records that the static snapshot cannot
+   * resolve ("无尽", "蓝buff"). Kept verbatim so editing never loses them.
+   */
+  coreItemsLegacy: string[];
+  /**
+   * Canonical augment ids in pick order. The free-text `augments` field stays
+   * the display/search fallback the rest of the app already reads, and is
+   * derived from these ids on save.
+   */
+  augmentIds: string[];
+  /**
+   * Typed augment names from older records that the snapshot cannot resolve.
+   * They are *not* canonical picks and so do not occupy one of the three
+   * in-game slots (see AugmentSelector): they are kept verbatim so that
+   * editing and re-saving a legacy record cannot destroy them.
+   */
+  augmentsLegacy: string[];
   primaryMistake: string;
   notes: string;
   /** Training session this match belongs to (defaults to the active one). */
   sessionId: string;
+}
+
+/**
+ * Ids win; typed text is only used to recover ids the record never had.
+ * Anything that cannot be resolved is handed back as legacy text rather than
+ * being dropped — old records store shorthand ("无尽", "蓝buff") that the
+ * official snapshot simply does not contain.
+ *
+ * The rule is identical for all three pickers, so it lives here once.
+ */
+function splitByIds(
+  ids: string[] | undefined,
+  texts: string[] | undefined,
+  idByName: (name: string) => string | undefined,
+): { ids: string[]; legacy: string[] } {
+  const resolved = [...(ids ?? [])];
+  const known = new Set(resolved);
+  const legacy: string[] = [];
+  for (const text of texts ?? []) {
+    const id = idByName(text);
+    if (!id) legacy.push(text);
+    else if (!known.has(id)) {
+      resolved.push(id);
+      known.add(id);
+    }
+  }
+  return { ids: resolved, legacy };
+}
+
+export function splitCoreItems(
+  ids: string[] | undefined,
+  texts: string[] | undefined,
+): { coreItemIds: string[]; coreItemsLegacy: string[] } {
+  const { ids: coreItemIds, legacy: coreItemsLegacy } = splitByIds(ids, texts, itemIdByName);
+  return { coreItemIds, coreItemsLegacy };
+}
+
+/** Same rule as items: ids win, typed text fills gaps, leftovers are kept. */
+export function splitTraits(
+  ids: string[] | undefined,
+  texts: string[] | undefined,
+): { traitIds: string[]; traitsLegacy: string[] } {
+  const { ids: traitIds, legacy: traitsLegacy } = splitByIds(ids, texts, traitIdByName);
+  return { traitIds, traitsLegacy };
+}
+
+/**
+ * Augments follow the very same rule. This used to be a bare
+ * `.map(augmentIdByName).filter(Boolean)`, which silently threw away any
+ * typed name the snapshot cannot resolve — pressing 保存 then destroyed it.
+ */
+export function splitAugments(
+  ids: string[] | undefined,
+  texts: string[] | undefined,
+): { augmentIds: string[]; augmentsLegacy: string[] } {
+  const { ids: augmentIds, legacy: augmentsLegacy } = splitByIds(ids, texts, augmentIdByName);
+  return { augmentIds, augmentsLegacy };
 }
 
 const pad = (n: number) => n.toString().padStart(2, "0");
@@ -47,10 +128,13 @@ export function emptyDraft(date = new Date(), sessionId = DAILY_SESSION_ID): Mat
     finalHealth: "",
     totalGold: "",
     composition: "",
-    traits: "",
+    traitIds: [],
+    traitsLegacy: [],
     coreUnits: "",
-    coreItems: "",
-    augments: "",
+    coreItemIds: [],
+    coreItemsLegacy: [],
+    augmentIds: [],
+    augmentsLegacy: [],
     primaryMistake: "",
     notes: "",
     sessionId,
@@ -72,10 +156,13 @@ export function draftFromMatch(
     finalHealth: match.finalHealth !== undefined ? String(match.finalHealth) : "",
     totalGold: match.totalGold !== undefined ? String(match.totalGold) : "",
     composition: match.composition ?? "",
-    traits: formatList(match.traits),
+    ...splitTraits(match.traitIds, match.traits),
     coreUnits: formatList(match.coreUnits),
-    coreItems: formatList(match.coreItems),
-    augments: formatList(match.augments),
+    ...splitCoreItems(match.coreItemIds, match.coreItems),
+    // records written before the picker only have names; look the ids up so
+    // editing an old game still shows what was played. Anything that cannot
+    // be resolved stays as legacy text instead of being dropped on save.
+    ...splitAugments(match.augmentIds, match.augments),
     primaryMistake: match.primaryMistake ?? "",
     notes: match.notes ?? "",
     sessionId: match.sessionId ?? fallbackSessionId,
@@ -101,10 +188,26 @@ export function draftToPayload(draft: MatchFormDraft): MatchFormPayload {
     finalHealth: draft.finalHealth,
     totalGold: draft.totalGold,
     composition: draft.composition,
-    traits: draft.traits,
+    traits: [...draft.traitsLegacy, ...traitOptions(draft.traitIds).map((t) => t.name)].join(" / "),
+    traitIds: draft.traitIds,
     coreUnits: draft.coreUnits,
-    coreItems: draft.coreItems,
-    augments: draft.augments,
+    // legacy shorthand first, then the names the ids resolve to: detail pages,
+    // search and CSV all still read this free-text field
+    coreItems: [...draft.coreItemsLegacy, ...itemOptions(draft.coreItemIds).map((i) => i.name)].join(
+      " / ",
+    ),
+    coreItemIds: draft.coreItemIds,
+    // names are derived, never typed: detail pages, search and CSV all still
+    // read the free-text field the picker now fills in. Legacy shorthand the
+    // snapshot cannot resolve is re-emitted verbatim so it survives the round
+    // trip; it leads because it is not an in-game pick order. On a legacy
+    // record's first save that lead flips this display-only string once
+    // (["大百宝袋","不存在…"] → ["不存在…","大百宝袋"]); it is idempotent from
+    // pass 1 on and nothing reads the order, so it is left alone.
+    augments: [...draft.augmentsLegacy, ...augmentOptions(draft.augmentIds).map((a) => a.name)].join(
+      " / ",
+    ),
+    augmentIds: draft.augmentIds,
     primaryMistake: draft.primaryMistake,
     notes: draft.notes,
     sessionId: draft.sessionId || undefined,

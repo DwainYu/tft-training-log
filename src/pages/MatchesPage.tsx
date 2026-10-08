@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { allMatches, knownCompositions, listMatches } from "../services/match-service";
-import { EMPTY_MATCH_QUERY, type MatchQuery } from "../domain/match/query";
+import {
+  EMPTY_MATCH_QUERY,
+  paramsToQuery,
+  queryToParams,
+  type MatchQuery,
+} from "../domain/match/query";
 import { MatchFilters } from "../components/matches/MatchFilters";
 import { MatchList } from "../components/matches/MatchList";
 import { AddMatchButton } from "../components/matches/AddMatchButton";
@@ -18,13 +23,15 @@ const PAGE_SIZE = 20;
 type Scope = "session" | "all";
 
 export function MatchesPage() {
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const { activeSession, activeSessionId, ready } = useSession();
-  const [query, setQuery] = useState<MatchQuery>({
-    ...EMPTY_MATCH_QUERY,
-    // /matches?reviewed=unreviewed is the link from the Dashboard todo card
-    reviewed: params.get("reviewed") === "unreviewed" ? "unreviewed" : "all",
-  });
+  // Filters live in the URL, not in local state: a chart on the Dashboard or
+  // the Statistics page can then link straight into a filtered list
+  // (/matches?mistake=ECONOMY), and the filter survives a reload or a share.
+  const query = useMemo<MatchQuery>(
+    () => ({ ...EMPTY_MATCH_QUERY, ...paramsToQuery(params) }),
+    [params],
+  );
   const [scope, setScope] = useState<Scope>("session");
   const [page, setPage] = useState(1);
 
@@ -76,8 +83,10 @@ export function MatchesPage() {
           <MatchFilters
             query={query}
             compositions={compositions}
-            onChange={(patch) => setQuery((q) => ({ ...q, ...patch }))}
-            onReset={() => setQuery(EMPTY_MATCH_QUERY)}
+            onChange={(patch) =>
+              setParams(queryToParams({ ...query, ...patch }), { replace: true })
+            }
+            onReset={() => setParams(new URLSearchParams(), { replace: true })}
           />
         </Panel>
 

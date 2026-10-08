@@ -1,10 +1,12 @@
 import { createId, nowIso, parseList, round } from "../../lib/utils";
 import { secondsBetween, isValidWallClock, toWallClock } from "../../lib/wallclock";
+import { isOpeningPlan } from "./opening";
 import {
   MAX_PLACEMENT,
   TOP4_PLACEMENT,
   type Match,
   type MistakeType,
+  type OpeningPlan,
 } from "../types";
 
 /** Typed payload accepted by the service layer (already parsed from the form). */
@@ -32,6 +34,8 @@ export interface MatchInput {
   sessionId?: string;
   primaryMistake?: MistakeType;
   notes?: string;
+  /** Structured 复盘 fact; see `OPENING_PLANS`. Absent = not marked. */
+  openingPlan?: OpeningPlan;
 }
 
 /**
@@ -102,6 +106,7 @@ function normalize(input: MatchInput): MatchInput {
     sessionId: input.sessionId?.trim() || undefined,
     primaryMistake: input.primaryMistake || undefined,
     notes: input.notes?.trim() || undefined,
+    openingPlan: input.openingPlan || undefined,
   }) as MatchInput;
 }
 
@@ -127,6 +132,9 @@ export function validateMatchInput(input: Partial<MatchInput>): string[] {
   }
   if (input.startedAt && input.endedAt && !secondsBetween(input.startedAt, input.endedAt)) {
     errors.push("结束时间应晚于开始时间");
+  }
+  if (input.openingPlan !== undefined && !isOpeningPlan(input.openingPlan)) {
+    errors.push(`开局路线取值不合法：${String(input.openingPlan)}`);
   }
   return errors;
 }
