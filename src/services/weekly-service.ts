@@ -1,4 +1,5 @@
 import { matchRepository } from "../data/repository/match-repository";
+import { normalizeCompositionKey } from "../domain/composition/composition";
 import { mistakeLabel } from "../domain/labels";
 import { isGoalCurrent } from "../domain/training/training-goal";
 import { allGoals } from "./training-service";
@@ -50,10 +51,10 @@ export async function weekStats(anchor = wallClockNow()): Promise<WeeklySummaryI
   const compCounts = new Map<string, number>();
   const compPlacements = new Map<string, number[]>();
   for (const m of matches) {
-    const c = m.composition?.trim();
-    if (!c) continue;
-    compCounts.set(c, (compCounts.get(c) ?? 0) + 1);
-    compPlacements.set(c, [...(compPlacements.get(c) ?? []), m.placement]);
+    const composition = normalizeCompositionKey(m.composition);
+    if (!composition) continue;
+    compCounts.set(composition, (compCounts.get(composition) ?? 0) + 1);
+    compPlacements.set(composition, [...(compPlacements.get(composition) ?? []), m.placement]);
   }
   let topComposition: WeeklySummaryInput["topComposition"] = null;
   for (const [composition, games_] of compCounts) {

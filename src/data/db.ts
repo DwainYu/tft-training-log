@@ -1,11 +1,13 @@
 import Dexie, { type Table } from "dexie";
 import type {
+  CompositionUsage,
   Decision,
   Match,
   Review,
   TrainingGoal,
   TrainingSession,
 } from "../domain/types";
+import { summarizeCompositionUsage } from "../domain/composition/composition";
 
 export interface AppSettings {
   /** Always the literal id `app` — a singleton record. */
@@ -23,6 +25,12 @@ export interface AppSettings {
  * v2 (Phase 2.5) adds `trainingSessions` and `settings` (active session).
  * There is no real user history yet, so the bump is a plain additive
  * schema change — no migration logic.
+ *
+ * v3 (Phase 3A) adds `compositionUsage`, a derived per-composition counter
+ * for Recent / Frequent / Preset composition picking. Existing v2 databases
+ * keep every row; the upgrade backfills usage from the matches that are
+ * already there (see the `upgrade` hook) so an upgrading player does not
+ * start from an empty table.
  */
 export class TftTrainingDatabase extends Dexie {
   matches!: Table<Match, string>;
@@ -31,6 +39,7 @@ export class TftTrainingDatabase extends Dexie {
   trainingGoals!: Table<TrainingGoal, string>;
   trainingSessions!: Table<TrainingSession, string>;
   settings!: Table<AppSettings, "app">;
+  compositionUsage!: Table<CompositionUsage, string>;
 
   constructor(name = "tft-training-log") {
     super(name);
@@ -45,6 +54,22 @@ export class TftTrainingDatabase extends Dexie {
       trainingSessions: "id, type",
       settings: "&id",
     });
+    this.version(3)
+      .stores({
+        // `compositionKey` is the primary key, so uniqueness comes for free;
+        // the two extra indexes serve Frequent (`usageCount`) and Recent
+        // (`lastUsedAt`) ordering later.
+        compositionUsage: "compositionKey, usageCount, lastUsedAt",
+      })
+      .upgrade(async (tx) => {
+        // Derived data only — existing matches are read, never rewritten.
+        const matches = (await tx.table("matches").toArray()) as Pick<
+          Match,
+          "composition" | "playedAt"
+        >[];
+        const rows = summarizeCompositionUsage(matches);
+        if (rows.length > 0) await tx.table("compositionUsage").bulkPut(rows);
+      });
   }
 }
 

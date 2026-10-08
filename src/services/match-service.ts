@@ -8,8 +8,10 @@ import {
   validateMatchInput,
   type MatchInput,
 } from "../domain/match/match";
+import { normalizeCompositionKey } from "../domain/composition/composition";
 import { queryMatches, type MatchQuery } from "../domain/match/query";
 import { seedReview } from "./review-service";
+import { recordCompositionUsage } from "./composition-usage-service";
 import { ValidationError } from "../lib/errors";
 import { dateKey, toDate } from "../lib/wallclock";
 import { nowIso } from "../lib/utils";
@@ -30,6 +32,19 @@ function assertStaticLinks(input: MatchInput): void {
 }
 
 /**
+ * Usage counting happens exactly once per *created* match: creation is the only
+ * point that means "one more game played with this composition". Editing a
+ * match, saving its review, re-rendering or reloading must not bump it again.
+ */
+async function trackCompositionUsage(match: Match): Promise<void> {
+  try {
+    await recordCompositionUsage(match.composition, match.playedAt);
+  } catch {
+    // Derived data: never fail a match the player already saved.
+  }
+}
+
+/**
  * The only way the UI writes matches. It goes through the ManualAdapter so a
  * future LCU / screenshot adapter can feed the exact same pipeline.
  *
@@ -42,7 +57,9 @@ export async function addMatch(payload: ManualMatchPayload): Promise<Match> {
   assertStaticLinks(result.value);
   const match = createMatch(result.value);
   if (!match.sessionId) match.sessionId = await getActiveSessionId();
-  return matchRepository.add(match);
+  const saved = await matchRepository.add(match);
+  await trackCompositionUsage(saved);
+  return saved;
 }
 
 export async function updateMatch(id: string, payload: ManualMatchPayload): Promise<Match> {
@@ -73,7 +90,9 @@ export async function saveMatchInput(input: MatchInput, id?: string): Promise<Ma
   }
   const match = createMatch(input);
   if (!match.sessionId) match.sessionId = await getActiveSessionId();
-  return matchRepository.add(match);
+  const saved = await matchRepository.add(match);
+  await trackCompositionUsage(saved);
+  return saved;
 }
 
 export async function deleteMatch(id: string): Promise<void> {
@@ -128,8 +147,8 @@ export async function knownCompositions(): Promise<string[]> {
   const matches = await matchRepository.all();
   const counts = new Map<string, number>();
   for (const m of matches) {
-    const c = m.composition?.trim();
-    if (c) counts.set(c, (counts.get(c) ?? 0) + 1);
+    const key = normalizeCompositionKey(m.composition);
+    if (key) counts.set(key, (counts.get(key) ?? 0) + 1);
   }
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([c]) => c);
 }

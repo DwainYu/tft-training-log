@@ -6,6 +6,7 @@ import { trainingGoalRepository } from "../data/repository/training-goal-reposit
 import { DAILY_SESSION_ID, type DatabaseSnapshot } from "../domain/types";
 import { addDays, dateKey, toDate, toWallClock, wallClockNow } from "../lib/wallclock";
 import { importSnapshot, type ImportReport } from "./export-service";
+import { rebuildCompositionUsage } from "./composition-usage-service";
 
 /**
  * Fictional demo dataset (`data/examples/demo-matches.json`) so a fresh clone
@@ -89,5 +90,11 @@ export async function removeDemoData(): Promise<number> {
   ];
   const removed = targets.flat().length;
   await Promise.all(targets.flat());
+  // usage rows counted from demo matches belong to the demo data set too
+  try {
+    await rebuildCompositionUsage();
+  } catch {
+    /* derived data */
+  }
   return removed;
 }
