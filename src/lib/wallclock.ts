@@ -154,21 +154,6 @@ export function formatDateTime(wallClock: string): string {
   return [formatDate(wallClock), formatTime(wallClock)].filter(Boolean).join(" ");
 }
 
-/* ------------------------------------------------------------------ */
-/* 云顶之巅 training window: 12:00 – 22:00 (Beijing time)               */
-/* ------------------------------------------------------------------ */
-
-export const TRAINING_WINDOW_START = 12;
-export const TRAINING_WINDOW_END = 22;
-export const TRAINING_WINDOW_LABEL = "12:00 – 22:00";
-export const TRAINING_WINDOW_WARNING = "当前时间不在云顶之巅训练时段";
-
-export function isWithinTrainingWindow(wallClock: string): boolean {
-  const h = hourOf(wallClock);
-  if (h === null) return true; // date only, nothing to warn about
-  return h >= TRAINING_WINDOW_START && h < TRAINING_WINDOW_END;
-}
-
 export interface TimeSlotStatBucket {
   key: string;
   label: string;
@@ -176,15 +161,23 @@ export interface TimeSlotStatBucket {
   end: number;
 }
 
-/** Two-hour buckets across the server window, plus an "outside" catch-all. */
+/** Two-hour buckets covering the whole day. */
 export const TIME_SLOTS: TimeSlotStatBucket[] = [
+  { key: "00-02", label: "00:00-02:00", start: 0, end: 2 },
+  { key: "02-04", label: "02:00-04:00", start: 2, end: 4 },
+  { key: "04-06", label: "04:00-06:00", start: 4, end: 6 },
+  { key: "06-08", label: "06:00-08:00", start: 6, end: 8 },
+  { key: "08-10", label: "08:00-10:00", start: 8, end: 10 },
+  { key: "10-12", label: "10:00-12:00", start: 10, end: 12 },
   { key: "12-14", label: "12:00-14:00", start: 12, end: 14 },
   { key: "14-16", label: "14:00-16:00", start: 14, end: 16 },
   { key: "16-18", label: "16:00-18:00", start: 16, end: 18 },
   { key: "18-20", label: "18:00-20:00", start: 18, end: 20 },
   { key: "20-22", label: "20:00-22:00", start: 20, end: 22 },
+  { key: "22-24", label: "22:00-24:00", start: 22, end: 24 },
 ];
 
+/** Catch-all for records that carry a date but no time of day. */
 export const OUTSIDE_SLOT_KEY = "off";
 
 export function slotKeyOf(wallClock: string): string {

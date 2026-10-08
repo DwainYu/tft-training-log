@@ -5,6 +5,7 @@ import {
   CalendarRange,
   ClipboardList,
   Database,
+  Globe,
   LayoutDashboard,
   Menu,
   Plus,
@@ -20,6 +21,7 @@ const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/matches", label: "对局", icon: ClipboardList },
   { to: "/statistics", label: "统计", icon: BarChart3 },
+  { to: "/data-center", label: "资料中心", icon: Globe },
   { to: "/goals", label: "训练目标", icon: Target },
   { to: "/weekly", label: "周复盘", icon: CalendarRange },
   { to: "/data", label: "数据", icon: Database },
@@ -71,8 +73,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="mt-auto">
             <AddMatchButton />
             <p className="mt-4 text-[11px] leading-relaxed text-ink-600">
-              训练时段 12:00 – 22:00（北京时间）
-              <br />
               数据全部保存在本机浏览器
             </p>
           </div>

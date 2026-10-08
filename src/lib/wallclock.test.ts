@@ -6,7 +6,6 @@ import {
   daysBetweenDateKeys,
   endOfWeek,
   hourOf,
-  isWithinTrainingWindow,
   isValidWallClock,
   secondsBetween,
   slotKeyOf,
@@ -48,24 +47,18 @@ describe("wall-clock parsing", () => {
   });
 });
 
-describe("云顶之巅 training window (12:00–22:00)", () => {
-  it("accepts the window and rejects outside it", () => {
-    expect(isWithinTrainingWindow("2026-02-05T12:00")).toBe(true);
-    expect(isWithinTrainingWindow("2026-02-05T21:59")).toBe(true);
-    expect(isWithinTrainingWindow("2026-02-05T22:00")).toBe(false);
-    expect(isWithinTrainingWindow("2026-02-05T11:59")).toBe(false);
-    expect(isWithinTrainingWindow("2026-02-05T03:00")).toBe(false);
-  });
-
-  it("does not warn for date-only values", () => {
-    expect(isWithinTrainingWindow("2026-02-05")).toBe(true);
-  });
-
-  it("buckets hours into two-hour slots", () => {
-    expect(TIME_SLOTS).toHaveLength(5);
+describe("time-of-day slots", () => {
+  it("buckets every hour of the day into a two-hour slot", () => {
+    expect(TIME_SLOTS).toHaveLength(12);
+    expect(slotKeyOf("2026-02-05T00:05")).toBe("00-02");
+    expect(slotKeyOf("2026-02-05T08:30")).toBe("08-10");
     expect(slotKeyOf("2026-02-05T12:05")).toBe("12-14");
     expect(slotKeyOf("2026-02-05T19:59")).toBe("18-20");
-    expect(slotKeyOf("2026-02-05T23:00")).toBe("off");
+    expect(slotKeyOf("2026-02-05T22:00")).toBe("22-24");
+    expect(slotKeyOf("2026-02-05T23:59")).toBe("22-24");
+  });
+
+  it("keeps a catch-all only for values without a time", () => {
     expect(slotKeyOf("2026-02-05")).toBe("off");
   });
 });
