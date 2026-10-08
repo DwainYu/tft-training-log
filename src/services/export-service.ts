@@ -1,5 +1,8 @@
+import { compositionUsageRepository } from "../data/repository/composition-usage-repository";
 import { decisionRepository } from "../data/repository/decision-repository";
 import { matchRepository } from "../data/repository/match-repository";
+import { openingPlanOrUndefined } from "../domain/match/opening";
+import { rebuildCompositionUsage } from "./composition-usage-service";
 import { reviewRepository } from "../data/repository/review-repository";
 import { trainingGoalRepository } from "../data/repository/training-goal-repository";
 import { trainingSessionRepository } from "../data/repository/training-session-repository";
@@ -60,6 +63,7 @@ const CSV_COLUMNS: { key: keyof Match & string; header: string }[] = [
   { key: "durationSeconds", header: "duration_seconds" },
   { key: "primaryMistake", header: "primary_mistake" },
   { key: "reviewed", header: "reviewed" },
+  { key: "openingPlan", header: "opening_plan" },
   { key: "notes", header: "notes" },
   { key: "sessionId", header: "session_id" },
 ];
@@ -199,6 +203,9 @@ export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<Import
       typeof m.sessionId === "string" && m.sessionId.length > 0 && knownSessionIds.has(m.sessionId)
         ? m.sessionId
         : DAILY_SESSION_ID,
+    // A structured value the vocabulary does not know is dropped, not kept:
+    // it would otherwise land in a statistic nobody can reproduce.
+    openingPlan: openingPlanOrUndefined(m.openingPlan),
   }));
 
   const validMatchIds = new Set(matches.map((m) => m.id));
@@ -224,6 +231,15 @@ export async function importSnapshot(snapshot: DatabaseSnapshot): Promise<Import
     reviewRepository.bulkPut(reviews as Review[]),
     trainingGoalRepository.bulkPut(trainingGoals as TrainingGoal[]),
   ]);
+
+  // Composition usage is derived from matches, so it never travels inside a
+  // snapshot — recompute it from the merged history instead. Best effort: an
+  // import must not fail because of counters we can rebuild any time.
+  try {
+    await rebuildCompositionUsage();
+  } catch {
+    /* derived data */
+  }
 
   return {
     matches: matches.length,
@@ -252,6 +268,8 @@ export async function wipeAll(): Promise<void> {
     decisionRepository.clear(),
     reviewRepository.clear(),
     trainingGoalRepository.clear(),
+    // derived from matches — nothing left to derive from means nothing to keep
+    compositionUsageRepository.clear(),
   ]);
 }
 

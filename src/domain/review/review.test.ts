@@ -5,6 +5,7 @@ import {
   isMistakeType,
   isReviewComplete,
   patchReview,
+  reviewProgress,
   validateReviewInput,
 } from "./review";
 
@@ -79,5 +80,40 @@ describe("createReview / patch", () => {
     expect(applied.selfScore).toBe(2);
     expect(applied.id).toBe(review.id);
     expect(applied.createdAt).toBe(review.createdAt);
+  });
+});
+
+describe("reviewProgress", () => {
+  it("is 0% before anything is filled in", () => {
+    const p = reviewProgress({});
+    expect(p.percent).toBe(0);
+    expect(p.filled).toBe(0);
+    expect(p.missing).toHaveLength(6);
+  });
+
+  it("counts one field as one sixth, not as complete", () => {
+    const p = reviewProgress({ openingPlan: "ECONOMY" });
+    expect(p.percent).toBe(20);
+    expect(p.filled).toBe(1);
+    expect(p.missing).toContain("主要问题");
+    expect(p.missing).not.toContain("开局路线");
+  });
+
+  it("is 60% when the required conclusion is complete — the reviewed gate", () => {
+    const p = reviewProgress(complete);
+    expect(p.percent).toBe(60);
+    expect(p.missing).toEqual(["开局路线", "自我评分"]);
+  });
+
+  it("is 100% only when every structured field is there", () => {
+    const p = reviewProgress({ ...complete, openingPlan: "FORCE", selfScore: 4 });
+    expect(p.percent).toBe(100);
+    expect(p.filled).toBe(p.total);
+    expect(p.missing).toEqual([]);
+  });
+
+  it("ignores whitespace-only answers", () => {
+    // 3 of 4 required = 45%
+    expect(reviewProgress({ ...complete, bestDecision: "   " }).percent).toBe(45);
   });
 });

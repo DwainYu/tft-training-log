@@ -65,6 +65,12 @@ describe("createMatch", () => {
     expect(next.placement).toBe(1);
     expect(next.composition).toBe("Fortune");
   });
+
+  it("keeps the structured opening plan when the match is edited again", () => {
+    const m = { ...createMatch(base), openingPlan: "FORCE" as const };
+    expect(applyMatchInput(m, { ...base, placement: 2 }).openingPlan).toBe("FORCE");
+    expect(matchToInput(m).openingPlan).toBe("FORCE");
+  });
 });
 
 describe("placement predicates", () => {

@@ -5,6 +5,7 @@ import { ChevronLeft, ListChecks } from "lucide-react";
 import { deleteReview, saveReview } from "../services/review-service";
 import { getMatchBundle } from "../services/match-service";
 import type { ReviewInput } from "../domain/review/review";
+import type { OpeningPlan } from "../domain/types";
 import { mistakeLabel } from "../domain/labels";
 import { durationOf } from "../domain/match/match";
 import { errorMessage, ValidationError } from "../lib/errors";
@@ -46,11 +47,11 @@ export function ReviewPage() {
   const { match, review, decisions } = bundle;
   const duration = durationOf(match);
 
-  async function onSubmit(input: ReviewInput) {
+  async function onSubmit(input: ReviewInput, openingPlan: OpeningPlan | null) {
     setBusy(true);
     setErrors([]);
     try {
-      await saveReview(match.id, input);
+      await saveReview(match.id, input, openingPlan);
       toast.push("复盘已保存 · 这局标记为已复盘");
       navigate(`/matches/${match.id}`);
     } catch (err) {
@@ -89,6 +90,7 @@ export function ReviewPage() {
       <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
         <ReviewForm
           initial={review}
+          initialOpeningPlan={match.openingPlan}
           errors={errors}
           busy={busy}
           onSave={onSubmit}
