@@ -51,7 +51,7 @@ export function DecisionTimeline({ events }: { events: TimelineEvent[] }) {
                   </span>
                 )}
               </span>
-              <span className="mt-0.5 block break-words text-sm leading-relaxed text-ink-100">
+              <span className="mt-0.5 block break-words text-sm leading-relaxed text-ink-200">
                 {e.title}
               </span>
             </span>

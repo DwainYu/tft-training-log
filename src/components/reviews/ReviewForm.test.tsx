@@ -121,6 +121,14 @@ describe("ReviewForm · completeness", () => {
     expect(screen.getByText("已满足必填")).toBeInTheDocument();
   });
 
+  it("reads the progress out as filled items, not as a bare percentage", () => {
+    render();
+    expect(screen.getByRole("progressbar")).toHaveAttribute(
+      "aria-valuetext",
+      "已填 0/6 项 · 0%",
+    );
+  });
+
   it("tells an untouched review where to start", () => {
     render();
     expect(screen.getByText(/还没有记录复盘内容/)).toBeInTheDocument();
@@ -157,5 +165,16 @@ describe("ReviewForm · section status", () => {
     const focus = screen.getByLabelText(/下一局要刻意练习什么/);
     expect(focus).toHaveAttribute("aria-invalid", "true");
     expect(focus).toHaveAttribute("aria-describedby", "rv-focus-error");
+  });
+
+  it("keeps pointing at the field when the same rejection repeats", () => {
+    const { onSave } = render({ errors: ["请填写本局最大的问题"] });
+
+    // A long form: a second failed save has to move focus back, otherwise the
+    // button looks dead even though nothing about the message changed.
+    fireEvent.click(screen.getByRole("button", { name: "保存复盘" }));
+    expect(onSave).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "保存复盘" }));
+    expect(document.activeElement).toBe(screen.getByLabelText(/这局最大的问题是什么/));
   });
 });

@@ -130,10 +130,15 @@ export function ReviewPage() {
             </div>
           </div>
           <div className="min-w-0 sm:ml-auto sm:text-right">
-            <div className="text-[11px] uppercase tracking-wide text-ink-600">阵容</div>
-            <div className="truncate text-sm text-ink-50">{match.composition ?? "未填阵容"}</div>
+            <div className="text-[11px] text-ink-600">阵容</div>
+            <div className="truncate text-sm text-ink-50" title={match.composition ?? "未填阵容"}>
+              {match.composition ?? "未填阵容"}
+            </div>
             {match.coreUnits?.length ? (
-              <div className="truncate text-xs text-ink-600">
+              <div
+                className="truncate text-xs text-ink-600"
+                title={`核心棋子 ${match.coreUnits.join(" / ")}`}
+              >
                 核心棋子 {match.coreUnits.join(" / ")}
               </div>
             ) : null}
@@ -154,7 +159,7 @@ export function ReviewPage() {
           onDiscard={() => navigate(`/matches/${match.id}`)}
         />
 
-        <aside className="flex flex-col gap-4">
+        <aside aria-label="这局的只读资料" className="flex flex-col gap-4">
           <Panel>
             <PanelHeader title="对局资料" subtitle="只读" />
             <dl className="flex flex-col gap-2 p-4">
@@ -235,10 +240,11 @@ export function ReviewPage() {
 }
 
 function SideFact({ label, value }: { label: string; value?: string }) {
+  const shown = value || "未填";
   return (
     <div className="flex items-baseline gap-2">
-      <dt className="w-16 shrink-0 text-[11px] uppercase tracking-wide text-ink-600">{label}</dt>
-      <dd className="min-w-0 flex-1 truncate text-ink-100">
+      <dt className="w-16 shrink-0 text-[11px] text-ink-600">{label}</dt>
+      <dd className="min-w-0 flex-1 truncate text-ink-200" title={shown}>
         {value || <span className="text-ink-600">未填</span>}
       </dd>
     </div>

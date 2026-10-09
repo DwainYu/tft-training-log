@@ -72,6 +72,10 @@ export function ReviewForm({
 }) {
   const [input, setInput] = useState<ReviewInput>(() => reviewInputOf(initial));
   const [openingPlan, setOpeningPlan] = useState<OpeningPlan | undefined>(initialOpeningPlan);
+  // Counted per attempt: the first rejected save and a second one with the
+  // exact same messages must both point at the field to fix, otherwise a
+  // long form looks like the button did nothing.
+  const [attempts, setAttempts] = useState(0);
 
   const set = <K extends keyof ReviewInput>(key: K, value: ReviewInput[K]) =>
     setInput((prev) => ({ ...prev, [key]: value }));
@@ -87,13 +91,14 @@ export function ReviewForm({
 
   useEffect(() => {
     if (firstInvalid) document.getElementById(FIELD_IDS[firstInvalid])?.focus();
-  }, [firstInvalid]);
+  }, [firstInvalid, attempts]);
 
   return (
     <form
       className="flex min-w-0 flex-col gap-4"
       onSubmit={(e) => {
         e.preventDefault();
+        setAttempts((n) => n + 1);
         onSave(input, openingPlan ?? null);
       }}
     >
@@ -123,6 +128,7 @@ export function ReviewForm({
           aria-valuenow={progress.percent}
           aria-valuemin={0}
           aria-valuemax={100}
+          aria-valuetext={`已填 ${progress.filled}/${progress.total} 项 · ${progress.percent}%`}
           aria-label="复盘完整度"
         >
           <span
@@ -162,7 +168,7 @@ export function ReviewForm({
             <div
               role="group"
               aria-label="开局路线"
-              className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5"
+              className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-5"
             >
               {OPENING_PLAN_LIST.map((plan) => {
                 const selected = openingPlan === plan;
@@ -274,7 +280,7 @@ export function ReviewForm({
             <Badge tone={complete ? "good" : "muted"}>{complete ? "已满足必填" : "必填未完成"}</Badge>
           }
         />
-        <div className="grid gap-4 p-4 lg:grid-cols-2">
+        <div className="grid gap-4 p-4 xl:grid-cols-2">
           <div>
             <Field
               label="本局做得最好的一件事"
@@ -324,16 +330,21 @@ export function ReviewForm({
 
           <Field
             label="自我评分"
-            htmlFor="rv-score"
+            labelId="rv-score-label"
+            hintId="rv-score-hint"
             hint="1 = 完全失控，5 = 决策基本没有遗憾 · 选填"
             className="lg:col-span-2"
           >
-            <div className="flex items-center gap-2">
+            <div
+              role="group"
+              aria-labelledby="rv-score-label"
+              aria-describedby="rv-score-hint"
+              className="flex items-center gap-2"
+            >
               {[1, 2, 3, 4, 5].map((n) => (
                 <button
                   key={n}
                   type="button"
-                  id={n === 1 ? "rv-score" : undefined}
                   aria-pressed={input.selfScore === n}
                   onClick={() => set("selfScore", input.selfScore === n ? undefined : n)}
                   className={[
@@ -363,14 +374,24 @@ export function ReviewForm({
 
       {/* 4 · 过程补充（选填） */}
       <details className="panel" open={hasFreeText}>
-        <summary className="flex cursor-pointer items-center gap-3 px-4 py-3">
+        <summary
+          className={[
+            "group flex cursor-pointer list-none items-center gap-3 px-4 py-3",
+            "[&::-webkit-details-marker]:hidden",
+            "focus-visible:ring-2 focus-visible:ring-gold-500/55 focus-visible:outline-none",
+          ].join(" ")}
+        >
           <h2 className="text-sm font-semibold text-ink-50">
             <SectionTitle index={4}>过程补充 · 开局 / 中期 / 后期</SectionTitle>
           </h2>
           <Badge tone="muted" className="ml-auto">
             选填
           </Badge>
-          <ChevronDown size={14} className="text-ink-600" aria-hidden />
+          <ChevronDown
+            size={14}
+            className="text-ink-600 transition-transform group-open:rotate-180"
+            aria-hidden
+          />
         </summary>
         <div className="border-t border-line px-4 py-1">
           <p className="py-3 text-xs leading-relaxed text-ink-600">
@@ -412,9 +433,9 @@ export function ReviewForm({
             取消
           </Button>
         )}
-        <Button type="submit" variant="primary" disabled={busy} className="order-1 ml-auto sm:order-3 sm:ml-0">
+        <Button type="submit" variant="primary" disabled={busy} aria-busy={busy || undefined} className="order-1 ml-auto sm:order-3 sm:ml-0">
           <Save size={15} />
-          保存复盘
+          {busy ? "保存中…" : "保存复盘"}
         </Button>
       </div>
     </form>

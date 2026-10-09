@@ -47,6 +47,7 @@ export function MistakePicker({
             onClick={() => onChange(selected ? "" : t)}
             className={[
               "rounded-md border px-2 py-1 text-xs transition-colors",
+              "focus-visible:ring-2 focus-visible:ring-bad/50 focus-visible:outline-none",
               selected
                 ? "border-gold-500/50 bg-gold-500/15 text-gold-300"
                 : "border-line bg-base-900/60 text-ink-400 hover:bg-base-800 hover:text-ink-200",
