@@ -20,6 +20,16 @@ const match = (extra: Partial<Match>): Match => ({
 });
 
 describe("match form + traits", () => {
+  it("keeps the recorded time when editing an existing match", () => {
+    // Editing must show the game's own times, never the current clock.
+    const draft = draftFromMatch(
+      match({ playedAt: "2026-02-05T09:30", startedAt: "2026-02-05T09:00" }),
+    );
+    expect(draft.date).toBe("2026-02-05");
+    expect(draft.startTime).toBe("09:00");
+    expect(draft.endTime).toBe("09:30");
+  });
+
   it("pre-fills ids from a record that already has them", () => {
     const draft = draftFromMatch(match({ traitIds: ["DA_18_Spellweaver"] }));
     expect(draft.traitIds).toEqual(["DA_18_Spellweaver"]);
