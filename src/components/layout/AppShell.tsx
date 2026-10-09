@@ -149,8 +149,8 @@ function Brand() {
         <Plus size={16} strokeWidth={3} />
       </span>
       <div className="leading-tight">
-        <div className="text-sm font-semibold tracking-wide text-ink-50">TFT Training Log</div>
-        <div className="text-[10px] uppercase tracking-[0.16em] text-ink-600">S18 · 训练日志</div>
+        <div className="text-sm font-semibold tracking-wide text-ink-50">TFT 弈记</div>
+        <div className="text-[10px] tracking-[0.16em] text-ink-600">TFT 对局记录与复盘</div>
       </div>
     </div>
   );

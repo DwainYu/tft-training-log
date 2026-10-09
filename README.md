@@ -1,6 +1,6 @@
-# TFT Training Log
+# TFT 弈记（TFT Match Journal）
 
-**S18 Personal Training & Review System.**
+**TFT 对局记录与复盘 · 记录每一局，积累下一局的经验。**
 
 ![CI](https://github.com/DwainYu/tft-training-log/actions/workflows/ci.yml/badge.svg)
 ![Pages](https://github.com/DwainYu/tft-training-log/actions/workflows/deploy-pages.yml/badge.svg)
@@ -11,8 +11,8 @@
 > Mainland China users: if the demo loads slowly or not at all, see
 > [🇨🇳 中国大陆访问说明](#-中国大陆访问说明) below.
 
-A local-first personal training system for recording TFT (Teamfight Tactics) matches,
-tracking in-game decisions, reviewing mistakes, and measuring improvement over time.
+A local-first training journal for TFT (Teamfight Tactics): record matches,
+track in-game decisions, review mistakes, and measure improvement over time.
 
 No backend, no account, no telemetry — everything lives in your browser's IndexedDB.
 
@@ -95,7 +95,7 @@ Watt Toolkit 是一个开源的跨平台工具，官方项目提供 GitHub Relea
 2. 打开 Watt Toolkit
 3. 找到 **网络加速**
 4. 开启 **GitHub** 相关加速
-5. 再打开上面的 TFT Training Log 地址
+5. 再打开上面的 TFT 弈记 地址
 
 > Watt Toolkit 属于第三方工具，并非本项目的运行依赖。不同网络环境下的加速效果可能有所不同。
 
@@ -131,7 +131,7 @@ date when loaded, so streaks and the weekly view stay meaningful whenever you cl
 
 ## Training Sessions
 
-TFT Training Log supports multiple training contexts, such as:
+TFT 弈记 supports multiple training contexts, such as:
 
 - Daily Training
 - Competition Training
