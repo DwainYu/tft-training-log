@@ -8,6 +8,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipContentProps,
 } from "recharts";
 import { chartTheme, MIN_SAMPLES } from "./chart-theme";
 import { ChartEmpty } from "./ChartEmpty";
@@ -21,6 +22,8 @@ export interface TrendPoint {
   playedAt: string;
   placement: number;
   top4: 0 | 1;
+  /** The player's own composition label for this game, when logged. */
+  composition?: string;
   /** Drill-down target: a point always belongs to exactly one match. */
   id: string;
 }
@@ -62,10 +65,31 @@ export function PlacementTrendChart({
     );
   }
 
+  // Three rows, one game: which game it was, where it finished, what line it
+  // played. A blank composition reads the same as everywhere else in the app.
+  const renderTooltip = ({ active, payload }: TooltipContentProps) => {
+    if (!active) return null;
+    const point = payload?.[0]?.payload as TrendPoint | undefined;
+    if (!point) return null;
+    const time = point.playedAt.slice(11, 16);
+    return (
+      <div style={{ ...t.TOOLTIP_STYLE, padding: "6px 10px", lineHeight: 1.7 }}>
+        <div>
+          第 {point.index} 局 · {point.label}
+          {time ? ` ${time}` : ""}
+        </div>
+        <div>名次：第 {point.placement} 名</div>
+        <div className="max-w-[11rem] break-words">阵容：{point.composition || "未填阵容"}</div>
+      </div>
+    );
+  };
+
+  // A negative left margin pushed the Y-axis tick labels outside the SVG's
+  // viewBox, clipping the rank digits at the left edge.
   return (
     <div className="h-48 w-full sm:h-56 lg:h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 4 }}>
+        <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 4 }}>
           <CartesianGrid stroke={t.CHART.grid} vertical={false} />
           <XAxis
             dataKey="index"
@@ -96,18 +120,9 @@ export function PlacementTrendChart({
             tick={t.AXIS_TICK}
             axisLine={false}
             tickLine={false}
-            width={28}
+            width={24}
           />
-          <Tooltip
-            contentStyle={t.TOOLTIP_STYLE}
-            labelFormatter={(_label, payload) => {
-              const point = payload?.[0]?.payload as TrendPoint | undefined;
-              if (!point) return "";
-              const time = point.playedAt.slice(11, 16);
-              return `第 ${point.index} 局 · ${point.label}${time ? ` ${time}` : ""}`;
-            }}
-            formatter={(value) => [`第 ${String(value)} 名`, "名次"]}
-          />
+          <Tooltip content={renderTooltip} />
           {avg !== null && (
             <ReferenceLine
               y={avg}
@@ -132,7 +147,7 @@ export function PlacementTrendChart({
               const { cx, cy, payload } = props;
               if (cx == null || cy == null || !payload) return null;
               const top4 = payload.top4 === 1;
-              const title = `${payload.label} ${payload.playedAt.slice(11, 16)} · 第 ${payload.placement} 名${top4 ? " · Top4" : ""}`;
+              const title = `${payload.label} ${payload.playedAt.slice(11, 16)} · 第 ${payload.placement} 名 · 阵容：${payload.composition || "未填阵容"}${top4 ? " · Top4" : ""}`;
               const shared = {
                 cx,
                 cy,

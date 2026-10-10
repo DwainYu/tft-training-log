@@ -93,6 +93,8 @@ export function placementTrendSeries(matches: MatchForStats[], limit = 20) {
     playedAt: m.playedAt,
     placement: m.placement,
     top4: (m.placement <= 4 ? 1 : 0) as 0 | 1,
+    /** Tooltip-only: the player's own label for this game's line. */
+    composition: normalizeCompositionKey(m.composition) || undefined,
     /** Drill-down target: clicking a point opens this match. */
     id: m.id,
   }));
