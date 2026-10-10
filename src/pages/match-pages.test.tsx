@@ -152,6 +152,20 @@ describe("Matches page", () => {
     renderApp("/matches");
     expect(await screen.findByText("没有符合条件的对局")).toBeInTheDocument();
   });
+
+  it("hides Level/Duration/Mistake columns when no record carries them", async () => {
+    // Real early records often only have placement + composition: a column of
+    // em-dashes is noise, not information.
+    await addMatch({ playedAt: "2026-02-05T13:20", placement: "1", composition: "Arcader" });
+    await addMatch({ playedAt: "2026-02-04T20:15", placement: "7", composition: "Rebel" });
+    renderApp("/matches");
+
+    await screen.findByRole("table");
+    expect(table().getByRole("columnheader", { name: "Date" })).toBeInTheDocument();
+    expect(table().queryByRole("columnheader", { name: "Level" })).not.toBeInTheDocument();
+    expect(table().queryByRole("columnheader", { name: "Duration" })).not.toBeInTheDocument();
+    expect(table().queryByRole("columnheader", { name: /Primary Mistake/ })).not.toBeInTheDocument();
+  });
 });
 
 describe("Match detail page", () => {
@@ -165,6 +179,24 @@ describe("Match detail page", () => {
     expect(screen.getByRole("button", { name: /删除/ })).toBeInTheDocument();
     expect(screen.getAllByText("开始复盘").length).toBeGreaterThan(0);
     expect(screen.getByText("添加决策")).toBeInTheDocument();
+  });
+
+  it("marks the review state on the conclusion panel, not only in the facts", async () => {
+    const match = await addMatch({ playedAt: "2026-02-03T18:00", placement: "3" });
+    renderApp(`/matches/${match.id}`);
+
+    const panel = (await screen.findByText("复盘结论")).closest("section")!;
+    expect(within(panel).getByText("未复盘")).toBeInTheDocument();
+    expect(within(panel).getByRole("link", { name: /开始复盘/ })).toBeInTheDocument();
+  });
+
+  it("collapses the empty composition details into one hint", async () => {
+    const match = await addMatch({ playedAt: "2026-02-03T18:00", placement: "3", composition: "Fortune" });
+    renderApp(`/matches/${match.id}`);
+
+    const panel = (await screen.findByText("阵容 / 装备 / 强化符文")).closest("section")!;
+    expect(within(panel).queryAllByText("未填写")).toHaveLength(0);
+    expect(within(panel).getByText(/还没有记录羁绊/)).toBeInTheDocument();
   });
 
   it("reports a missing match instead of crashing", async () => {

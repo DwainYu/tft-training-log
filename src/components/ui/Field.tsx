@@ -13,6 +13,8 @@ export function Field({
   hint,
   required,
   htmlFor,
+  labelId,
+  hintId,
   children,
   className = "",
 }: {
@@ -20,6 +22,10 @@ export function Field({
   hint?: ReactNode;
   required?: boolean;
   htmlFor?: string;
+  /** Id for the label itself, for controls grouped under it (e.g. a button row). */
+  labelId?: string;
+  /** Id for the hint, so a control can point at it with `aria-describedby`. */
+  hintId?: string;
   children: ReactNode;
   className?: string;
 }): ReactNode {
@@ -27,6 +33,7 @@ export function Field({
     <div className={`min-w-0 ${className}`}>
       {label && (
         <label
+          id={labelId}
           htmlFor={htmlFor}
           className="mb-1.5 flex items-center gap-1 text-xs font-medium text-ink-400"
         >
@@ -35,7 +42,11 @@ export function Field({
         </label>
       )}
       {children}
-      {hint && <p className="mt-1 text-[11px] leading-relaxed text-ink-600">{hint}</p>}
+      {hint && (
+        <p id={hintId} className="mt-1 text-[11px] leading-relaxed text-ink-600">
+          {hint}
+        </p>
+      )}
     </div>
   );
 }

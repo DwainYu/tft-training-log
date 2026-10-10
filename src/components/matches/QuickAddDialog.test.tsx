@@ -13,10 +13,34 @@ vi.mock("react-router-dom", async () => {
   return { ...actual, useNavigate: () => navigate };
 });
 
-function renderDialog(onClose = () => undefined) {
+// Controllable wall clock: the dialog seeds `playedAt` from `wallClockNow()`,
+// and these tests need to move "now" without touching real timers (Dexie and
+// useLiveQuery run on real async). When unset, the real implementation is used.
+const timeControl = vi.hoisted(() => ({ now: undefined as string | undefined }));
+vi.mock("../../lib/wallclock", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../../lib/wallclock")>();
+  return {
+    ...actual,
+    wallClockNow: () => timeControl.now ?? actual.wallClockNow(),
+  };
+});
+
+function renderDialog(onClose = () => undefined, open = true) {
   return render(
     <ToastProvider>
-      <QuickAddDialog open onClose={onClose} />
+      <QuickAddDialog open={open} onClose={onClose} />
+    </ToastProvider>,
+  );
+}
+
+function rerenderDialog(
+  view: ReturnType<typeof renderDialog>,
+  onClose = () => undefined,
+  open = true,
+) {
+  view.rerender(
+    <ToastProvider>
+      <QuickAddDialog open={open} onClose={onClose} />
     </ToastProvider>,
   );
 }
@@ -24,6 +48,7 @@ function renderDialog(onClose = () => undefined) {
 beforeEach(async () => {
   await resetDatabase();
   navigate.mockClear();
+  timeControl.now = undefined;
 });
 
 describe("Quick Add", () => {
@@ -185,5 +210,52 @@ describe("Quick Add", () => {
     // focus a plain text field: no panel, so Esc belongs to the dialog
     fireEvent.keyDown(screen.getByLabelText("下一局训练重点"), { key: "Escape" });
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("seeds the time from when the player clicks, not when the page loaded", () => {
+    // The app has been sitting open since 09:00 (the dialog mounts with the
+    // shell, hidden). At 10:27 the player finishes a game and clicks quick add.
+    timeControl.now = "2026-02-05T09:00";
+    const view = renderDialog(() => undefined, false);
+
+    timeControl.now = "2026-02-05T10:27";
+    rerenderDialog(view);
+    expect(screen.getByLabelText("对局时间")).toHaveValue("2026-02-05T10:27");
+  });
+
+  it("re-seeds the time on every fresh open after a cancel", () => {
+    timeControl.now = "2026-02-05T10:27";
+    const onClose = vi.fn();
+    const view = renderDialog(onClose);
+    expect(screen.getByLabelText("对局时间")).toHaveValue("2026-02-05T10:27");
+
+    rerenderDialog(view, onClose, false);
+    timeControl.now = "2026-02-05T10:42";
+    rerenderDialog(view, onClose);
+    expect(screen.getByLabelText("对局时间")).toHaveValue("2026-02-05T10:42");
+  });
+
+  it("does not overwrite a manually edited time while the dialog is open", () => {
+    timeControl.now = "2026-02-05T10:27";
+    const view = renderDialog();
+
+    fireEvent.change(screen.getByLabelText("对局时间"), {
+      target: { value: "2026-02-05T10:15" },
+    });
+
+    // ordinary re-renders (state updates, parent re-render) must not reset it
+    rerenderDialog(view, () => undefined);
+    expect(screen.getByLabelText("对局时间")).toHaveValue("2026-02-05T10:15");
+  });
+
+  it("rolls the seeded time across midnight without a day offset", () => {
+    timeControl.now = "2026-02-05T23:59";
+    const view = renderDialog();
+    expect(screen.getByLabelText("对局时间")).toHaveValue("2026-02-05T23:59");
+
+    rerenderDialog(view, () => undefined, false);
+    timeControl.now = "2026-02-06T00:03";
+    rerenderDialog(view);
+    expect(screen.getByLabelText("对局时间")).toHaveValue("2026-02-06T00:03");
   });
 });

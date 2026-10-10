@@ -36,7 +36,7 @@ export function ToastProvider({ children }: { children: ReactNode }): ReactNode 
           <div
             key={t.id}
             className={`panel pointer-events-auto flex items-center gap-2 px-3 py-2.5 text-sm shadow-xl ${
-              t.tone === "warn" ? "border-amber-500/40 text-amber-200" : "border-emerald-500/35 text-emerald-200"
+              t.tone === "warn" ? "border-warn/40 text-warn" : "border-good/35 text-good"
             }`}
           >
             {t.tone === "warn" ? <AlertTriangle size={15} /> : <CheckCircle2 size={15} />}

@@ -1,15 +1,24 @@
 <!doctype html>
-<html lang="zh-CN" class="dark">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light" />
     <meta
       name="description"
-      content="Local-first S18 Teamfight Tactics training log: record matches, decisions and reviews, then measure improvement with statistics and weekly goals."
+      content="TFT 弈记（TFT Match Journal）—— 云顶之弈对局记录与复盘工具：记录每一局，积累下一局的经验。"
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>TFT Training Log · S18 训练记录</title>
+    <title>TFT 弈记</title>
+    <script>
+      // Apply the persisted theme before first paint so a dark-mode user
+      // never sees a light flash. Default is light.
+      try {
+        if (localStorage.getItem("tft-theme") === "dark") {
+          document.documentElement.classList.add("dark");
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

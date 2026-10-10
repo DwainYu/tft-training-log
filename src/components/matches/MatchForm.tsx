@@ -78,7 +78,7 @@ export function MatchForm({
   return (
     <div className="flex flex-col gap-4">
       {errors.length > 0 && (
-        <div className="panel border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <div className="panel border-bad/40 bg-bad/10 px-4 py-3 text-sm text-bad">
           {errors.join("；")}
         </div>
       )}

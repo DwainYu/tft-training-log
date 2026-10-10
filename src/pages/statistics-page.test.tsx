@@ -28,8 +28,9 @@ describe("Statistics page", () => {
     await seed();
     renderWithProviders(<StatisticsPage />, "/statistics");
 
-    await screen.findByText("Games");
-    expect(screen.getByText("Avg Placement")).toBeInTheDocument();
+    // the KPI label is a div; the composition table header is a th
+    await screen.findByText("场次", { selector: "div" });
+    expect(screen.getByText("平均名次", { selector: "div" })).toBeInTheDocument();
     // the whole page waits for every query, so nothing flashes "no data"
     expect(screen.queryByText(/暂无数据/)).not.toBeInTheDocument();
   });
@@ -65,5 +66,32 @@ describe("Statistics page", () => {
 
     const panel = (await screen.findByRole("heading", { name: "开局路线" })).closest("section")!;
     expect(within(panel).getByText(/还没有标记过开局路线/)).toBeInTheDocument();
+  });
+
+  it("gates composition conclusions on the same sample size as the dashboard", async () => {
+    await seed();
+    renderWithProviders(<StatisticsPage />, "/statistics");
+
+    // Arcader: 4 games → conclusions allowed. Rebel: 2 games → facts only.
+    const arcader = (await screen.findByText("Arcader")).closest("tr")!;
+    expect(within(arcader).getByText("3.0")).toBeInTheDocument();
+    const rebel = screen.getByText("Rebel").closest("tr")!;
+    expect(within(rebel).getAllByText("样本不足")).toHaveLength(2);
+  });
+
+  it("swaps the mistake chart for a review prompt when every game is unclassified", async () => {
+    // 6 games, no Primary Mistake anywhere: a bar chart of 未分类 says nothing.
+    for (let i = 0; i < 6; i += 1) {
+      await addMatch({ playedAt: `2026-02-0${i + 1}T13:00`, placement: "4", composition: "Arcader" });
+    }
+    renderWithProviders(<StatisticsPage />, "/statistics");
+
+    const mistakePanel = (await screen.findByRole("heading", { name: "错误统计" })).closest("section")!;
+    expect(within(mistakePanel).getByText(/还没有复盘/)).toBeInTheDocument();
+    expect(within(mistakePanel).queryByText(/未分类 ×/)).not.toBeInTheDocument();
+
+    // the window comparison is equally meaningless without a single classification
+    const structurePanel = (await screen.findByRole("heading", { name: /错误结构/ })).closest("section")!;
+    expect(within(structurePanel).getByText(/都还没有 Primary Mistake/)).toBeInTheDocument();
   });
 });

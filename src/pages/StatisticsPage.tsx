@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import {
   allOverall,
   allStreak,
@@ -86,7 +87,7 @@ export function StatisticsPage() {
 
   const scopeControl = (
     <label className="flex items-center gap-2 text-xs text-ink-400">
-      数据范围
+      <span className="shrink-0">数据范围</span>
       <Select
         aria-label="数据范围"
         value={scope}
@@ -128,11 +129,42 @@ export function StatisticsPage() {
 
   const trendAvg = trendSeries && trendSeries.length > 0 ? last20?.avgPlacement ?? null : null;
 
+  const mistakeSample = (mistakes ?? []).reduce((sum, m) => sum + m.count, 0);
+  // "全部未分类" is a review backlog, not a mistake profile — the same rule the
+  // Dashboard applies.
+  const mistakesUnclassifiedOnly =
+    mistakes.length === 1 && mistakes[0].key === UNCLASSIFIED && mistakeSample > 0;
+  // The window comparison needs classified mistakes on both sides to say
+  // anything; counting 未分类 10/10 is not a structure.
+  const classifiedWindowCount = mistakeWindows
+    .filter((r) => r.key !== UNCLASSIFIED)
+    .reduce((sum, r) => sum + r.recent + r.previous, 0);
+
   const compositionColumns: StatTableColumn<NonNullable<typeof compositions>[number]>[] = [
     { key: "comp", label: "阵容", render: (r) => <span className="text-ink-50">{r.composition}</span> },
     { key: "games", label: "场次", align: "right", render: (r) => r.games },
-    { key: "avg", label: "平均名次", align: "right", render: (r) => formatNumber(r.avgPlacement, 1) },
-    { key: "top4", label: "Top4 率", align: "right", render: (r) => formatRateValue(r.top4Rate) },
+    {
+      key: "avg",
+      label: "平均名次",
+      align: "right",
+      render: (r) =>
+        r.games >= MIN_SAMPLES.compositionRow ? (
+          formatNumber(r.avgPlacement, 1)
+        ) : (
+          <span className="text-ink-600">样本不足</span>
+        ),
+    },
+    {
+      key: "top4",
+      label: "Top4 率",
+      align: "right",
+      render: (r) =>
+        r.games >= MIN_SAMPLES.compositionRow ? (
+          formatRateValue(r.top4Rate)
+        ) : (
+          <span className="text-ink-600">样本不足</span>
+        ),
+    },
     {
       key: "last",
       label: "最近使用",
@@ -172,8 +204,28 @@ export function StatisticsPage() {
   const slotColumns: StatTableColumn<NonNullable<typeof slots>[number]>[] = [
     { key: "slot", label: "时间段", render: (r) => <span className="text-ink-50">{r.label}</span> },
     { key: "games", label: "场次", align: "right", render: (r) => r.games },
-    { key: "avg", label: "平均名次", align: "right", render: (r) => formatNumber(r.avgPlacement, 1) },
-    { key: "top4", label: "Top4 率", align: "right", render: (r) => formatRateValue(r.top4Rate) },
+    {
+      key: "avg",
+      label: "平均名次",
+      align: "right",
+      render: (r) =>
+        r.games >= MIN_SAMPLES.compositionRow ? (
+          formatNumber(r.avgPlacement, 1)
+        ) : (
+          <span className="text-ink-600">样本不足</span>
+        ),
+    },
+    {
+      key: "top4",
+      label: "Top4 率",
+      align: "right",
+      render: (r) =>
+        r.games >= MIN_SAMPLES.compositionRow ? (
+          formatRateValue(r.top4Rate)
+        ) : (
+          <span className="text-ink-600">样本不足</span>
+        ),
+    },
   ];
 
   return (
@@ -187,26 +239,26 @@ export function StatisticsPage() {
       <div className="flex flex-col gap-4">
         <Panel>
           <PanelHeader
-            title={`Overall${scope === "current" ? ` · ${activeSession?.name ?? "日常训练"}` : " · 全部训练"}`}
+            title={`训练概览${scope === "current" ? ` · ${activeSession?.name ?? "日常训练"}` : " · 全部训练"}`}
             subtitle={`${overall.games} 局`}
           />
           <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-3 xl:grid-cols-6">
-            <StatCard label="Games" value={String(overall.games)} sub={`${overall.reviewedGames} 局已复盘`} />
-            <StatCard label="Avg Placement" value={formatNumber(overall.avgPlacement, 1)} tone="gold" />
+            <StatCard label="场次" value={String(overall.games)} sub={`${overall.reviewedGames} 局已复盘`} />
+            <StatCard label="平均名次" value={formatNumber(overall.avgPlacement, 1)} tone="gold" />
             <StatCard
-              label="Top4 Rate"
+              label="Top4 率"
               value={formatRateValue(overall.top4Rate)}
               tone="good"
               sub={`${overall.top4} / ${overall.games}`}
             />
             <StatCard
-              label="Win Rate"
+              label="吃鸡率"
               value={formatRateValue(overall.winRate)}
               tone="gold"
-              sub={`${overall.wins} 次吃鸡`}
+              sub={`${overall.wins} 次第一`}
             />
             <StatCard
-              label="Bottom4 Rate"
+              label="Bottom4 率"
               value={formatRateValue(overall.bottom4Rate)}
               tone="bad"
               sub={`${overall.bottom4} / ${overall.games}`}
@@ -232,22 +284,29 @@ export function StatisticsPage() {
             subtitle="蓝点为 Top4；虚线为近 20 场平均名次"
           />
           <div className="flex flex-col gap-4 p-4">
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <StatCard
-                label="最近 10 场 · 平均名次"
-                value={formatNumber(last10?.avgPlacement ?? null, 1)}
-                sub={`${last10?.games ?? 0} 局`}
-              />
-              <StatCard
-                label="最近 20 场 · 平均名次"
-                value={formatNumber(last20?.avgPlacement ?? null, 1)}
-                sub={`${last20?.games ?? 0} 局`}
-              />
-              <StatCard
-                label="最近 20 场 · Top4 率"
-                value={formatRateValue(last20?.top4Rate ?? null)}
-                tone="good"
-              />
+            {/* Window numbers as one compact strip: they give the chart its
+                reading key without repeating the Dashboard's KPI tiles. */}
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-ink-600">
+              <span>
+                近 10 场平均名次{" "}
+                <span className="num text-sm font-semibold text-ink-50">
+                  {formatNumber(last10?.avgPlacement ?? null, 1)}
+                </span>{" "}
+                · {last10?.games ?? 0} 局
+              </span>
+              <span>
+                近 20 场平均名次{" "}
+                <span className="num text-sm font-semibold text-ink-50">
+                  {formatNumber(last20?.avgPlacement ?? null, 1)}
+                </span>{" "}
+                · {last20?.games ?? 0} 局
+              </span>
+              <span>
+                近 20 场 Top4{" "}
+                <span className="num text-sm font-semibold text-good">
+                  {formatRateValue(last20?.top4Rate ?? null)}
+                </span>
+              </span>
             </div>
             <PlacementTrendChart
               data={trendSeries}
@@ -262,12 +321,24 @@ export function StatisticsPage() {
             title="错误统计"
             subtitle="来自每局复盘的 Primary Mistake · 点击柱子查看这几局"
           />
-          <div className="p-4">
-            <MistakeBarChart
-              data={mistakes}
-              onSelect={(key) => navigate(`/matches?${mistakeDrillQuery(key)}`)}
-            />
-          </div>
+          {mistakesUnclassifiedOnly ? (
+            <div className="flex flex-col items-start gap-2 p-4">
+              <p className="text-xs leading-relaxed text-ink-400">
+                已记录 {mistakeSample} 局，但还没有复盘。复盘时给每局选一个 Primary
+                Mistake，这里才会显示你真正的问题分布。
+              </p>
+              <LinkButton to="/matches?reviewed=unreviewed" size="sm">
+                去复盘 {mistakeSample} 局 <ArrowRight size={12} />
+              </LinkButton>
+            </div>
+          ) : (
+            <div className="p-4">
+              <MistakeBarChart
+                data={mistakes}
+                onSelect={(key) => navigate(`/matches?${mistakeDrillQuery(key)}`)}
+              />
+            </div>
+          )}
         </Panel>
 
         <div className="grid gap-4 xl:grid-cols-2">
@@ -297,35 +368,45 @@ export function StatisticsPage() {
           </Panel>
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-2">
-          <Panel className="min-w-0">
-            <PanelHeader
-              title="决策类型"
-              subtitle="按局去重 · 一局可以属于多类 · 少于 3 局不给结论"
-            />
-            <GroupStatTable
-              rows={decisionTypes.map((r) => ({ ...r, label: decisionLabel(r.key as DecisionType) }))}
-              labelHeader="决策类型"
-              min={MIN_SAMPLES.decisionRow}
-              empty="还没有记录过决策。对局详情页可以按回合记录当时的决定。"
-            />
-          </Panel>
-          <Panel className="min-w-0">
-            <PanelHeader
-              title="决策后视"
-              subtitle="「现在回看是否正确」× 该局名次 · 同一局可计入多行"
-            />
-            <GroupStatTable
-              rows={decisionHindsight.map((r) => ({
-                ...r,
-                label: hindsightLabel(r.key as DecisionHindsight),
-              }))}
-              labelHeader="后视判断"
-              min={MIN_SAMPLES.decisionRow}
-              empty="给决策标记「正确 / 错误 / 一般」后，这里会显示对应局的名次。"
-            />
-          </Panel>
-        </div>
+        <Panel className="min-w-0">
+          <PanelHeader
+            title="决策分析"
+            subtitle="来自对局详情页的逐回合决策 · 少于 3 局不给结论"
+          />
+          <div className="grid gap-4 p-4 lg:grid-cols-2">
+            <div className="min-w-0">
+              <h3 className="text-xs font-semibold text-ink-200">
+                决策类型
+                <span className="ml-2 font-normal text-ink-600">按局去重 · 一局可属于多类</span>
+              </h3>
+              <div className="mt-2">
+                <GroupStatTable
+                  rows={decisionTypes.map((r) => ({ ...r, label: decisionLabel(r.key as DecisionType) }))}
+                  labelHeader="决策类型"
+                  min={MIN_SAMPLES.decisionRow}
+                  empty="还没有记录过决策。对局详情页可以按回合记录当时的决定。"
+                />
+              </div>
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-xs font-semibold text-ink-200">
+                决策后视
+                <span className="ml-2 font-normal text-ink-600">「现在回看是否正确」× 该局名次</span>
+              </h3>
+              <div className="mt-2">
+                <GroupStatTable
+                  rows={decisionHindsight.map((r) => ({
+                    ...r,
+                    label: hindsightLabel(r.key as DecisionHindsight),
+                  }))}
+                  labelHeader="后视判断"
+                  min={MIN_SAMPLES.decisionRow}
+                  empty="给决策标记「正确 / 错误 / 一般」后，这里会显示对应局的名次。"
+                />
+              </div>
+            </div>
+          </div>
+        </Panel>
 
         <Panel className="min-w-0">
           <PanelHeader
@@ -345,7 +426,17 @@ export function StatisticsPage() {
             title="错误结构 · 近 10 场 vs 前 10 场"
             subtitle="只数次数，不下「在改善」的结论"
           />
-          {overall.games < MIN_SAMPLES.mistakeComparison ? (
+          {classifiedWindowCount === 0 ? (
+            <div className="flex flex-col items-start gap-2 p-4">
+              <p className="text-xs leading-relaxed text-ink-400">
+                窗口里的 {Math.min(overall.games, 20)} 局都还没有 Primary
+                Mistake。先复盘，两期错误结构才有可比的内容。
+              </p>
+              <LinkButton to="/matches?reviewed=unreviewed" size="sm">
+                去复盘 <ArrowRight size={12} />
+              </LinkButton>
+            </div>
+          ) : overall.games < MIN_SAMPLES.mistakeComparison ? (
             <ChartEmpty
               count={overall.games}
               min={MIN_SAMPLES.mistakeComparison}
@@ -365,7 +456,7 @@ export function StatisticsPage() {
                   render: (r) => {
                     const d = r.recent - r.previous;
                     return (
-                      <span className={d > 0 ? "text-red-300" : d < 0 ? "text-emerald-300" : "text-ink-600"}>
+                      <span className={d > 0 ? "text-bad" : d < 0 ? "text-good" : "text-ink-600"}>
                         {d > 0 ? `+${d}` : String(d)}
                       </span>
                     );
@@ -423,7 +514,14 @@ function NumericBlock({
         {data.filled === 0 ? (
           <p className="px-1 py-6 text-center text-xs text-ink-600">{empty}</p>
         ) : (
-          <GroupStatTable rows={data.rows} labelHeader="区间" min={min} empty={empty} />
+          // Zero-count buckets are noise once something is filled: show only
+          // the bands the filled games actually land in.
+          <GroupStatTable
+            rows={data.rows.filter((r) => r.matches > 0)}
+            labelHeader="区间"
+            min={min}
+            empty={empty}
+          />
         )}
       </div>
     </div>

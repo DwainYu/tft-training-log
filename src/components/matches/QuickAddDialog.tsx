@@ -61,6 +61,16 @@ export function QuickAddDialog({
     setDraft((d) => ({ ...d, [key]: value }));
   }, []);
 
+  // The dialog stays mounted while hidden (QuickAddProvider keeps it next to
+  // the app shell), so the useState initializer pins `playedAt` to whenever
+  // the page first loaded. Every fresh open is a new quick-create flow: seed
+  // it with the time the player actually clicked. Rendering while open never
+  // re-runs this, so manual edits survive; "保存并再记一局" re-seeds via its
+  // own emptyDraft() reset.
+  useEffect(() => {
+    if (open) set("playedAt", wallClockNow());
+  }, [open, set]);
+
   // Keys 1–8 set the placement: the fastest possible start for the next record.
   useEffect(() => {
     if (!open) return;
@@ -164,7 +174,7 @@ export function QuickAddDialog({
     >
       <div className="flex flex-col gap-4">
         {errors.length > 0 && (
-          <ul className="rounded-lg border border-red-500/35 bg-red-500/10 px-3 py-2 text-xs text-red-200">
+          <ul className="rounded-lg border border-bad/35 bg-bad/10 px-3 py-2 text-xs text-bad">
             {errors.map((e) => (
               <li key={e}>{e}</li>
             ))}

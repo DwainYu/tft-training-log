@@ -78,6 +78,16 @@ describe("placementTrendSeries", () => {
     expect(series[2].top4).toBe(1);
     expect(placementTrendSeries(matches, 2).map((p) => p.id)).toEqual(["b", "c"]);
   });
+
+  it("carries each game's own composition, normalized, or undefined when blank", () => {
+    const matches = [
+      m({ id: "a", playedAt: "2026-02-01T13:00", placement: 5, composition: " 森林  95 " }),
+      m({ id: "b", playedAt: "2026-02-02T13:00", placement: 6, composition: "   " }),
+      m({ id: "c", playedAt: "2026-02-03T13:00", placement: 1 }),
+    ];
+    const series = placementTrendSeries(matches, 20);
+    expect(series.map((p) => p.composition)).toEqual(["森林 95", undefined, undefined]);
+  });
 });
 
 describe("compareRecentWindows", () => {

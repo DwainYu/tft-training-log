@@ -8,13 +8,16 @@ import {
   Globe,
   LayoutDashboard,
   Menu,
+  Moon,
   Plus,
+  Sun,
   Target,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { AddMatchButton } from "../../components/matches/AddMatchButton";
 import { Select } from "../ui/Field";
+import { useTheme } from "../../lib/theme";
 import { useSession } from "../../services/session-context";
 
 const NAV: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
@@ -54,6 +57,27 @@ function SessionSwitcher({ compact = false }: { compact?: boolean }) {
   );
 }
 
+/**
+ * Light/dark switch. Shows the mode you would switch TO (moon in light mode),
+ * and names that target mode for assistive tech rather than the current one.
+ */
+export function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const nextLabel = theme === "light" ? "切换到夜晚模式" : "切换到白天模式";
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      title={nextLabel}
+      aria-label={nextLabel}
+      aria-pressed={theme === "dark"}
+      className="rounded-lg border border-line p-2 text-ink-400 hover:bg-base-800 hover:text-ink-200"
+    >
+      {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
+    </button>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
 
@@ -61,10 +85,13 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh lg:grid lg:grid-cols-[236px_1fr]">
       <aside className="hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-dvh lg:border-r lg:border-line lg:bg-base-900/70 lg:backdrop-blur">
         <div className="flex h-full flex-col gap-6 px-4 py-6">
-          <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-start justify-between gap-2">
             <Brand />
-            <SessionSwitcher />
+            <ThemeToggle />
           </div>
+          <SessionSwitcher />
+        </div>
           <nav className="flex flex-col gap-1">
             {NAV.map((item) => (
               <NavItem key={item.to} {...item} onNavigate={() => undefined} />
@@ -89,7 +116,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           {open ? <X size={18} /> : <Menu size={18} />}
         </button>
         <Brand />
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
           <AddMatchButton compact />
         </div>
         <div className="w-full lg:hidden">
@@ -121,8 +149,8 @@ function Brand() {
         <Plus size={16} strokeWidth={3} />
       </span>
       <div className="leading-tight">
-        <div className="text-sm font-semibold tracking-wide text-ink-50">TFT Training Log</div>
-        <div className="text-[10px] uppercase tracking-[0.16em] text-ink-600">S18 · 训练日志</div>
+        <div className="text-sm font-semibold tracking-wide text-ink-50">TFT 弈记</div>
+        <div className="text-[10px] tracking-[0.16em] text-ink-600">TFT 对局记录与复盘</div>
       </div>
     </div>
   );

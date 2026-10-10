@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   CartesianGrid,
   Line,
@@ -7,9 +8,11 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipContentProps,
 } from "recharts";
-import { AXIS_LINE, AXIS_TICK, CHART, CHART_SEMANTIC, MIN_SAMPLES, TOOLTIP_STYLE } from "./chart-theme";
+import { chartTheme, MIN_SAMPLES } from "./chart-theme";
 import { ChartEmpty } from "./ChartEmpty";
+import { useTheme } from "../../lib/theme";
 
 export interface TrendPoint {
   index: number;
@@ -19,6 +22,8 @@ export interface TrendPoint {
   playedAt: string;
   placement: number;
   top4: 0 | 1;
+  /** The player's own composition label for this game, when logged. */
+  composition?: string;
   /** Drill-down target: a point always belongs to exactly one match. */
   id: string;
 }
@@ -27,7 +32,8 @@ export interface TrendPoint {
  * Rank trend, 1st place on top; the dashed reference line is the window average.
  *
  * Answers: "am I playing better lately?" — a direction, which no single KPI
- * tile can express. Every dot is one game and opens that game.
+ * tile can express. Every dot is one game and opens that game. Dates on the
+ * x axis are labelled once per day, on that day's first game.
  */
 export function PlacementTrendChart({
   data,
@@ -42,6 +48,11 @@ export function PlacementTrendChart({
   onSelectMatch?: (matchId: string) => void;
   loading?: boolean;
 }) {
+  // Literal SVG colours for the active theme; the useTheme() dependency makes
+  // a toggle re-render the chart. Hooks stay above the early return.
+  const { dark } = useTheme();
+  const t = useMemo(() => chartTheme(dark), [dark]);
+
   if (loading || data.length < MIN_SAMPLES.trend) {
     return (
       <ChartEmpty
@@ -54,17 +65,49 @@ export function PlacementTrendChart({
     );
   }
 
+  // Three rows, one game: which game it was, where it finished, what line it
+  // played. A blank composition reads the same as everywhere else in the app.
+  const renderTooltip = ({ active, payload }: TooltipContentProps) => {
+    if (!active) return null;
+    const point = payload?.[0]?.payload as TrendPoint | undefined;
+    if (!point) return null;
+    const time = point.playedAt.slice(11, 16);
+    return (
+      <div style={{ ...t.TOOLTIP_STYLE, padding: "6px 10px", lineHeight: 1.7 }}>
+        <div>
+          第 {point.index} 局 · {point.label}
+          {time ? ` ${time}` : ""}
+        </div>
+        <div>名次：第 {point.placement} 名</div>
+        <div className="max-w-[11rem] break-words">阵容：{point.composition || "未填阵容"}</div>
+      </div>
+    );
+  };
+
+  // A negative left margin pushed the Y-axis tick labels outside the SVG's
+  // viewBox, clipping the rank digits at the left edge.
   return (
     <div className="h-48 w-full sm:h-56 lg:h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 4 }}>
-          <CartesianGrid stroke={CHART.grid} vertical={false} />
+        <LineChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 4 }}>
+          <CartesianGrid stroke={t.CHART.grid} vertical={false} />
           <XAxis
             dataKey="index"
-            tickFormatter={(v: number) => data[v - 1]?.label ?? ""}
-            tick={AXIS_TICK}
-            axisLine={AXIS_LINE}
+            // Several games land on the same day. A date is only labelled on
+            // its first game, so the axis reads "10-04 10-05 10-06" instead of
+            // repeating "10-05" for every point on that day.
+            tickFormatter={(v: number) => {
+              const point = data[v - 1];
+              if (!point) return "";
+              const prev = data[v - 2];
+              return prev && prev.label === point.label ? "" : point.label;
+            }}
+            tick={t.AXIS_TICK}
+            axisLine={t.AXIS_LINE}
             tickLine={false}
+            // Keep the window's first and last tick visible even when the
+            // dedupe above blanks a middle label.
+            interval="preserveStartEnd"
             minTickGap={24}
           />
           <YAxis
@@ -74,30 +117,21 @@ export function PlacementTrendChart({
             // best rank on the scale ends up unlabelled.
             interval={0}
             reversed
-            tick={AXIS_TICK}
+            tick={t.AXIS_TICK}
             axisLine={false}
             tickLine={false}
-            width={28}
+            width={24}
           />
-          <Tooltip
-            contentStyle={TOOLTIP_STYLE}
-            labelFormatter={(_label, payload) => {
-              const point = payload?.[0]?.payload as TrendPoint | undefined;
-              if (!point) return "";
-              const time = point.playedAt.slice(11, 16);
-              return `第 ${point.index} 局 · ${point.label}${time ? ` ${time}` : ""}`;
-            }}
-            formatter={(value) => [`第 ${String(value)} 名`, "名次"]}
-          />
+          <Tooltip content={renderTooltip} />
           {avg !== null && (
             <ReferenceLine
               y={avg}
-              stroke={CHART_SEMANTIC.reference}
+              stroke={t.CHART_SEMANTIC.reference}
               strokeDasharray="4 4"
               strokeOpacity={0.6}
               label={{
                 value: `平均 ${avg}`,
-                fill: CHART_SEMANTIC.reference,
+                fill: t.CHART_SEMANTIC.reference,
                 fontSize: 11,
                 position: "insideTopLeft",
               }}
@@ -107,18 +141,18 @@ export function PlacementTrendChart({
             type="monotone"
             dataKey="placement"
             name="rank"
-            stroke={CHART_SEMANTIC.series}
+            stroke={t.CHART_SEMANTIC.series}
             strokeWidth={2}
             dot={(props: { cx?: number; cy?: number; payload?: TrendPoint }) => {
               const { cx, cy, payload } = props;
               if (cx == null || cy == null || !payload) return null;
               const top4 = payload.top4 === 1;
-              const title = `${payload.label} ${payload.playedAt.slice(11, 16)} · 第 ${payload.placement} 名${top4 ? " · Top4" : ""}`;
+              const title = `${payload.label} ${payload.playedAt.slice(11, 16)} · 第 ${payload.placement} 名 · 阵容：${payload.composition || "未填阵容"}${top4 ? " · Top4" : ""}`;
               const shared = {
                 cx,
                 cy,
                 r: onSelectMatch ? 4 : 3,
-                fill: top4 ? CHART_SEMANTIC.highlight : CHART_SEMANTIC.series,
+                fill: top4 ? t.CHART_SEMANTIC.highlight : t.CHART_SEMANTIC.series,
                 strokeWidth: 0,
               };
               if (!onSelectMatch) return <circle {...shared} />;
@@ -141,7 +175,7 @@ export function PlacementTrendChart({
                 </circle>
               );
             }}
-            activeDot={{ r: 5, fill: CHART_SEMANTIC.highlight, stroke: CHART.surface, strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: t.CHART_SEMANTIC.highlight, stroke: t.CHART.surface, strokeWidth: 2 }}
             isAnimationActive={false}
           />
         </LineChart>

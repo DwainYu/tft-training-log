@@ -7,8 +7,8 @@ const HINDSIGHT_MARK: Record<
   "correct" | "wrong" | "mixed",
   { icon: typeof Check; cls: string }
 > = {
-  correct: { icon: Check, cls: "text-emerald-300 border-emerald-400/40 bg-emerald-400/10" },
-  wrong: { icon: X, cls: "text-red-300 border-red-400/40 bg-red-400/10" },
+  correct: { icon: Check, cls: "text-good border-good/40 bg-good/10" },
+  wrong: { icon: X, cls: "text-bad border-bad/40 bg-bad/10" },
   mixed: { icon: Circle, cls: "text-ink-400 border-line bg-base-900" },
 };
 
@@ -51,7 +51,7 @@ export function DecisionTimeline({ events }: { events: TimelineEvent[] }) {
                   </span>
                 )}
               </span>
-              <span className="mt-0.5 block break-words text-sm leading-relaxed text-ink-100">
+              <span className="mt-0.5 block break-words text-sm leading-relaxed text-ink-200">
                 {e.title}
               </span>
             </span>
@@ -60,8 +60,8 @@ export function DecisionTimeline({ events }: { events: TimelineEvent[] }) {
       })}
 
       {outcome && (
-        <li className="mt-1 flex flex-wrap items-center gap-2 border-t border-line px-4 py-3">
-          <span className="text-[11px] uppercase tracking-wide text-ink-600">结果</span>
+        <li className="mt-1 flex flex-wrap items-center gap-2 border-t border-line bg-base-900/40 px-4 py-3">
+          <span className="text-[11px] uppercase tracking-wide text-ink-600">最终结果</span>
           <Badge tone={outcome.placement === 1 ? "gold" : outcome.placement <= 4 ? "good" : "bad"}>
             第 {outcome.placement} 名
           </Badge>

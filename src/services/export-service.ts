@@ -127,7 +127,7 @@ export function parseSnapshot(text: string): DatabaseSnapshot {
     throw new Error("文件不是合法的 JSON");
   }
   if (!isRecord(raw) || raw.app !== "tft-training-log") {
-    throw new Error("不是 TFT Training Log 导出的文件（缺少 app 标识）");
+    throw new Error("不是 TFT 弈记 导出的文件（缺少 app 标识）");
   }
   const snap = raw as Partial<DatabaseSnapshot>;
   for (const key of ["matches", "decisions", "reviews", "trainingGoals"] as const) {

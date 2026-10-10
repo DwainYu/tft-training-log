@@ -18,6 +18,7 @@ import { loadDemoData } from "../services/demo-service";
 import { useSession } from "../services/session-context";
 import { goalStatusLabel } from "../domain/training/training-goal";
 import { mistakeLabel } from "../domain/labels";
+import { UNCLASSIFIED } from "../domain/stats/stats";
 import { formatNumber } from "../lib/utils";
 import { AddMatchButton } from "../components/matches/AddMatchButton";
 import { MatchList } from "../components/matches/MatchList";
@@ -129,6 +130,10 @@ export function DashboardPage() {
           : `与前 ${WINDOW} 场持平`;
 
   const mistakeSample = mistakes.reduce((sum, m) => sum + m.count, 0);
+  // "全部未分类" is not a mistake profile — it is a review backlog. Drawing a
+  // single giant 未分类 bar would waste the second panel on nothing.
+  const mistakesUnclassifiedOnly =
+    mistakes.length === 1 && mistakes[0].key === UNCLASSIFIED && mistakeSample > 0;
 
   const compositionRows = [...compositions].sort((a, b) => {
     const enough = (games: number) => games >= MIN_SAMPLES.compositionRow;
@@ -169,12 +174,20 @@ export function DashboardPage() {
       {/* Layer 1 — how am I doing lately. Five numbers, five different facts. */}
       {/* 2 columns even on a phone: the labels are short enough not to wrap,
           and 5 stacked tiles would push the trend chart off-screen. */}
-      <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-5">
+      {/* min-w-0: a nowrap table (阵容表现) would otherwise widen its grid
+          track past the viewport and push the whole page sideways. */}
+      <div className="mb-4 grid grid-cols-2 gap-3 [&>*]:min-w-0 lg:grid-cols-5">
         <StatCard
           label={`近 ${WINDOW} 场平均名次`}
           value={formatNumber(recent10.avgPlacement, 1)}
           tone="gold"
+          emphasis
           sub={deltaText}
+          trend={
+            delta === null || delta === 0
+              ? undefined
+              : { direction: delta < 0 ? "down" : "up", tone: delta < 0 ? "good" : "bad" }
+          }
         />
         <StatCard
           label={`Top4 率 · 近 ${WINDOW} 场`}
@@ -196,7 +209,7 @@ export function DashboardPage() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 [&>*]:min-w-0 lg:grid-cols-3">
         {/* Layer 2 — why. */}
         <Panel className="lg:col-span-2">
           <PanelHeader
@@ -217,27 +230,39 @@ export function DashboardPage() {
             title="主要问题"
             subtitle="Primary Mistake · 点击柱子查看这几局"
           />
-          <div className="p-4">
-            <MistakeBarChart
-              data={mistakes}
-              onSelect={(key) => navigate(`/matches?${mistakeDrillQuery(key)}`)}
-            />
-            {/* Text alternative to the bars: same numbers, reachable without
-                hovering a bar (touch, keyboard, screen reader). */}
-            {mistakeSample >= MIN_SAMPLES.mistake && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {mistakes.slice(0, 3).map((m) => (
-                  <Link
-                    key={m.key}
-                    to={`/matches?${mistakeDrillQuery(m.key)}`}
-                    className="rounded-md border border-line bg-base-800 px-1.5 py-0.5 text-[11px] text-ink-200 underline-offset-4 hover:underline"
-                  >
-                    {m.label} × {m.count}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+          {mistakesUnclassifiedOnly ? (
+            <div className="flex flex-col items-start gap-2 p-4">
+              <p className="text-xs leading-relaxed text-ink-400">
+                已记录 {mistakeSample} 局，但还没有复盘。复盘时给每局选一个 Primary
+                Mistake，这里才会显示你真正的问题分布。
+              </p>
+              <LinkButton to="/matches?reviewed=unreviewed" size="sm">
+                去复盘 {mistakeSample} 局 <ArrowRight size={12} />
+              </LinkButton>
+            </div>
+          ) : (
+            <div className="p-4">
+              <MistakeBarChart
+                data={mistakes}
+                onSelect={(key) => navigate(`/matches?${mistakeDrillQuery(key)}`)}
+              />
+              {/* Text alternative to the bars: same numbers, reachable without
+                  hovering a bar (touch, keyboard, screen reader). */}
+              {mistakeSample >= MIN_SAMPLES.mistake && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {mistakes.slice(0, 3).map((m) => (
+                    <Link
+                      key={m.key}
+                      to={`/matches?${mistakeDrillQuery(m.key)}`}
+                      className="rounded-md border border-line bg-base-800 px-1.5 py-0.5 text-[11px] text-ink-200 underline-offset-4 hover:underline"
+                    >
+                      {m.label} × {m.count}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </Panel>
 
         <Panel className="lg:col-span-2">
@@ -325,7 +350,7 @@ export function DashboardPage() {
             </div>
           }
         />
-        <MatchList matches={recent} />
+        <MatchList matches={recent} variant="compact" />
       </Panel>
     </>
   );

@@ -3,8 +3,8 @@ import { placementTone } from "../../domain/match/match";
 
 const TONE_SELECTED: Record<string, string> = {
   gold: "border-gold-400 bg-gold-500/25 text-gold-300",
-  good: "border-emerald-400/70 bg-emerald-500/20 text-emerald-200",
-  bad: "border-red-400/70 bg-red-500/18 text-red-200",
+  good: "border-good/70 bg-good/20 text-good",
+  bad: "border-bad/70 bg-bad/20 text-bad",
 };
 
 /** Placement is the single most-used field: one row of 8, no scrolling, keys 1–8. */

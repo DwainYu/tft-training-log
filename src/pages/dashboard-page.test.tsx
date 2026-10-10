@@ -151,6 +151,35 @@ describe("Dashboard · normal sample", () => {
     const recent = await findPanel("最近对局");
     expect(within(recent).getAllByRole("link", { name: "详情" })).toHaveLength(8);
   });
+
+  it("keeps the recent list compact: no Level/Duration columns on the Dashboard", async () => {
+    await seedNormal();
+    render();
+
+    const recent = await findPanel("最近对局");
+    expect(within(recent).getByRole("columnheader", { name: "Date" })).toBeInTheDocument();
+    expect(within(recent).queryByRole("columnheader", { name: "Level" })).not.toBeInTheDocument();
+    expect(
+      within(recent).queryByRole("columnheader", { name: "Duration" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("swaps the mistake chart for a review prompt when every game is unclassified", async () => {
+    // 6 unreviewed games: past MIN_SAMPLES.mistake, but 100% 未分类.
+    for (let i = 0; i < 6; i += 1) {
+      await log({ placement: 4, composition: "Arcader" });
+    }
+    render();
+
+    const panel = await findPanel("主要问题");
+    expect(within(panel).getByText(/还没有复盘/)).toBeInTheDocument();
+    // no giant single bar, no duplicated 未分类 chip
+    expect(within(panel).queryByText(/未分类 ×/)).not.toBeInTheDocument();
+    expect(within(panel).getByRole("link", { name: /去复盘 6 局/ })).toHaveAttribute(
+      "href",
+      "/matches?reviewed=unreviewed",
+    );
+  });
 });
 
 describe("Dashboard · narrow screen", () => {
